@@ -1,0 +1,21 @@
+Package: gesel
+Version: 0.1.0
+Date: 2024-10-27
+Title: Search for Interesting Gene Sets
+Description:
+    Query the gesel indices to identify interesting gene sets.
+    Users can test for enrichment in their own list of genes and/or search by text in the set names or descriptions.
+    The indices can be hosted remotely or on a local filesystem.
+Authors@R:
+    person("Aaron", "Lun", role=c("aut", "cre"), email="infinite.monkeys.with.keyboards@gmail.com")
+Imports:
+    utils,
+    httr2
+Suggests:
+    BiocStyle,
+    knitr,
+    testthat,
+    rmarkdown
+VignetteBuilder: knitr
+Encoding: UTF-8
+RoxygenNote: 7.3.2
