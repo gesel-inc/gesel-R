@@ -27,9 +27,6 @@ parse_remote_last_modified <- function(res) {
     return(remote_mod) 
 }
 
-checked.env <- new.env()
-checked.env$checked <- character(0)
-
 #' @import httr2 
 #' @importFrom rappdirs user_cache_dir
 #' @importFrom utils URLencode
@@ -43,20 +40,15 @@ download_file <- function(cache, url, overwrite) {
     if (!file.exists(target)) {
         overwrite <- TRUE
     } else if (!overwrite) {
-        if (!(url %in% checked.env$checked)) { # don't check again if we already checked in this session.
-            req <- request(url)
-            req <- req_method(req, "HEAD")
-            req <- handle_error(req)
-            res <- try(req_perform(req), silent=TRUE)
-
-            if (!is(res, "try-error")) { # don't throw an error if there is no internet.
-                remote_mod <- parse_remote_last_modified(res)
-                last_mod <- file.info(target)$mtime
-                if (!is.null(remote_mod) && remote_mod > last_mod) {
-                    overwrite <- TRUE
-                } else {
-                    checked.env$checked <- c(checked.env$checked, url)
-                }
+        req <- request(url)
+        req <- req_method(req, "HEAD")
+        req <- handle_error(req)
+        res <- try(req_perform(req), silent=TRUE)
+        if (!is(res, "try-error")) { # don't throw an error if there is no internet.
+            remote_mod <- parse_remote_last_modified(res)
+            last_mod <- file.info(target)$mtime
+            if (!is.null(remote_mod) && remote_mod > last_mod) {
+                overwrite <- TRUE
             }
         }
     }
@@ -79,7 +71,6 @@ download_file <- function(cache, url, overwrite) {
         }
 
         file.rename(tempf, target) # this should be more or less atomic, so no need for locks.
-        checked.env$checked <- c(checked.env$checked, url)
     }
 
     target
