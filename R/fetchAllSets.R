@@ -2,10 +2,7 @@
 #'
 #' Fetch information about all gene sets in the \pkg{gesel} index.
 #'
-#' @param species String containing the NCBI taxonomy ID of the species of interest.
-#' @param cache String containing the path to a cache directory.
-#' If \code{NULL}, a cache location is automatically chosen.
-#' @param overwrite Logical scalar indicating whether any cached file should be overwritten.
+#' @inheritParams fetchAllCollections
 #' 
 #' @return Data frame of gene set information.
 #' Each row represents a gene set and contains:
@@ -24,16 +21,20 @@
 #' head(out)
 #'
 #' @export
-fetchAllSets <- function(species, cache = NULL, overwrite = FALSE) {
-    if (!overwrite) {
+fetchAllSets <- function(species, fetch = NULL, fetch.args = list(), use.preloaded = TRUE) {
+    if (use.preloaded) {
         candidate <- fetchAllSets.env$result[[species]]
         if (!is.null(candidate)) {
             return(candidate)
         }
     }
 
+    if (is.null(fetch)) {
+        fetch <- downloadIndexFile
+    }
+
     fname <- paste0(species, "_sets.tsv.gz")
-    path <- download_file(cache, paste0(default_index_url, "/", fname), overwrite=overwrite)
+    path <- do.call(fetch, c(list(fname), fetch.args))
     raw <- decompress_lines(path)
     details <- strsplit(raw, "\t")
 
@@ -45,7 +46,7 @@ fetchAllSets <- function(species, cache = NULL, overwrite = FALSE) {
         size[i] <- current[3]
     }
 
-    info <- fetchAllCollections(species, cache=cache, overwrite=overwrite)
+    info <- fetchAllCollections(species, fetch=fetch, fetch.args=fetch.args, use.preloaded=use.preloaded)
     output <- data.frame(
         name=names,
         description=desc,

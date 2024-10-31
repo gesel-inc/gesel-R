@@ -6,9 +6,10 @@
 #' @param types Character vector specifying the gene ID types to returnc.
 #' This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
 #' defaulting to all of them.
-#' @param cache String specifying the path to a cache directory.
-#' If \code{NULL}, a cache location is automatically chosen.
-#' @param overwrite Logical scalar indicating whether any cached file should be overwritten.
+#' @param fetch Function that accepts the name of the file in the Gesel gene descriptions and returns an absolute path to the file.
+#' If \code{NULL}, it defaults to \code{\link{downloadGeneFile}}.
+#' @param fetch.args Named list of arguments to pass to \code{fetch}.
+#' @param use.preloaded Logical scalar indicating whether to use the preloaded value from a previous call to this function.
 #'
 #' @return List of length equal to \code{types}.
 #' Each element is another list of length equal to the number of genes,
@@ -21,14 +22,17 @@
 #' head(out$symbol)
 #' 
 #' @export
-fetchAllGenes <- function(species, types = NULL, cache = NULL, overwrite = FALSE) {
+fetchAllGenes <- function(species, types = NULL, fetch = NULL, fetch.args = list(), use.preloaded = TRUE) {
     if (is.null(types)) {
         types <- c("symbol", "entrez", "ensembl")
+    }
+    if (is.null(fetch)) {
+        fetch <- downloadGeneFile
     }
 
     output <- list()
     for (t in types) {
-        if (!overwrite) {
+        if (use.preloaded) {
             candidate <- fetchAllGenes.env$result[[species]][[t]]
             if (!is.null(candidate)) {
                 output[[t]] <- candidate
@@ -36,7 +40,7 @@ fetchAllGenes <- function(species, types = NULL, cache = NULL, overwrite = FALSE
             }
         }
 
-        path <- download_file(cache, paste0(default_gene_url, "/", species, "_", t, ".tsv.gz"), overwrite=overwrite)
+        path <- do.call(fetch, c(list(paste0(species, "_", t, ".tsv.gz")), fetch.args))
         raw <- decompress_lines(path)
         processed <- strsplit(raw, "\t")
         for (i in seq_along(processed)) {

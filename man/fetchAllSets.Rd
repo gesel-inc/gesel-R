@@ -4,15 +4,17 @@
 \alias{fetchAllSets}
 \title{Fetch all gene sets}
 \usage{
-fetchAllSets(species, cache = NULL, overwrite = FALSE)
+fetchAllSets(species, fetch = NULL, fetch.args = list(), use.preloaded = TRUE)
 }
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
 
-\item{cache}{String containing the path to a cache directory.
-If \code{NULL}, a cache location is automatically chosen.}
+\item{fetch}{Function that accepts the name of the file in the Gesel index and returns an absolute path to the file.
+If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.}
 
-\item{overwrite}{Logical scalar indicating whether any cached file should be overwritten.}
+\item{fetch.args}{Named list of arguments to pass to \code{fetch}.}
+
+\item{use.preloaded}{Logical scalar indicating whether to use the preloaded value from a previous call to this function.}
 }
 \value{
 Data frame of gene set information.

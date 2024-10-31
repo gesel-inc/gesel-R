@@ -4,7 +4,13 @@
 \alias{fetchAllGenes}
 \title{Fetch all genes}
 \usage{
-fetchAllGenes(species, types = NULL, cache = NULL, overwrite = FALSE)
+fetchAllGenes(
+  species,
+  types = NULL,
+  fetch = NULL,
+  fetch.args = list(),
+  use.preloaded = TRUE
+)
 }
 \arguments{
 \item{species}{String specifying the taxonomy ID of the species of interest.}
@@ -13,10 +19,12 @@ fetchAllGenes(species, types = NULL, cache = NULL, overwrite = FALSE)
 This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
 defaulting to all of them.}
 
-\item{cache}{String specifying the path to a cache directory.
-If \code{NULL}, a cache location is automatically chosen.}
+\item{fetch}{Function that accepts the name of the file in the Gesel gene descriptions and returns an absolute path to the file.
+If \code{NULL}, it defaults to \code{\link{downloadGeneFile}}.}
 
-\item{overwrite}{Logical scalar indicating whether any cached file should be overwritten.}
+\item{fetch.args}{Named list of arguments to pass to \code{fetch}.}
+
+\item{use.preloaded}{Logical scalar indicating whether to use the preloaded value from a previous call to this function.}
 }
 \value{
 List of length equal to \code{types}.
