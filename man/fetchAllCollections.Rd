@@ -29,6 +29,8 @@ Each row represents a collection and contains:
 \item \code{description}, string containing a description for the collection.
 \item \code{maintainer}, string containing the identity of the collection's maintainer.
 \item \code{source}, string containing the source of origin of the collection.
+\item \code{start}, integer scalar specifying the identity of the first gene set in this collection,
+as an index into the return value of \code{\link{fetchAllSets}}.
 \item \code{size}, integer scalar specifying the number of gene sets in the collection.
 }
 }

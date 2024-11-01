@@ -96,3 +96,20 @@ retrieve_ranges <- function(name, fetch, fetch.args) {
     contents <- decompress_lines(path)
     c(0L, cumsum(as.integer(contents) + 1L)) # +1 for the newline.
 }
+
+retrieve_ranges_with_sizes <- function(name, fetch, fetch.args) {
+    if (is.null(fetch)) {
+        fetch <- downloadIndexFile
+    }
+    path <- do.call(fetch, c(list(paste0(name, ".ranges.gz")), fetch.args))
+
+    contents <- decompress_lines(path)
+    parsed <- strsplit(contents, "\t")
+    bytes <- vapply(parsed, function(x) x[1], "")
+    extra <- vapply(parsed, function(x) x[2], "")
+
+    list(
+        ranges=c(0L, cumsum(as.integer(bytes) + 1L)), # +1 for the newline.
+        sizes=as.integer(extra)
+    )
+}
