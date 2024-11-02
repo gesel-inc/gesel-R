@@ -10,6 +10,7 @@ Authors@R:
     person("Aaron", "Lun", role=c("aut", "cre"), email="infinite.monkeys.with.keyboards@gmail.com")
 Imports:
     utils,
+    parallel,
     httr2
 Suggests:
     BiocStyle,
