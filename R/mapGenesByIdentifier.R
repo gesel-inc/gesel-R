@@ -29,7 +29,8 @@ mapGenesByIdentifier <- function(species, type, ignore.case = FALSE, more.args=l
         store.name <- "cased"
     }
 
-    sfound <- get(store.name, envir=mapGenesByIdentifier.env, inherits=FALSE)[[species]]
+    cached <- get(store.name, envir=mapGenesByIdentifier.env, inherits=FALSE)
+    sfound <- cached[[species]]
     restore <- FALSE
     if (is.null(sfound)) {
         sfound <- list()
@@ -54,7 +55,8 @@ mapGenesByIdentifier <- function(species, type, ignore.case = FALSE, more.args=l
 
     if (restore) {
         sfound[[type]] <- tfound
-        assign(store.name, sfound, envir=mapGenesByIdentifier.env)
+        cached[[species]] <- sfound
+        assign(store.name, cached, envir=mapGenesByIdentifier.env)
     }
 
     tfound;
