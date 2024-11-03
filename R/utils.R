@@ -88,13 +88,17 @@ decompress_lines <- function(path) {
     }
 }
 
+compute_ranges <- function(bytes) {
+    c(0L, cumsum(as.integer(bytes) + 1L)) # +1 for the newline.
+}
+
 retrieve_ranges <- function(name, fetch, fetch.args) {
     if (is.null(fetch)) {
         fetch <- downloadIndexFile
     }
     path <- do.call(fetch, c(list(paste0(name, ".ranges.gz")), fetch.args))
     contents <- decompress_lines(path)
-    c(0L, cumsum(as.integer(contents) + 1L)) # +1 for the newline.
+    compute_ranges(contents)
 }
 
 retrieve_ranges_with_sizes <- function(name, fetch, fetch.args) {
@@ -108,8 +112,46 @@ retrieve_ranges_with_sizes <- function(name, fetch, fetch.args) {
     bytes <- vapply(parsed, function(x) x[1], "")
     extra <- vapply(parsed, function(x) x[2], "")
 
-    list(
-        ranges=c(0L, cumsum(as.integer(bytes) + 1L)), # +1 for the newline.
-        sizes=as.integer(extra)
-    )
+    list(ranges=compute_ranges(bytes), sizes=as.integer(extra))
 }
+
+retrieve_ranges_with_names <- function(name, fetch, fetch.args) {
+    if (is.null(fetch)) {
+        fetch <- downloadIndexFile
+    }
+    path <- do.call(fetch, c(list(paste0(name, ".ranges.gz")), fetch.args))
+
+    contents <- decompress_lines(path)
+    parsed <- strsplit(contents, "\t")
+    names <- vapply(parsed, function(x) x[1], "")
+    bytes <- vapply(parsed, function(x) x[2], "")
+
+    list(names=names, ranges=compute_ranges(bytes))
+}
+
+decode_indices <- function(lines) {
+    parsed <- strsplit(lines, "\t", fixed=TRUE)
+    lapply(parsed, function(x) cumsum(as.integer(x)) + 1L)
+}
+
+#' @importFrom parallel parLapply makeCluster stopCluster
+super_lapply <- function(num.workers, X, FUN, more.args) {
+    if (num.workers == 1L) {
+        largs <- c(list(X=X, FUN=FUN), more.args)
+        do.call(lapply, largs)
+    } else {
+        if (num.workers != super_lapply.env$num.workers) {
+            if (!is.null(super_lapply.env$cluster)) {
+                stopCluster(super_lapply.env$cluster)
+            } 
+            super_lapply.env$cluster <- makeCluster(num.workers)
+            super_lapply.env$num.workers <- num.workers
+        }
+        largs <- c(list(cl=super_lapply.env$cluster, X=X, fun=FUN), more.args)
+        do.call(parLapply, largs)
+    }
+}
+
+super_lapply.env <- new.env()
+super_lapply.env$cluster <- NULL
+super_lapply.env$num.workers <- 0L
