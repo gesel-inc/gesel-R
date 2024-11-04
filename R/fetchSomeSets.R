@@ -16,11 +16,13 @@
 #'
 #' @export
 #' @importFrom utils head
-fetchSomeSets <- function(species, sets, fetch.file = NULL, fetch.file.args = list(), fetch.range = NULL, fetch.range.args = list(), use.preloaded = TRUE) {
+fetchSomeSets <- function(species, sets, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRanges, fetch.range.args = list(), use.preloaded = TRUE) {
     if (use.preloaded) {
         candidate <- fetchAllSets.env$result[[species]]
         if (!is.null(candidate)) {
-            return(candidate[sets,])
+            output <- candidate[sets,]
+            rownames(output) <- NULL
+            return(output)
         }
     }
 
@@ -28,9 +30,6 @@ fetchSomeSets <- function(species, sets, fetch.file = NULL, fetch.file.args = li
     range.info <- get_single_set_ranges(species, fname, fetch.file=fetch.file, fetch.file.args=fetch.file.args, use.preloaded=use.preloaded)
     intervals <- range.info$ranges
 
-    if (is.null(fetch.range)) {
-        fetch.range <- downloadIndexRange
-    }
     starts <- intervals[sets]
     ends <- intervals[sets + 1L] - 1L # remove the newline.
     deets <- do.call(fetch.range, c(list(name=fname, start=starts, end=ends), fetch.range.args))

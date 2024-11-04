@@ -22,7 +22,7 @@
 #' head(all.set.info[first.gene[[1]],])
 #' 
 #' @export
-fetchSetsForSomeGenes <- function(species, genes, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRange, fetch.range.args = list(), use.preloaded = TRUE) {
+fetchSetsForSomeGenes <- function(species, genes, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRanges, fetch.range.args = list(), use.preloaded = TRUE) {
     if (use.preloaded) {
         candidate <- fetchSetsForAllGenes.env$result[[species]]
         if (!is.null(candidate)) {

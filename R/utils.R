@@ -111,6 +111,10 @@ retrieve_ranges_with_names <- function(name, fetch, fetch.args) {
 }
 
 decode_indices <- function(lines) {
-    parsed <- strsplit(lines, "\t", fixed=TRUE)
-    lapply(parsed, function(x) cumsum(as.integer(x)) + 1L)
+    ignore <- lines == "\n"
+    parsed <- strsplit(lines[!ignore], "\t", fixed=TRUE)
+    output <- vector("list", length(lines))
+    output[ignore] <- list(integer())
+    output[!ignore] <- lapply(parsed, function(x) cumsum(as.integer(x)) + 1L)
+    output
 }

@@ -125,7 +125,7 @@ save_integer_list <- function(x, prefix, include.names = FALSE) {
         z <- x[[i]]
         if (length(z)) {
             z <- sort(unique(z)) # convert to diffs to reduce integer size
-            z <- c(z[1] - 1L, diff(z)) # get to 0-based indexing.
+            z <- c(z[1] - 1L, diff(z)) # get to 0-based indexing with delta encoding.
             lines[i] <- paste(z, collapse="\t")
         }
     }
