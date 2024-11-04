@@ -1,4 +1,5 @@
 set.seed(9999)
+species <- "1111"
 
 # Mocking up some information.
 ref.collections <- data.frame(
@@ -39,7 +40,7 @@ ref.set.info$size <- lengths(ref.set.membership)
 ref.dir <- tempfile()
 dir.create(ref.dir)
 prepareDatabaseFiles(
-    "1111",
+    species,
     ref.collections, 
     ref.set.info, 
     ref.set.membership,
@@ -63,4 +64,32 @@ getDatabaseRanges <- function(name, starts, ends) {
     }
 
     output
+}
+
+gene.dir <- tempfile()
+dir.create(gene.dir)
+
+ref.genes <- list()
+num.genes <- 500
+ref.gene.types <- c("foo", "bar", "WHEE")
+
+for (i in 1:3) {
+    type <- ref.gene.types[i]
+    gene.ids <- sprintf("%s_%4d", type, seq_len(9999))
+
+    genes.plus <- num.genes * (1 + i/5) # generating a 1:many mapping of genes to names.
+    chosen <- sample(gene.ids, genes.plus, replace=TRUE)
+    ids <- sample(num.genes, genes.plus, replace=TRUE)
+
+    current <- unname(split(chosen, factor(ids, seq_len(num.genes))))
+    ref.genes[[type]] <- current
+
+    gpath <- file.path(gene.dir, paste0(species, "_", type, ".tsv.gz"))
+    handle <- gzfile(gpath, open="wb")
+    writeLines(vapply(current, paste, collapse="\t", FUN.VALUE=""), con=handle)
+    close(handle)
+}
+
+getGeneFile <- function(name) {
+    file.path(gene.dir, name)
 }

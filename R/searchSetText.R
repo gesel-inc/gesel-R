@@ -26,9 +26,9 @@ searchSetText <- function(
     query,
     use.name = TRUE, 
     use.description = TRUE,
-    fetch.file = NULL,
+    fetch.file = downloadDatabaseFile,
     fetch.file.args = list(),
-    fetch.range = NULL,
+    fetch.range = downloadDatabaseRanges,
     fetch.range.args = list()) 
 {
     # Don't use tokenize() here, as we need to preserve ? and *.
@@ -88,7 +88,7 @@ fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.ar
             regex <- needed.token
             regex <- gsub("[*]", ".*", regex)
             regex <- gsub("[?]", ".", regex)
-            regex <- paste0("^", regex)
+            regex <- paste0("^", regex, "$")
 
             relevant <- grep(regex, snames)
             relevant.names <- snames[relevant]
