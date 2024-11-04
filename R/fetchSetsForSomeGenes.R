@@ -22,7 +22,7 @@
 #' 
 #' @export
 fetchSetsForSomeGenes <- function(species, genes, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRanges, fetch.range.args = list()) {
-    candidate <- get_cache("fetchSetsForSomeGenes", species)
+    candidate <- get_cache("fetchSetsForAllGenes", species)
     if (!is.null(candidate)) {
         return(candidate[genes])
     }
@@ -52,7 +52,7 @@ fetchSetsForSomeGenes <- function(species, genes, fetch.file = downloadDatabaseF
     if (modified) {
         cached$prior$gene <- prior.gene
         cached$prior$sets <- prior.sets
-        set_cache("fetchSetsForGenes", species, cached)
+        set_cache("fetchSetsForSomeGenes", species, cached)
     }
 
     m <- match(genes, prior.gene)
