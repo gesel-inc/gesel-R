@@ -22,9 +22,11 @@ searchGenes <- function(species, genes, types = NULL, ignore.case = TRUE, more.a
         genes <- tolower(genes)
     }
 
+    all.mappings <- mapGenesByIdentifier(species, types, ignore.case=ignore.case, more.args=more.args)
+
     output <- vector("list", length(genes))
     for (t in types) {
-        mappings <- mapGenesByIdentifier(species, t, ignore.case=ignore.case, more.args=more.args)
+        mappings <- all.mappings[[t]]
         m <- match(genes, names(mappings))
         keep <- which(!is.na(m))
         output[keep] <- mapply(c, output[keep], mappings[m[keep]], SIMPLIFY=FALSE)

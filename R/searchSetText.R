@@ -2,7 +2,7 @@
 #'
 #' Search for sets based on their names and descriptions.
 #'
-#' @inheritParams fetchSetsForGene
+#' @inheritParams fetchSetsForSomeGenes
 #' @param query String containing one or more words to search on.
 #' A set is only matched if it matches to all of the tokens in the query.
 #' The \code{*} and \code{?} wildcards can be used to match to any or one character, respectively.
@@ -15,10 +15,10 @@
 #' @author Aaron Lun
 #' @examples
 #' out <- searchSetText("9606", "cancer")
-#' fetchSingleSet("9606", out[1])
+#' fetchSomeSets("9606", out[1])
 #' 
 #' out <- searchSetText("9606", "innate immun*")
-#' fetchSingleSet("9606", out[1])
+#' fetchSomeSets("9606", out[1])
 #' 
 #' @export
 searchSetText <- function(
@@ -36,103 +36,109 @@ searchSetText <- function(
     tokens <- unique(unlist(strsplit(tokens, "\\s+")))
     tokens <- setdiff(tokens, c("", "-"))
 
-    gathered <- vector("list", length(tokens))
-
+    gathered.names <- vector("list", length(tokens))
     if (use.name) {
-        for (i in seq_along(tokens)) {
-            gathered[[i]] <- fetch_sets_by_token(
-                species,
-                tokens[i],
-                "names", 
-                fetch.file=fetch.file,
-                fetch.file.args=fetch.file.args,
-                fetch.range=fetch.range,
-                fetch.range.args=fetch.range.args
-            )
-        }
+		gathered.names <- fetch_sets_by_token(
+			species,
+			tokens,
+			"names", 
+			fetch.file=fetch.file,
+			fetch.file.args=fetch.file.args,
+			fetch.range=fetch.range,
+			fetch.range.args=fetch.range.args
+		)
     }
 
+    gathered.descriptions <- vector("list", length(tokens))
     if (use.description) {
-        for (i in seq_along(tokens)) {
-            found <- fetch_sets_by_token(
-                species,
-                tokens[i],
-                "descriptions", 
-                fetch.file=fetch.file,
-                fetch.file.args=fetch.file.args,
-                fetch.range=fetch.range,
-                fetch.range.args=fetch.range.args
-            )
-            gathered[[i]] <- union(gathered[[i]], found)
-        }
+		gathered.descriptions <- fetch_sets_by_token(
+			species,
+			tokens,
+			"descriptions", 
+			fetch.file=fetch.file,
+			fetch.file.args=fetch.file.args,
+			fetch.range=fetch.range,
+			fetch.range.args=fetch.range.args
+		)
     }
 
-    Reduce(intersect, gathered)
+	gathered <- mapply(c, gathered.names, gathered.descriptions, SIMPLIFY=FALSE)
+    as.integer(Reduce(intersect, gathered))
 }
 
-searchSetText.env <- new.env()
-searchSetText.env$names <- list()
-searchSetText.env$descriptions <- list()
-
-fetch_sets_by_token <- function(species, token, type, fetch.file, fetch.file.args, fetch.range, fetch.range.args) {
-    if (is.null(token)) {
-        return(integer())
-    }
-
+fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.args, fetch.range, fetch.range.args) {
     cached <- get(type, envir=searchSetText.env, inherits=FALSE)
     sfound <- cached[[species]]
-    if (token %in% names(sfound$prior)) {
-        return(sfound$prior[[token]])
-    }
 
     fname <- sprintf("%s_tokens-%s.tsv", species, type)
     if (is.null(sfound)) {
         sraw <- retrieve_ranges_with_names(fname, fetch=fetch.file, fetch.args=fetch.file.args)
         sfound$ranges <- sraw$ranges
-        sfound$order <- sraw$names
+        sfound$names <- sraw$names
         sfound$prior <- list()
     }
-    ordered <- sfound$order
-    ranges <- sfound$ranges
+    snames <- sfound$names
+    prior <- sfound$prior
 
-    if (is.null(fetch.range)) {
-        fetch.range <- downloadIndexRange
-    }
+    # Finding the unique set of all tokens that haven't been resolved yet.
+    to.request <- integer(0)
+    partial.request <- list()
+    for (needed.token in setdiff(tokens, names(prior))) {
+        if (grepl("[*?]", needed.token)) {
+            regex <- needed.token
+            regex <- gsub("[*]", ".*", regex)
+            regex <- gsub("[?]", ".", regex)
+            regex <- paste0("^", regex)
 
-    output <- integer()
-    if (grepl("[*?]", token)) {
-        regex <- token
-        regex <- gsub("[*]", ".*", regex)
-        regex <- gsub("[?]", ".", regex)
-        regex <- paste0("^", regex)
+            relevant <- grep(regex, snames)
+            relevant.names <- snames[relevant]
+            partial.request[[needed.token]] <- relevant.names
 
-        relevant <- grep(regex, ordered)
-        if (length(relevant)) {
-            is.uncached <- !(relevant %in% names(sfound$prior))
-
-            if (any(is.uncached)) {
-                uncached <- relevant[is.uncached]
-                lines <- lapply(uncached, function(t) {
-                    do.call(fetch.range, c(list(fname, ranges[t + 0:1]), fetch.range.args))
-                })
-                decoded <- decode_indices(unlist(lines))
-                names(decoded) <- ordered[uncached]
-                sfound$prior <- c(sfound$prior, decoded)
+            if (length(relevant)) {
+                is.uncached <- !(relevant.names %in% names(prior))
+                if (any(is.uncached)) {
+                    to.request <- union(to.request, relevant[is.uncached])
+                }
             }
-
-            output <- unique(unlist(sfound$prior[ordered[relevant]]))
-        }
-
-    } else {
-        t <- match(token, ordered)
-        if (!is.na(t)) {
-            text <- do.call(fetch.range, c(list(fname, ranges[t + 0:1]), fetch.range.args))
-            output <- decode_indices(text)[[1]]
+        } else {
+            m <- match(needed.token, snames)
+            if (!is.na(m)) {
+                to.request <- union(to.request, m)
+            } else {
+                prior[[needed.token]] <- integer(0)
+            }
         }
     }
 
-    sfound$prior[[token]] <- output
+	# Making a parallelized set of to.request for anything that we're missing.
+    if (length(to.request)) {
+        if (is.null(fetch.range)) {
+            fetch.range <- downloadIndexRange
+        }
+        ranges <- sfound$ranges
+        starts <- ranges[to.request]
+        ends <- ranges[to.request + 1L]
+        deets <- do.call(fetch.range, c(list(name=fname, start=starts, end=ends), fetch.range.args))
+        requested.indices <- decode_indices(deets)
+
+        names(requested.indices) <- snames[to.request] 
+        prior <- c(prior, requested.indices)
+    }
+
+	# Filling up the caches for subsequent queries.
+    for (needed.token in names(partial.request)) {
+        needed.actual.tokens <- partial.request[[needed.token]]
+		prior.actual.tokens <- prior[needed.actual.tokens]
+        prior[[needed.token]] <- unique(unlist(prior.actual.tokens))
+    }
+
+    sfound$prior <- prior
     cached[[species]] <- sfound
     assign(type, value=cached, envir=searchSetText.env)
-    as.integer(output)
+
+    prior[tokens]
 }
+
+searchSetText.env <- new.env()
+searchSetText.env$names <- list()
+searchSetText.env$descriptions <- list()

@@ -4,25 +4,30 @@
 \alias{downloadIndexRange}
 \title{Download a byte range from a Gesel index file}
 \usage{
-downloadIndexRange(name, range, url = indexUrl())
+downloadIndexRange(name, start, end, url = indexUrl(), num.workers = 4L)
 }
 \arguments{
 \item{name}{String containing the name of the file.}
 
-\item{range}{Integer vector of length 2 containing the zero-indexed half-open byte range to extract from the file,
-i.e., \code{c(a, b)} should extract bytes from \eqn{[a, b)}.}
+\item{start}{Integer vector containing the zero-indexed closed start of each byte range to extract from the file.}
+
+\item{end}{Integer vector containing the zero-indexed open end of each byte range to extract from the file.
+This should have the same length as \code{start} such that the \code{i}-th range is defined as \code{[start[i], end[i])}.}
 
 \item{url}{String containing the base URL to the Gesel indices.
 For \code{indexUrl}, this can be \code{NULL} to set it back to the default.}
+
+\item{num.workers}{Integer scalar specifying the number of workers to use for concurrent requests with multiple ranges.}
 }
 \value{
-String containing the contents of the specified byte range.
+Character vector of length equal to \code{length(start)}, containing the contents of the byte ranges.
 }
 \description{
 Download a byte range from a file in the Gesel index.
 }
 \examples{
-downloadIndexRange("9606_set2gene.tsv", c(0L, 100L))
+downloadIndexRange("9606_set2gene.tsv", 0L, 100L)
+downloadIndexRange("9606_set2gene.tsv", c(10, 100, 1000), c(20, 150, 1100))
 
 }
 \author{

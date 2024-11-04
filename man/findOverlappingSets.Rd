@@ -4,7 +4,7 @@
 \alias{findOverlappingSets}
 \title{Find sets overlapping a list of genes}
 \usage{
-findOverlappingSets(species, genes, num.workers = 4L, more.args = list())
+findOverlappingSets(species, genes, more.args = list())
 }
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
@@ -12,9 +12,9 @@ findOverlappingSets(species, genes, num.workers = 4L, more.args = list())
 \item{genes}{Integer vector representing a list of genes.
 Each entry is an index into one of the lists returned by \code{\link{fetchAllGenes}}.}
 
-\item{num.workers}{Integer scalar specifying the number of workers to use for parallelizing calls to \code{\link{fetchSetsForGene}}.}
-
 \item{more.args}{Further arguments to pass to \code{\link{fetchSetsPerGene}}.}
+
+\item{num.workers}{Integer scalar specifying the number of workers to use for parallelizing calls to \code{\link{fetchSetsForGene}}.}
 }
 \value{
 A list containing:

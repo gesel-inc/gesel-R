@@ -133,25 +133,3 @@ decode_indices <- function(lines) {
     parsed <- strsplit(lines, "\t", fixed=TRUE)
     lapply(parsed, function(x) cumsum(as.integer(x)) + 1L)
 }
-
-#' @importFrom parallel parLapply makeCluster stopCluster
-super_lapply <- function(num.workers, X, FUN, more.args) {
-    if (num.workers == 1L) {
-        largs <- c(list(X=X, FUN=FUN), more.args)
-        do.call(lapply, largs)
-    } else {
-        if (num.workers != super_lapply.env$num.workers) {
-            if (!is.null(super_lapply.env$cluster)) {
-                stopCluster(super_lapply.env$cluster)
-            } 
-            super_lapply.env$cluster <- makeCluster(num.workers)
-            super_lapply.env$num.workers <- num.workers
-        }
-        largs <- c(list(cl=super_lapply.env$cluster, X=X, fun=FUN), more.args)
-        do.call(parLapply, largs)
-    }
-}
-
-super_lapply.env <- new.env()
-super_lapply.env$cluster <- NULL
-super_lapply.env$num.workers <- 0L

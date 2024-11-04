@@ -24,23 +24,8 @@
 #' head(overlaps$overlap)
 #' 
 #' @export
-#' @importFrom parallel parLapply makeCluster stopCluster
-findOverlappingSets <- function(species, genes, num.workers = 4L, more.args = list()) {
-    if (num.workers == 1L) {
-        largs <- c(list(X=genes, FUN=fetchSetsForGene, species=species), more.args)
-        info <- do.call(lapply, largs)
-    } else {
-        if (num.workers != findOverlappingSets.env$num.workers) {
-            if (!is.null(findOverlappingSets.env$cluster)) {
-                stopCluster(findOverlappingSets.env$cluster)
-            } 
-            findOverlappingSets.env$cluster <- makeCluster(num.workers)
-            findOverlappingSets.env$num.workers <- num.workers
-        }
-        largs <- c(list(cl=findOverlappingSets.env$cluster, X=genes, fun=fetchSetsForGene, species=species), more.args)
-        info <- do.call(parLapply, largs)
-    }
-
+findOverlappingSets <- function(species, genes, more.args = list()) {
+    info <- do.call(findSetsForGene, c(list(species=species, genes=genes), more.args))
     tab <- table(unlist(info))
     o <- order(tab, decreasing=TRUE)
 
@@ -52,7 +37,3 @@ findOverlappingSets <- function(species, genes, num.workers = 4L, more.args = li
         present=sum(lengths(info) > 0)
     )
 }
-
-findOverlappingSets.env <- new.env()
-findOverlappingSets.env$cluster <- NULL
-findOverlappingSets.env$num.workers <- 0L

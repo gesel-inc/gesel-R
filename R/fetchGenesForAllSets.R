@@ -35,10 +35,7 @@ fetchGenesForAllSets <- function(species, fetch = NULL, fetch.args = list(), use
     fname <- paste0(species, "_set2gene.tsv.gz")
     path <- do.call(fetch, c(list(fname), fetch.args))
     raw <- decompress_lines(path)
-    output <- strsplit(raw, "\t")
-    for (i in seq_along(output)) {
-        output[[i]] <- cumsum(as.integer(output[[i]])) + 1L
-    }
+    output <- decode_indices(raw)
 
     fetchGenesForAllSets.env$result[[species]] <- output
     output

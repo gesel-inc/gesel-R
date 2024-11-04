@@ -48,10 +48,10 @@ Search for sets based on their names and descriptions.
 }
 \examples{
 out <- searchSetText("9606", "cancer")
-fetchSingleSet("9606", out[1])
+fetchSomeSets("9606", out[1])
 
-searchSetText("9606", "liver cancer")
-fetchSingleSet("9606", out[1])
+out <- searchSetText("9606", "innate immun*")
+fetchSomeSets("9606", out[1])
 
 }
 \author{
