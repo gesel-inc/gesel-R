@@ -2,9 +2,29 @@
 
 test_that("fetchSomeSets matches our local ref", {
     everything <- fetchAllSets("1111", fetch=getDatabaseFile)
-    chosen <- seq_len(nrow(everything))
+    flushMemoryCache()
 
-    payload <- fetchSomeSets("1111", chosen, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges, use.preloaded=FALSE)
+    payload <- fetchSomeSets("1111", 10:20, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    expected <- everything[10:20,]
+    rownames(expected) <- NULL
+    expect_identical(expected, payload)
+
+    payload <- fetchSomeSets("1111", 40:60, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    expected <- everything[40:60,]
+    rownames(expected) <- NULL
+    expect_identical(expected, payload)
+
+    chosen <- seq_len(nrow(everything))
+    payload <- fetchSomeSets("1111", chosen, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    expect_identical(everything, payload)
+
+    # Works for sizes.
+    sizes <- fetchSetSizes("1111", fetch.file=getDatabaseFile)
+    expect_identical(sizes, everything$size)
+
+    # Works with pre-loaded.
+    everything <- fetchAllSets("1111", fetch=getDatabaseFile)
+    payload <- fetchSomeSets("1111", chosen, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges) 
     expect_identical(everything, payload)
 
     preloaded <- fetchSomeSets("1111", chosen, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
@@ -13,16 +33,20 @@ test_that("fetchSomeSets matches our local ref", {
 
 test_that("fetchSomeSets yields a sensible remote ref", {
     everything <- fetchAllSets("9606")
+    flushMemoryCache()
 
     set.seed(99)
     chosen <- sample(nrow(everything), 20L) 
     chosen <- union(chosen, c(1L, nrow(everything)))
 
-    test <- fetchSomeSets("9606", chosen, use.preloaded=FALSE)
+    test <- fetchSomeSets("9606", chosen)
     expected <- everything[chosen,]
     rownames(expected) <- NULL
     expect_identical(expected, test)
 
+    expect_identical(fetchSetSizes("9606"), everything$size)
+
+    # Works with pre-loading.
     preloaded <- fetchSomeSets("9606", chosen)
     expect_identical(test, preloaded)
 })

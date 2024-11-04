@@ -67,18 +67,20 @@ searchSetText <- function(
 }
 
 fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.args, fetch.range, fetch.range.args) {
-    cached <- get(type, envir=searchSetText.env, inherits=FALSE)
-    sfound <- cached[[species]]
+    cached <- get_cache("searchSetText", species)
+    tfound <- cached[[type]]
+    modified <- FALSE
 
     fname <- sprintf("%s_tokens-%s.tsv", species, type)
-    if (is.null(sfound)) {
+    if (is.null(tfound)) {
         sraw <- retrieve_ranges_with_names(fname, fetch=fetch.file, fetch.args=fetch.file.args)
-        sfound$ranges <- sraw$ranges
-        sfound$names <- sraw$names
-        sfound$prior <- list()
+        tfound$ranges <- sraw$ranges
+        tfound$names <- sraw$names
+        tfound$prior <- list()
+        modified <- TRUE
     }
-    snames <- sfound$names
-    prior <- sfound$prior
+    tnames <- tfound$names
+    prior <- tfound$prior
 
     # Finding the unique set of all tokens that haven't been resolved yet.
     to.request <- integer(0)
@@ -90,8 +92,8 @@ fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.ar
             regex <- gsub("[?]", ".", regex)
             regex <- paste0("^", regex, "$")
 
-            relevant <- grep(regex, snames)
-            relevant.names <- snames[relevant]
+            relevant <- grep(regex, tnames)
+            relevant.names <- tnames[relevant]
             partial.request[[needed.token]] <- relevant.names
 
             if (length(relevant)) {
@@ -101,11 +103,12 @@ fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.ar
                 }
             }
         } else {
-            m <- match(needed.token, snames)
+            m <- match(needed.token, tnames)
             if (!is.na(m)) {
                 to.request <- union(to.request, m)
             } else {
                 prior[[needed.token]] <- integer(0)
+                modified <- TRUE
             }
         }
     }
@@ -115,14 +118,15 @@ fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.ar
         if (is.null(fetch.range)) {
             fetch.range <- downloadIndexRange
         }
-        ranges <- sfound$ranges
+        ranges <- tfound$ranges
         starts <- ranges[to.request]
         ends <- ranges[to.request + 1L]
         deets <- do.call(fetch.range, c(list(name=fname, start=starts, end=ends), fetch.range.args))
         requested.indices <- decode_indices(deets)
 
-        names(requested.indices) <- snames[to.request] 
+        names(requested.indices) <- tnames[to.request] 
         prior <- c(prior, requested.indices)
+        modified <- TRUE
     }
 
 	# Filling up the caches for subsequent queries.
@@ -130,15 +134,14 @@ fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.ar
         needed.actual.tokens <- partial.request[[needed.token]]
 		prior.actual.tokens <- prior[needed.actual.tokens]
         prior[[needed.token]] <- unique(unlist(prior.actual.tokens))
+        modified <- TRUE
     }
 
-    sfound$prior <- prior
-    cached[[species]] <- sfound
-    assign(type, value=cached, envir=searchSetText.env)
+    if (modified) {
+        tfound$prior <- prior
+        cached[[type]] <- tfound
+        set_cache("searchSetText", species, cached)
+    }
 
     prior[tokens]
 }
-
-searchSetText.env <- new.env()
-searchSetText.env$names <- list()
-searchSetText.env$descriptions <- list()

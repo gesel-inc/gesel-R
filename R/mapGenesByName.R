@@ -29,18 +29,18 @@ mapGenesByName <- function(species, type, ignore.case = FALSE, more.args=list())
         store.name <- "cased"
     }
 
-    cached <- get(store.name, envir=mapGenesByName.env, inherits=FALSE)
-    sfound <- cached[[species]]
-    restore <- FALSE
+    cached <- get_cache("mapGenesByName", species)
+    sfound <- cached[[store.name]]
+    modified <- FALSE
     if (is.null(sfound)) {
         sfound <- list()
-        restore <- TRUE
+        modified <- TRUE
     }
 
     tfound <- sfound[[type]]
     if (is.null(tfound)) {
         tfound <- list()
-        restore <- TRUE
+        modified <- TRUE
 
         genes <- do.call(fetchAllGenes, c(list(species, types=type), more.args))[[type]]
         all.ids <- unlist(genes)
@@ -55,13 +55,9 @@ mapGenesByName <- function(species, type, ignore.case = FALSE, more.args=list())
 
     if (restore) {
         sfound[[type]] <- tfound
-        cached[[species]] <- sfound
-        assign(store.name, cached, envir=mapGenesByName.env)
+        cached[[store.name]] <- sfound
+        set_cache("mapGenesByName", species, cached)
     }
 
-    tfound;
+    tfound
 }
-
-mapGenesByName.env <- new.env()
-mapGenesByName.env$cased <- list()
-mapGenesByName.env$lower <- list()

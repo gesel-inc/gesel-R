@@ -5,7 +5,6 @@
 #'
 #' @inheritParams fetchGenesForSomeSets
 #' @param sets Integer vector of set indices, where each set index refers to a row in the data frame returned by \code{\link{fetchAllSets}}.
-#' @param use.preloaded Logical scalar indicating whether to use the preloaded value from a previous call to \code{\link{fetchAllSets}}.
 #'
 #' @return Data frame with the same columns as the return value of \code{\link{fetchAllSets}},
 #' where each row corresponds to an entry of \code{sets}.
@@ -16,47 +15,77 @@
 #'
 #' @export
 #' @importFrom utils head
-fetchSomeSets <- function(species, sets, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRanges, fetch.range.args = list(), use.preloaded = TRUE) {
-    if (use.preloaded) {
-        candidate <- fetchAllSets.env$result[[species]]
-        if (!is.null(candidate)) {
-            output <- candidate[sets,]
-            rownames(output) <- NULL
-            return(output)
-        }
+fetchSomeSets <- function(species, sets, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRanges, fetch.range.args = list()) {
+    candidate <- get_cache("fetchAllSets", species)
+    if (!is.null(candidate)) {
+        output <- candidate[sets,]
+        rownames(output) <- NULL
+        return(output)
     }
 
     fname <- paste0(species, "_sets.tsv")
-    range.info <- get_single_set_ranges(species, fname, fetch.file=fetch.file, fetch.file.args=fetch.file.args, use.preloaded=use.preloaded)
-    intervals <- range.info$ranges
+    raw.cached <- get_single_set_ranges(species, fname, fetch.file=fetch.file, fetch.file.args=fetch.file.args)
+    cached <- raw.cached$cached
+    modified <- raw.cached$modified
 
-    starts <- intervals[sets]
-    ends <- intervals[sets + 1L] - 1L # remove the newline.
-    deets <- do.call(fetch.range, c(list(name=fname, start=starts, end=ends), fetch.range.args))
-    split <- strsplit(deets, "\t")
+    prior.sets <- cached$prior$sets
+    prior.details <- cached$prior$details
 
-    data.frame(
-        name = vapply(split, function(x) x[1], ""),
-        description = vapply(split, function(x) x[2], ""),
-        size = range.info$sizes[sets],
-        collection = range.info$collections[sets],
-        number = range.info$numbers[sets]
-    )
+    needed <- setdiff(sets, prior.sets)
+    if (length(needed)) {
+        intervals <- cached$intervals
+        starts <- intervals[needed]
+        ends <- intervals[needed + 1L] - 1L # remove the newline.
+        deets <- do.call(fetch.range, c(list(name=fname, start=starts, end=ends), fetch.range.args))
+
+        prior.sets <- c(prior.sets, needed)
+        split <- strsplit(deets, "\t")
+        extra.df <- data.frame(
+            name = vapply(split, function(x) x[1], ""),
+            description = vapply(split, function(x) x[2], "")
+        )
+        prior.details <- rbind(prior.details, extra.df)
+        modified <- TRUE
+    }
+
+    if (modified) {
+        cached$prior$sets <- prior.sets
+        cached$prior$details <- prior.details
+        set_cache("fetchSomeSets", species, cached)
+    }
+
+    output <- prior.details[match(sets, prior.sets),]
+    output$size <- cached$size[sets]
+    output$collection <- cached$collections[sets]
+    output$number <- cached$numbers[sets]
+    rownames(output) <- NULL
+    output
 }
     
-fetchSomeSets.env <- new.env()
-fetchSomeSets.env$result <- list()
-
-get_single_set_ranges <- function(species, fname, fetch.file, fetch.file.args, use.preloaded) {
-    range.info <- fetchSomeSets.env$result[[species]]
-    if (is.null(range.info)) {
-        range.info <- retrieve_ranges_with_sizes(fname, fetch=fetch.file, fetch.args=fetch.file.args)
-        csizes <- fetchCollectionSizes(species, fetch.file=fetch.file, fetch.file.args=fetch.file.args, use.preloaded=use.preloaded)
-        range.info$collections <- rep(seq_along(csizes), csizes)
-        range.info$numbers <- sequence(csizes)
-        fetchSomeSets.env$result[[species]] <- range.info
+get_single_set_ranges <- function(species, fname, fetch.file, fetch.file.args) { 
+    cached <- get_cache("fetchSomeSets", species)
+    if (!is.null(cached)) {
+        return(list(cached=cached, modified=FALSE))
     }
-    range.info
+
+    range.info <- retrieve_ranges_with_sizes(fname, fetch=fetch.file, fetch.args=fetch.file.args)
+    csizes <- fetchCollectionSizes(species, fetch.file=fetch.file, fetch.file.args=fetch.file.args)
+
+    cached <- list(
+        intervals = range.info$ranges,
+        collections = rep(seq_along(csizes), csizes),
+        numbers = sequence(csizes),
+        sizes = range.info$sizes,
+        prior = list(
+            sets=integer(0),
+            details=data.frame(
+                name=character(0),
+                description=character(0)
+            )
+        )
+    )
+
+    list(cached=cached, modified=TRUE)
 }
 
 #' Size of gene sets
@@ -73,15 +102,19 @@ get_single_set_ranges <- function(species, fname, fetch.file, fetch.file.args, u
 #' head(fetchSetSizes("9606"))
 #'
 #' @export
-fetchSetSizes <- function(species, fetch.file = NULL, fetch.file.args = list(), use.preloaded = TRUE) {
-    if (use.preloaded) {
-        candidate <- fetchAllSets.env$result[[species]]
-        if (!is.null(candidate)) {
-            return(nrow(candidate))
-        }
+fetchSetSizes <- function(species, fetch.file = NULL, fetch.file.args = list()) {
+    candidate <- get_cache("fetchAllSets", species)
+    if (!is.null(candidate)) {
+        return(candidate$size)
     }
 
     fname <- paste0(species, "_sets.tsv")
-    range.info <- get_single_set_ranges(species, fname, fetch.file=fetch.file, fetch.file.args=fetch.file.args, use.preloaded=use.preloaded)
-    range.info$sizes
+    raw.cached <- get_single_set_ranges(species, fname, fetch.file=fetch.file, fetch.file.args=fetch.file.args)
+
+    cached <- raw.cached$cached
+    if (raw.cached$modified) {
+        set_cache("fetchSomeSets", species, cached)
+    }
+
+    cached$sizes
 }

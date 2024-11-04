@@ -1,5 +1,7 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-searchSetText.R")
 
+flushMemoryCache()
+
 test_that("basic search works for the local ref", {
     out <- searchSetText(species, "foo 1", fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
     expect_identical(out, grep("foo 1$", ref.set.info$description, ignore.case=TRUE))

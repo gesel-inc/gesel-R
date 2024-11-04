@@ -9,7 +9,6 @@
 #' @param fetch Function that accepts the name of the file in the Gesel gene descriptions and returns an absolute path to the file.
 #' If \code{NULL}, it defaults to \code{\link{downloadGeneFile}}.
 #' @param fetch.args Named list of arguments to pass to \code{fetch}.
-#' @param use.preloaded Logical scalar indicating whether to use the preloaded value from a previous call to this function.
 #'
 #' @return Data frame where each row represents a gene.
 #' Each column corresponds to one of the \code{types} and is a list of character vectors.
@@ -22,19 +21,23 @@
 #' head(out$symbol)
 #' 
 #' @export
-fetchAllGenes <- function(species, types = NULL, fetch = downloadGeneFile, fetch.args = list(), use.preloaded = TRUE) {
+fetchAllGenes <- function(species, types = NULL, fetch = downloadGeneFile, fetch.args = list()) {
     if (is.null(types)) {
         types <- c("symbol", "entrez", "ensembl")
     }
 
+    cached <- get_cache("fetchAllGenes", species)
+    modified <- FALSE
+    if (is.null(cached)) {
+        cached <- list()
+    }
+
     output <- list()
     for (t in types) {
-        if (use.preloaded) {
-            candidate <- fetchAllGenes.env$result[[species]][[t]]
-            if (!is.null(candidate)) {
-                output[[t]] <- candidate
-                next
-            }
+        candidate <- cached[[t]]
+        if (!is.null(candidate)) {
+            output[[t]] <- candidate
+            next
         }
 
         path <- do.call(fetch, c(list(paste0(species, "_", t, ".tsv.gz")), fetch.args))
@@ -48,14 +51,13 @@ fetchAllGenes <- function(species, types = NULL, fetch = downloadGeneFile, fetch
         }
 
         output[[t]] <- processed
-        if (is.null(fetchAllGenes.env$result[[species]])) {
-            fetchAllGenes.env$result[[species]] <- list()
-        }
-        fetchAllGenes.env$result[[species]][[t]] <- processed
+        cached[[t]] <- processed
+        modified <- TRUE
+    }
+
+    if (modified) {
+        set_cache("fetchAllGenes", species, cached)
     }
 
     do.call(data.frame, lapply(output, I))
 }
-
-fetchAllGenes.env <- new.env()
-fetchAllGenes.env$result <- list()

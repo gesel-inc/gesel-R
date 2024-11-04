@@ -7,11 +7,10 @@
 fetchSomeSets(
   species,
   sets,
-  fetch.file = NULL,
+  fetch.file = downloadDatabaseFile,
   fetch.file.args = list(),
-  fetch.range = NULL,
-  fetch.range.args = list(),
-  use.preloaded = TRUE
+  fetch.range = downloadDatabaseRanges,
+  fetch.range.args = list()
 )
 }
 \arguments{
@@ -31,8 +30,6 @@ It should return a string containing the contents of the specified byte range.
 If \code{NULL}, it defaults to \code{\link{downloadIndexRange}}.}
 
 \item{fetch.range.args}{Named list of arguments to pass to \code{fetch.file}.}
-
-\item{use.preloaded}{Logical scalar indicating whether to use the preloaded value from a previous call to \code{\link{fetchAllSets}}.}
 }
 \value{
 Data frame with the same columns as the return value of \code{\link{fetchAllSets}},

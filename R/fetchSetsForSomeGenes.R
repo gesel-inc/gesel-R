@@ -6,7 +6,6 @@
 #' @param genes Integer vector containing gene indices.
 #' Each gene index refers to a row of the data frame returned by \code{\link{fetchAllGenes}}).
 #' @inheritParams fetchGenesForSomeSets
-#' @param use.preloaded Logical scalar indicating whether to use the preloaded value from a previous call to \code{\link{fetchSetsForAllGenes}}.
 #'
 #' @return List of integer vectors.
 #' Each vector corresponds to a gene in \code{genes} and contains the identities of the sets containing that gene.
@@ -22,25 +21,40 @@
 #' head(all.set.info[first.gene[[1]],])
 #' 
 #' @export
-fetchSetsForSomeGenes <- function(species, genes, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRanges, fetch.range.args = list(), use.preloaded = TRUE) {
-    if (use.preloaded) {
-        candidate <- fetchSetsForAllGenes.env$result[[species]]
-        if (!is.null(candidate)) {
-            return(candidate[genes])
-        }
+fetchSetsForSomeGenes <- function(species, genes, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRanges, fetch.range.args = list()) {
+    candidate <- get_cache("fetchSetsForSomeGenes", species)
+    if (!is.null(candidate)) {
+        return(candidate[sets])
     }
 
     fname <- paste0(species, "_gene2set.tsv")
+    cached <- get_cache("fetchSetsForSomeGenes", species)
+    modified <- FALSE
 
-    intervals <- fetchSetsForSomeGenes.env$result[[species]]
-    if (is.null(intervals)) {
+    if (is.null(cached)) {
         intervals <- retrieve_ranges(fname, fetch=fetch.file, fetch.args=fetch.file.args)
-        fetchSetsForSomeGenes.env$result[[species]] <- intervals
+        cached <- list(intervals = intervals, prior = list(gene = integer(0), sets = list()))
+        modified <- TRUE
     }
 
-    deets <- do.call(fetch.range, c(list(name=fname, start=intervals[genes], end=intervals[genes + 1L]), fetch.range.args))
-    decode_indices(deets)
-}
+    prior.gene <- cached$prior$gene
+    prior.sets <- cached$prior$sets
 
-fetchSetsForSomeGenes.env <- new.env()
-fetchSetsForSomeGenes.env$result <- list()
+    needed <- sort(setdiff(genes, prior.gene))
+    if (length(needed)) {
+        intervals <- cached$intervals
+        deets <- do.call(fetch.range, c(list(name=fname, start=intervals[needed], end=intervals[needed + 1L]), fetch.range.args))
+        prior.gene <- c(prior.gene, needed)
+        prior.sets <- c(prior.sets, decode_indices(deets))
+        modified <- TRUE
+    }
+
+    if (modified) {
+        cached$prior$gene <- prior.gene
+        cached$prior$sets <- prior.sets
+        set_cache("fetchSetsForGenes", species, cached)
+    }
+
+    m <- match(genes, prior.gene)
+    prior.sets[m]
+}

@@ -22,12 +22,10 @@
 #' head(out)
 #'
 #' @export
-fetchAllSets <- function(species, fetch = downloadDatabaseFile, fetch.args = list(), use.preloaded = TRUE) {
-    if (use.preloaded) {
-        candidate <- fetchAllSets.env$result[[species]]
-        if (!is.null(candidate)) {
-            return(candidate)
-        }
+fetchAllSets <- function(species, fetch = downloadDatabaseFile, fetch.args = list()) {
+    candidate <- get_cache("fetchAllSets", species)
+    if (!is.null(candidate)) {
+        return(candidate)
     }
 
     fname <- paste0(species, "_sets.tsv.gz")
@@ -43,7 +41,7 @@ fetchAllSets <- function(species, fetch = downloadDatabaseFile, fetch.args = lis
         size[i] <- current[3]
     }
 
-    info <- fetchAllCollections(species, fetch=fetch, fetch.args=fetch.args, use.preloaded=use.preloaded)
+    info <- fetchAllCollections(species, fetch=fetch, fetch.args=fetch.args) 
     output <- data.frame(
         name=names,
         description=desc,
@@ -52,9 +50,6 @@ fetchAllSets <- function(species, fetch = downloadDatabaseFile, fetch.args = lis
         number=sequence(info$size)
     )
 
-    fetchAllSets.env$result[[species]] <- output
+    set_cache("fetchAllSets", species, output)
     output
 }
-
-fetchAllSets.env <- new.env()
-fetchAllSets.env$results <- list()

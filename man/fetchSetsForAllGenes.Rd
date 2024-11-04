@@ -7,8 +7,7 @@
 fetchSetsForAllGenes(
   species,
   fetch = downloadDatabaseFile,
-  fetch.args = list(),
-  use.preloaded = TRUE
+  fetch.args = list()
 )
 }
 \arguments{
@@ -17,8 +16,6 @@ fetchSetsForAllGenes(
 \item{fetch}{Function that accepts the name of a Gesel database file and returns an absolute path to that file.}
 
 \item{fetch.args}{Named list of arguments to pass to \code{fetch}.}
-
-\item{use.preloaded}{Logical scalar indicating whether to use the preloaded value from a previous call to this function.}
 }
 \value{
 List of integer vectors.

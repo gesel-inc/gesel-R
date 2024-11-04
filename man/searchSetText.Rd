@@ -9,9 +9,9 @@ searchSetText(
   query,
   use.name = TRUE,
   use.description = TRUE,
-  fetch.file = NULL,
+  fetch.file = downloadDatabaseFile,
   fetch.file.args = list(),
-  fetch.range = NULL,
+  fetch.range = downloadDatabaseRanges,
   fetch.range.args = list()
 )
 }

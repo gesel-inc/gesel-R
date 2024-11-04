@@ -4,12 +4,7 @@
 \alias{fetchCollectionSizes}
 \title{Size of collections}
 \usage{
-fetchCollectionSizes(
-  species,
-  fetch.file = NULL,
-  fetch.file.args = list(),
-  use.preloaded = TRUE
-)
+fetchCollectionSizes(species, fetch.file = NULL, fetch.file.args = list())
 }
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
@@ -18,8 +13,6 @@ fetchCollectionSizes(
 If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.}
 
 \item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
-
-\item{use.preloaded}{Logical scalar indicating whether to use the preloaded value from a previous call to \code{\link{fetchAllCollections}}.}
 }
 \value{
 Integer vector containing the size of each collection (i.e., the number of gene sets).

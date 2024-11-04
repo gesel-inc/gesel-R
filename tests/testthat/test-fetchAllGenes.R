@@ -1,5 +1,7 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-fetchAllGenes.R")
 
+flushMemoryCache()
+
 test_that("fetchAllGenes works for the local ref", {
     roundtrip <- fetchAllGenes(species, types=ref.gene.types, fetch=getGeneFile)
     expect_identical(unclass(roundtrip$foo), ref.genes$foo)
@@ -11,7 +13,7 @@ test_that("fetchAllGenes works for the local ref", {
 })
 
 test_that("fetchAllGenes behaves for the remote", {
-    roundtrip <- fetchAllGenes("9606", use.preloaded=TRUE)
+    roundtrip <- fetchAllGenes("9606") 
     expect_gt(nrow(roundtrip), 0)
 
     expect_true(any(lengths(roundtrip$symbol) > 0L))

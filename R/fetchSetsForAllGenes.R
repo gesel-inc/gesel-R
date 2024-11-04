@@ -21,12 +21,10 @@
 #' fetchAllGenes("9606")$symbol[1]
 #' 
 #' @export
-fetchSetsForAllGenes <- function(species, fetch = downloadDatabaseFile, fetch.args = list(), use.preloaded = TRUE) {
-    if (use.preloaded) {
-        candidate <- fetchSetsForAllGenes.env$result[[species]]
-        if (!is.null(candidate)) {
-            return(candidate)
-        }
+fetchSetsForAllGenes <- function(species, fetch = downloadDatabaseFile, fetch.args = list()) {
+    candidate <- get_cache("fetchSetsForAllGenes", species)
+    if (!is.null(candidate)) {
+        return(candidate)
     }
 
     fname <- paste0(species, "_gene2set.tsv.gz")
@@ -34,9 +32,6 @@ fetchSetsForAllGenes <- function(species, fetch = downloadDatabaseFile, fetch.ar
     raw <- decompress_lines(path)
     output <- decode_indices(raw)
 
-    fetchSetsForAllGenes.env$result[[species]] <- output
+    set_cache("fetchSetsForAllGenes", species, output)
     output
 }
-
-fetchSetsForAllGenes.env <- new.env()
-fetchSetsForAllGenes.env$result <- list()

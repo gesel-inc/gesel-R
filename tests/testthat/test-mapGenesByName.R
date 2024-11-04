@@ -1,5 +1,7 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-mapGenesByName.R")
 
+flushMemoryCache()
+
 test_that("mapGenesByName works for the local ref", {
     mapping <- mapGenesByName(species, type="foo", more.args=list(fetch=getGeneFile))
 

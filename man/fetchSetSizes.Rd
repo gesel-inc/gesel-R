@@ -4,12 +4,7 @@
 \alias{fetchSetSizes}
 \title{Size of gene sets}
 \usage{
-fetchSetSizes(
-  species,
-  fetch.file = NULL,
-  fetch.file.args = list(),
-  use.preloaded = TRUE
-)
+fetchSetSizes(species, fetch.file = NULL, fetch.file.args = list())
 }
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
@@ -18,8 +13,6 @@ fetchSetSizes(
 If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.}
 
 \item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
-
-\item{use.preloaded}{Logical scalar indicating whether to use the preloaded value from a previous call to \code{\link{fetchAllSets}}.}
 }
 \value{
 Integer vector containing the size of each set (i.e., the number of gene sets).

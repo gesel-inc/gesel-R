@@ -10,8 +10,7 @@ fetchGenesForSomeSets(
   fetch.file = downloadDatabaseFile,
   fetch.file.args = list(),
   fetch.range = downloadDatabaseRanges,
-  fetch.range.args = list(),
-  use.preloaded = TRUE
+  fetch.range.args = list()
 )
 }
 \arguments{
@@ -32,8 +31,6 @@ It should return a string containing the contents of the specified byte range.
 If \code{NULL}, it defaults to \code{\link{downloadIndexRange}}.}
 
 \item{fetch.range.args}{Named list of arguments to pass to \code{fetch.file}.}
-
-\item{use.preloaded}{Logical scalar indicating whether to use the preloaded value from a previous call to \code{\link{fetchGenesForAllSets}}.}
 }
 \value{
 List of integer vectors.

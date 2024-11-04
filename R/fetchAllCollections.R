@@ -5,7 +5,6 @@
 #' @param species String containing the NCBI taxonomy ID of the species of interest.
 #' @param fetch Function that accepts the name of a Gesel database file and returns an absolute path to that file.
 #' @param fetch.args Named list of arguments to pass to \code{fetch}.
-#' @param use.preloaded Logical scalar indicating whether to use the preloaded value from a previous call to this function.
 #'
 #' @return Data frame of gene set collection information.
 #' Each row represents a collection and contains:
@@ -26,12 +25,10 @@
 #'
 #' @export
 #' @importFrom utils head
-fetchAllCollections <- function(species, fetch = downloadDatabaseFile, fetch.args = list(), use.preloaded = TRUE) {
-    if (use.preloaded) {
-        candidate <- fetchAllCollections.env$result[[species]]
-        if (!is.null(candidate)) {
-            return(candidate)
-        }
+fetchAllCollections <- function(species, fetch = downloadDatabaseFile, fetch.args = list()) {
+    candidate <- get_cache("fetchAllCollections", species)
+    if (!is.null(candidate)) {
+        return(candidate)
     }
 
     fname <- paste0(species, "_collections.tsv.gz")
@@ -59,9 +56,6 @@ fetchAllCollections <- function(species, fetch = downloadDatabaseFile, fetch.arg
         size=size
     )
 
-    fetchAllCollections.env$result[[species]] <- output
+    set_cache("fetchAllCollections", species, output)
     output
 }
-
-fetchAllCollections.env <- new.env()
-fetchAllCollections.env$result <- list()

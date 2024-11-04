@@ -8,8 +8,7 @@ fetchAllGenes(
   species,
   types = NULL,
   fetch = downloadGeneFile,
-  fetch.args = list(),
-  use.preloaded = TRUE
+  fetch.args = list()
 )
 }
 \arguments{
@@ -23,8 +22,6 @@ defaulting to all of them.}
 If \code{NULL}, it defaults to \code{\link{downloadGeneFile}}.}
 
 \item{fetch.args}{Named list of arguments to pass to \code{fetch}.}
-
-\item{use.preloaded}{Logical scalar indicating whether to use the preloaded value from a previous call to this function.}
 }
 \value{
 Data frame where each row represents a gene.

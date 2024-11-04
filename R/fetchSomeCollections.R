@@ -6,7 +6,6 @@
 #' @inheritParams fetchGenesForSomeSets
 #' @param collections Integer vector containing collection indices.
 #' Each entry refers to a row of the data frame returned by \code{\link{fetchAllCollections}}).
-#' @param use.preloaded Logical scalar indicating whether to use the preloaded value from a previous call to \code{\link{fetchAllCollections}}.
 #'
 #' @return Data frame with the same columns as the return value of \code{\link{fetchAllCollections}},
 #' where each row corresponds to an entry of \code{collections}.
@@ -17,46 +16,78 @@
 #'
 #' @export
 #' @importFrom utils head
-fetchSomeCollections <- function(species, collections, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRanges, fetch.range.args = list(), use.preloaded = TRUE) {
-    if (use.preloaded) {
-        candidate <- fetchAllCollections.env$result[[species]]
-        if (!is.null(candidate)) {
-            output <- candidate[collections,]
-            rownames(output) <- NULL
-            return(output)
-        }
+fetchSomeCollections <- function(species, collections, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRanges, fetch.range.args = list()) {
+    candidate <- get_cache("fetchAllCollections", species)
+    if (!is.null(candidate)) {
+        output <- candidate[collections,]
+        rownames(output) <- NULL
+        return(output)
     }
 
     fname <- paste0(species, "_collections.tsv")
-    range.info <- get_single_collection_ranges(species, fname, fetch.file=fetch.file, fetch.file.args=fetch.file.args)
-    intervals <- range.info$ranges
+    raw.cached <- get_single_collection_ranges(species, fname, fetch.file=fetch.file, fetch.file.args=fetch.file.args)
+    cached <- raw.cached$cached
+    modified <- raw.cached$modified
 
-    starts <- intervals[collections]
-    ends <- intervals[collections + 1L] - 1L # remove the newline.
-    deets <- do.call(fetch.range, c(list(name=fname, start=starts, end=ends), fetch.range.args))
-    split <- strsplit(deets, "\t")
+    prior.collections <- cached$prior$collections
+    prior.details <- cached$prior$details
 
-    data.frame(
-        title = vapply(split, function(x) x[1], ""),
-        description = vapply(split, function(x) x[2], ""),
-        maintainer = vapply(split, function(x) x[4], ""),
-        `source` = vapply(split, function(x) x[5], ""),
-        start = range.info$starts[collections],
-        size = range.info$sizes[collections]
-    )
+    needed <- setdiff(collections, prior.collections)
+    if (length(needed)) {
+        intervals <- cached$intervals
+        starts <- intervals[collections]
+        ends <- intervals[collections + 1L] - 1L # remove the newline.
+        deets <- do.call(fetch.range, c(list(name=fname, start=starts, end=ends), fetch.range.args))
+
+        prior.collections <- c(prior.collections, needed)
+        split <- strsplit(deets, "\t")
+        extra.df <- data.frame(
+            title = vapply(split, function(x) x[1], ""),
+            description = vapply(split, function(x) x[2], ""),
+            maintainer = vapply(split, function(x) x[4], ""),
+            `source` = vapply(split, function(x) x[5], "")
+        )
+        prior.details <- rbind(prior.details, extra.df)
+        modified <- TRUE
+    }
+
+    if (modified) {
+        cached$prior$collections <- prior.collections
+        cached$prior$details <- prior.details
+        set_cache("fetchSomeCollections", species, cached)
+    }
+
+    output <- prior.details[match(collections, prior.collections),]
+    output$start <- cached$starts[collections]
+    output$size <- cached$sizes[collections]
+    rownames(output) <- NULL
+    output
 }
     
-fetchSomeCollections.env <- new.env()
-fetchSomeCollections.env$result <- list()
-
 get_single_collection_ranges <- function(species, fname, fetch.file, fetch.file.args) {
-    range.info <- fetchSomeCollections.env$result[[species]]
-    if (is.null(range.info)) {
-        range.info <- retrieve_ranges_with_sizes(fname, fetch=fetch.file, fetch.args=fetch.file.args)
-        range.info$starts <- c(0L, cumsum(head(range.info$sizes, -1L))) + 1L
-        fetchSomeCollections.env$result[[species]] <- range.info
+    cached <- get_cache("fetchSomeCollections", species)
+    if (!is.null(cached)) {
+        return(list(cached=cached, modified=FALSE))
     }
-    range.info
+
+    range.info <- retrieve_ranges_with_sizes(fname, fetch=fetch.file, fetch.args=fetch.file.args)
+
+    cached <- list(
+        intervals = range.info$ranges,
+        starts = c(0L, cumsum(head(range.info$sizes, -1L))) + 1L,
+        sizes = range.info$sizes,
+        prior = list(
+            collections=integer(0),
+            details=data.frame(
+                title=character(0),
+                description=character(0),
+                maintainer=character(0),
+                `source`=character(0)
+            )
+        )
+    )
+
+    list(cached=cached, modified=TRUE)
 }
 
 #' Size of collections
@@ -73,15 +104,19 @@ get_single_collection_ranges <- function(species, fname, fetch.file, fetch.file.
 #' head(fetchCollectionSizes("9606"))
 #'
 #' @export
-fetchCollectionSizes <- function(species, fetch.file = NULL, fetch.file.args = list(), use.preloaded = TRUE) {
-    if (use.preloaded) {
-        candidate <- fetchAllCollections.env$result[[species]]
-        if (!is.null(candidate)) {
-            return(nrow(candidate))
-        }
+fetchCollectionSizes <- function(species, fetch.file = NULL, fetch.file.args = list()) { 
+    candidate <- get_cache("fetchAllCollections", species)
+    if (!is.null(candidate)) {
+        return(candidate$size)
     }
 
     fname <- paste0(species, "_collections.tsv")
-    range.info <- get_single_collection_ranges(species, fname, fetch.file=fetch.file, fetch.file.args=fetch.file.args)
-    range.info$sizes
+    raw.cached <- get_single_collection_ranges(species, fname, fetch.file=fetch.file, fetch.file.args=fetch.file.args)
+
+    cached <- raw.cached$cached
+    if (raw.cached$modified) {
+        set_cache("fetchSomeCollections", species, cached)
+    }
+
+    cached$sizes
 }

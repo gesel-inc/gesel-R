@@ -1,12 +1,17 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-fetchGenesForAllSets.R")
 
+flushMemoryCache()
+
 test_that("fetchGenesForAllSets matches our local ref", {
-    payload <- fetchGenesForAllSets("1111", fetch=getDatabaseFile, use.preloaded=FALSE)
+    payload <- fetchGenesForAllSets("1111", fetch=getDatabaseFile)
     expect_identical(payload, lapply(ref.set.membership, function(x) sort(unique(x))))
+
+    preloaded <- fetchGenesForAllSets("1111", fetch=getDatabaseFile)
+    expect_identical(payload, preloaded)
 })
 
 test_that("fetchGenesForAllSets yields a sensible remote ref", {
-    test <- fetchGenesForAllSets("9606", use.preloaded=FALSE)
+    test <- fetchGenesForAllSets("9606")
     expect_true(any(lengths(test) > 0L))
 
     set.idx <- unlist(test)

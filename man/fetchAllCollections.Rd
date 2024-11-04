@@ -4,12 +4,7 @@
 \alias{fetchAllCollections}
 \title{Fetch all gene set collections}
 \usage{
-fetchAllCollections(
-  species,
-  fetch = downloadDatabaseFile,
-  fetch.args = list(),
-  use.preloaded = TRUE
-)
+fetchAllCollections(species, fetch = downloadDatabaseFile, fetch.args = list())
 }
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
@@ -17,8 +12,6 @@ fetchAllCollections(
 \item{fetch}{Function that accepts the name of a Gesel database file and returns an absolute path to that file.}
 
 \item{fetch.args}{Named list of arguments to pass to \code{fetch}.}
-
-\item{use.preloaded}{Logical scalar indicating whether to use the preloaded value from a previous call to this function.}
 }
 \value{
 Data frame of gene set collection information.
