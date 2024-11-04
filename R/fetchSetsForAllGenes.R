@@ -1,13 +1,13 @@
 #' Fetch sets for all genes
 #'
-#' Fetch the identities of the sets that contain each gene in the Gesel index.
+#' Fetch the identities of the sets that contain each gene in the Gesel database.
 #'
-#' @param species String containing the NCBI taxonomy ID of the species of interest.
 #' @inheritParams fetchAllCollections
 #'
 #' @return List of integer vectors.
 #' Each vector corresponds to a gene in the same order as \code{\link{fetchAllGenes}}.
-#' Each vector contains the identities of the sets that contain that gene, where each integer is an index into \code{\link{fetchAllSets}}.
+#' Each vector contains the identities of the sets that contain that gene, 
+#' where each integer is a set index that refers to a row of the data frame returned by \code{\link{fetchAllSets}}.
 #'
 #' @author Aaron Lun
 #' @examples
@@ -21,15 +21,12 @@
 #' fetchAllGenes("9606")$symbol[1]
 #' 
 #' @export
-fetchSetsForAllGenes <- function(species, fetch = NULL, fetch.args = list(), use.preloaded = TRUE) {
+fetchSetsForAllGenes <- function(species, fetch = downloadDatabaseFile, fetch.args = list(), use.preloaded = TRUE) {
     if (use.preloaded) {
         candidate <- fetchSetsForAllGenes.env$result[[species]]
         if (!is.null(candidate)) {
             return(candidate)
         }
-    }
-    if (is.null(fetch)) {
-        fetch <- downloadIndexFile 
     }
 
     fname <- paste0(species, "_gene2set.tsv.gz")

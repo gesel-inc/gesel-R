@@ -1,10 +1,9 @@
 #' Fetch all gene set collections
 #'
-#' Fetch information about all gene set collections in the Gesel index.
+#' Fetch information about all gene set collections in the Gesel database.
 #' 
 #' @param species String containing the NCBI taxonomy ID of the species of interest.
-#' @param fetch Function that accepts the name of the file in the Gesel index and returns an absolute path to the file.
-#' If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.
+#' @param fetch Function that accepts the name of a Gesel database file and returns an absolute path to that file.
 #' @param fetch.args Named list of arguments to pass to \code{fetch}.
 #' @param use.preloaded Logical scalar indicating whether to use the preloaded value from a previous call to this function.
 #'
@@ -15,8 +14,8 @@
 #' \item \code{description}, string containing a description for the collection.
 #' \item \code{maintainer}, string containing the identity of the collection's maintainer.
 #' \item \code{source}, string containing the source of origin of the collection.
-#' \item \code{start}, integer scalar specifying the identity of the first gene set in this collection,
-#' as an index into the return value of \code{\link{fetchAllSets}}.
+#' \item \code{start}, integer containing the set index for the first gene set in this collection.
+#' The set index refers to a row in the data frame returned by \code{\link{fetchAllSets}}.
 #' \item \code{size}, integer scalar specifying the number of gene sets in the collection.
 #' }
 #' 
@@ -27,16 +26,12 @@
 #'
 #' @export
 #' @importFrom utils head
-fetchAllCollections <- function(species, fetch = NULL, fetch.args = list(), use.preloaded = TRUE) {
+fetchAllCollections <- function(species, fetch = downloadDatabaseFile, fetch.args = list(), use.preloaded = TRUE) {
     if (use.preloaded) {
         candidate <- fetchAllCollections.env$result[[species]]
         if (!is.null(candidate)) {
             return(candidate)
         }
-    }
-
-    if (is.null(fetch)) {
-        fetch <- downloadIndexFile
     }
 
     fname <- paste0(species, "_collections.tsv.gz")

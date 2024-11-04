@@ -6,7 +6,7 @@
 \usage{
 fetchGenesForAllSets(
   species,
-  fetch = NULL,
+  fetch = downloadDatabaseFile,
   fetch.args = list(),
   use.preloaded = TRUE
 )
@@ -14,8 +14,7 @@ fetchGenesForAllSets(
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
 
-\item{fetch}{Function that accepts the name of the file in the Gesel index and returns an absolute path to the file.
-If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.}
+\item{fetch}{Function that accepts the name of a Gesel database file and returns an absolute path to that file.}
 
 \item{fetch.args}{Named list of arguments to pass to \code{fetch}.}
 
@@ -23,11 +22,12 @@ If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.}
 }
 \value{
 List of integer vectors.
-Each vector corresponds to a gene set in the same order as \code{\link{fetchAllSets}}.
-Each vector contains the identities of the genes in that set, where each integer is an index into \code{\link{fetchAllGenes}}.
+Each vector represents a gene set, corresponding to the rows of the data frame returned by \code{\link{fetchAllSets}}.
+Each vector contains the identities of the genes in that set, 
+where each integer is a gene index that refers to a row of the data frame returned by \code{\link{fetchAllGenes}}.
 }
 \description{
-Fetch the identities for genes in all sets in the \pkg{gesel} index.
+Fetch the identities for genes in all sets in the Gesel database.
 }
 \examples{
 all.sets <- fetchGenesForAllSets("9606")

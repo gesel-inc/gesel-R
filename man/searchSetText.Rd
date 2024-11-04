@@ -26,13 +26,13 @@ The \code{*} and \code{?} wildcards can be used to match to any or one character
 
 \item{use.description}{Logical scalar indicating whether to search on the description of the set.}
 
-\item{fetch.file}{Function that accepts the name of the file in the Gesel index and returns an absolute path to the file.
+\item{fetch.file}{Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.
 If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.}
 
 \item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
 
 \item{fetch.range}{Function that accepts at least two arguments - 
-the name of the file in the Gesel index, and an integer vector of length 2 containing the zero-indexed half-open byte range to extract from the file
+the name of the file in the Gesel database, and an integer vector of length 2 containing the zero-indexed half-open byte range to extract from the file
 (see \code{\link{downloadIndexRange}} for details).
 It should return a string containing the contents of the specified byte range.
 If \code{NULL}, it defaults to \code{\link{downloadIndexRange}}.}
@@ -41,7 +41,7 @@ If \code{NULL}, it defaults to \code{\link{downloadIndexRange}}.}
 }
 \value{
 Integer vector of set indices for the matching gene sets.
-Each index refers to a row in the data frame returned by \code{\link{fetchAllSets}}.
+Each set index refers to a row in the data frame returned by \code{\link{fetchAllSets}}.
 }
 \description{
 Search for sets based on their names and descriptions.

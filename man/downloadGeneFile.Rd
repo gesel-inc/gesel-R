@@ -3,14 +3,14 @@
 \name{downloadGeneFile}
 \alias{downloadGeneFile}
 \alias{geneUrl}
-\title{Default fetch for Gesel gene files}
+\title{Fetch Gesel gene description files}
 \usage{
 downloadGeneFile(name, url = geneUrl(), cache = NULL, overwrite = FALSE)
 
 geneUrl(url)
 }
 \arguments{
-\item{name}{String containing the name of the file.}
+\item{name}{String containing the name of the file, typically of the form \code{<species>_<type>.tsv.gz}, e.g., \code{"9606_symbol.tsv.gz"}.}
 
 \item{url}{String containing the base URL to the Gesel gene descriptions. 
 For \code{geneUrl}, this can be \code{NULL} to set it back to the default.}
@@ -21,13 +21,13 @@ If \code{NULL}, a cache location is automatically chosen.}
 \item{overwrite}{Logical scalar indicating whether any cached file should be overwritten.}
 }
 \value{
-\code{downloadGeneFile} returns a string containing a path to the downloaded file.
+\code{downloadGeneFile} returns a string containing a local path to the downloaded file.
 
-If \code{url} is missing, \code{geneUrl} returns a string containing the URL to the Gesel indices.
+For \code{geneUrl}, if \code{url} is missing, the function returns a string containing the URL to the Gesel gene descriptions.
 If \code{url} is provided, it instead stores \code{url} as the URL to the indices, and the previous value of \code{url} is invisibly returned.
 }
 \description{
-Default fetch function for files in the Gesel gene descriptions.
+Default function to download Gesel gene description files.
 }
 \details{
 The default gene URL is set to the GitHub releases at \url{https://github.com/LTLA/gesel-feedstock}.

@@ -76,16 +76,10 @@ download_file <- function(cache, url, overwrite) {
     target
 }
 
-#' @importFrom utils head
 decompress_lines <- function(path) {
     handle <- gzfile(path, "rb")
     on.exit(close(handle))
-    lines <- readLines(handle)
-    if (lines[length(lines) - 1] == "") {
-        head(lines, -1L)
-    } else {
-        lines
-    }
+    readLines(handle)
 }
 
 compute_ranges <- function(bytes) {
@@ -93,39 +87,26 @@ compute_ranges <- function(bytes) {
 }
 
 retrieve_ranges <- function(name, fetch, fetch.args) {
-    if (is.null(fetch)) {
-        fetch <- downloadIndexFile
-    }
     path <- do.call(fetch, c(list(paste0(name, ".ranges.gz")), fetch.args))
     contents <- decompress_lines(path)
     compute_ranges(contents)
 }
 
 retrieve_ranges_with_sizes <- function(name, fetch, fetch.args) {
-    if (is.null(fetch)) {
-        fetch <- downloadIndexFile
-    }
     path <- do.call(fetch, c(list(paste0(name, ".ranges.gz")), fetch.args))
-
     contents <- decompress_lines(path)
     parsed <- strsplit(contents, "\t")
     bytes <- vapply(parsed, function(x) x[1], "")
     extra <- vapply(parsed, function(x) x[2], "")
-
     list(ranges=compute_ranges(bytes), sizes=as.integer(extra))
 }
 
 retrieve_ranges_with_names <- function(name, fetch, fetch.args) {
-    if (is.null(fetch)) {
-        fetch <- downloadIndexFile
-    }
     path <- do.call(fetch, c(list(paste0(name, ".ranges.gz")), fetch.args))
-
     contents <- decompress_lines(path)
     parsed <- strsplit(contents, "\t")
     names <- vapply(parsed, function(x) x[1], "")
     bytes <- vapply(parsed, function(x) x[2], "")
-
     list(names=names, ranges=compute_ranges(bytes))
 }
 

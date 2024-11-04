@@ -3,7 +3,7 @@
 #' Fetch names for all genes.
 #'
 #' @param species String specifying the taxonomy ID of the species of interest.
-#' @param types Character vector specifying the gene ID types to returnc.
+#' @param types Character vector specifying the types of gene names to return.
 #' This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
 #' defaulting to all of them.
 #' @param fetch Function that accepts the name of the file in the Gesel gene descriptions and returns an absolute path to the file.
@@ -11,23 +11,20 @@
 #' @param fetch.args Named list of arguments to pass to \code{fetch}.
 #' @param use.preloaded Logical scalar indicating whether to use the preloaded value from a previous call to this function.
 #'
-#' @return List of length equal to \code{types}.
-#' Each element is another list of length equal to the number of genes,
-#' containing character vectors with the names of those genes.
+#' @return Data frame where each row represents a gene.
+#' Each column corresponds to one of the \code{types} and is a list of character vectors.
+#' Each vector in the column contains the names of the specified type for each gene.
 #'
 #' @author Aaron Lun
 #' @examples
 #' out <- fetchAllGenes("9606")
-#' names(out)
+#' head(out)
 #' head(out$symbol)
 #' 
 #' @export
-fetchAllGenes <- function(species, types = NULL, fetch = NULL, fetch.args = list(), use.preloaded = TRUE) {
+fetchAllGenes <- function(species, types = NULL, fetch = downloadGeneFile, fetch.args = list(), use.preloaded = TRUE) {
     if (is.null(types)) {
         types <- c("symbol", "entrez", "ensembl")
-    }
-    if (is.null(fetch)) {
-        fetch <- downloadGeneFile
     }
 
     output <- list()
@@ -57,7 +54,7 @@ fetchAllGenes <- function(species, types = NULL, fetch = NULL, fetch.args = list
         fetchAllGenes.env$result[[species]][[t]] <- processed
     }
 
-    output
+    do.call(data.frame, lapply(output, I))
 }
 
 fetchAllGenes.env <- new.env()

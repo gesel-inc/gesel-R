@@ -1,6 +1,6 @@
-#' Prepare Gesel indices
+#' Prepare the Gesel database
 #'
-#' Prepare Gesel indices from various pieces of gene set information.
+#' Prepare Gesel database files from various pieces of gene set information.
 #'
 #' @param species String specifying the species in the form of its NCBI taxonomy ID.
 #' @param collections Data frame of information about each gene set collection, where each row corresponds to a collection.
@@ -8,11 +8,11 @@
 #' @param set.info Data frame of information about each gene set, where each row corresponds to a set. 
 #' This data frame should contain the same columns as that returned by \code{\link{fetchAllSets}}.
 #' @param set.membership List of integer vectors, where each vector corresponds to a gene set and contains the indices of its constituent genes.
-#' All indices should be positive and no greater than \code{num.genes}.
+#' All gene indices should be positive and no greater than \code{num.genes}.
 #' @param num.genes Integer scalar specifying the total number of genes available for this species.
 #'
 #' @return Several files are produced at \code{path} with the \code{<species>_} prefix.
-#' These can be made available for download with \code{\link{downloadIndexFile}}.
+#' These can be made available for download with \code{\link{downloadDatabaseFile}}.
 #'
 #' @author Aaron Lun
 #' @examples
@@ -49,10 +49,10 @@
 #' )
 #' set.info$size <- lengths(set.membership)
 #'
-#' # Now making the index files.
+#' # Now making the database files.
 #' output <- tempfile()
 #' dir.create(output)
-#' prepareIndexFiles(
+#' prepareDatabaseFiles(
 #'     "9606",
 #'     collections, 
 #'     set.info, 
@@ -70,7 +70,7 @@
 #' ))
 #'
 #' @export
-prepareIndexFiles <- function(species, collections, set.info, set.membership, num.genes, path = ".") {
+prepareDatabaseFiles <- function(species, collections, set.info, set.membership, num.genes, path = ".") {
     prefix <- file.path(path, paste0(species, "_"))
 
     save_data_frame_with_sizes(

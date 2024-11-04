@@ -1,6 +1,6 @@
-#' Fetch some collection
+#' Fetch some collections
 #' 
-#' Fetch the details of some gene set collections from the Gesel index.
+#' Fetch the details of some gene set collections from the Gesel database.
 #' This can be more efficient than \code{\link{fetchAllCollections}} when only a few collections are of interest.
 #'
 #' @inheritParams fetchGenesForSomeSets
@@ -62,7 +62,7 @@ get_single_collection_ranges <- function(species, fname, fetch.file, fetch.file.
 
 #' Size of collections
 #'
-#' Quickly get the sizes of all gene set collections in the Gesel index.
+#' Quickly get the sizes of all gene set collections in the Gesel database.
 #' This is more efficient than \code{\link{fetchAllCollections}} when only the sizes are of interest.
 #'
 #' @inheritParams fetchSomeCollections

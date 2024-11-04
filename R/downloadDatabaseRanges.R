@@ -1,38 +1,38 @@
-#' Download a byte range from a Gesel index file
+#' Fetch byte ranges from a Gesel database file
 #'
-#' Download a byte range from a file in the Gesel index.
+#' Download any number of byte ranges from a Gesel database file.
 #'
-#' @inheritParams downloadIndexFile
+#' @inheritParams downloadDatabaseFile
 #' @param start Integer vector containing the zero-indexed closed start of each byte range to extract from the file.
 #' @param end Integer vector containing the zero-indexed open end of each byte range to extract from the file.
 #' This should have the same length as \code{start} such that the \code{i}-th range is defined as \code{[start[i], end[i])}.
 #' @param num.workers Integer scalar specifying the number of workers to use for concurrent requests with multiple ranges.
 #'
-#' @return Character vector of length equal to \code{length(start)}, containing the contents of the byte ranges.
+#' @return Character vector of length equal to \code{length(start)}, containing the contents of the requested byte ranges.
 #'
 #' @author Aaron Lun
 #' @examples
-#' downloadIndexRange("9606_set2gene.tsv", 0L, 100L)
-#' downloadIndexRange("9606_set2gene.tsv", c(10, 100, 1000), c(20, 150, 1100))
+#' downloadDatabaseRange("9606_set2gene.tsv", 0L, 100L)
+#' downloadDatabaseRange("9606_set2gene.tsv", c(10, 100, 1000), c(20, 150, 1100))
 #'
 #' @export
 #' @importFrom parallel stopCluster makeCluster parLapplyLB
-downloadIndexRange <- function(name, start, end, url = indexUrl(), num.workers = 4L) {
+downloadDatabaseRanges <- function(name, start, end, url = databaseUrl(), num.workers = 4L) {
     url <- paste0(url, "/", name)
     intervals <- mapply(c, start, end, SIMPLIFY=FALSE)
     if (num.workers == 1L) {
         return(vapply(X=intervals, FUN=range_request, url=url, FUN.VALUE=""))
     }
 
-    if (num.workers != downloadIndexRange.env$num.workers) {
-        if (!is.null(downloadIndexRange.env$cluster)) {
-            stopCluster(downloadIndexRange.env$cluster)
+    if (num.workers != downloadDatabaseRanges.env$num.workers) {
+        if (!is.null(downloadDatabaseRanges.env$cluster)) {
+            stopCluster(downloadDatabaseRanges.env$cluster)
         } 
-        downloadIndexRange.env$cluster <- makeCluster(num.workers)
-        downloadIndexRange.env$num.workers <- num.workers
+        downloadDatabaseRanges.env$cluster <- makeCluster(num.workers)
+        downloadDatabaseRanges.env$num.workers <- num.workers
     }
 
-    out <- parLapplyLB(downloadIndexRange.env$cluster, X=intervals, fun=range_request, url=url)
+    out <- parLapplyLB(downloadDatabaseRanges.env$cluster, X=intervals, fun=range_request, url=url)
     as.character(unlist(out))
 }
 
@@ -45,6 +45,6 @@ range_request <- function(interval, url) {
     substr(payload, 1L, diff(interval))
 }
 
-downloadIndexRange.env <- new.env()
-downloadIndexRange.env$cluster <- NULL
-downloadIndexRange.env$num.workers <- 0L
+downloadDatabaseRanges.env <- new.env()
+downloadDatabaseRanges.env$cluster <- NULL
+downloadDatabaseRanges.env$num.workers <- 0L

@@ -19,13 +19,13 @@ fetchSomeSets(
 
 \item{sets}{Integer vector of set indices, where each set index refers to a row in the data frame returned by \code{\link{fetchAllSets}}.}
 
-\item{fetch.file}{Function that accepts the name of the file in the Gesel index and returns an absolute path to the file.
+\item{fetch.file}{Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.
 If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.}
 
 \item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
 
 \item{fetch.range}{Function that accepts at least two arguments - 
-the name of the file in the Gesel index, and an integer vector of length 2 containing the zero-indexed half-open byte range to extract from the file
+the name of the file in the Gesel database, and an integer vector of length 2 containing the zero-indexed half-open byte range to extract from the file
 (see \code{\link{downloadIndexRange}} for details).
 It should return a string containing the contents of the specified byte range.
 If \code{NULL}, it defaults to \code{\link{downloadIndexRange}}.}
@@ -39,7 +39,7 @@ Data frame with the same columns as the return value of \code{\link{fetchAllSets
 where each row corresponds to an entry of \code{sets}.
 }
 \description{
-Fetch the details of some gene sets from the Gesel index.
+Fetch the details of some gene sets from the Gesel database.
 This can be more efficient than calling \code{\link{fetchAllSets}} when only a few sets are of interest.
 }
 \examples{

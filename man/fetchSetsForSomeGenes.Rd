@@ -7,9 +7,9 @@
 fetchSetsForSomeGenes(
   species,
   genes,
-  fetch.file = NULL,
+  fetch.file = downloadDatabaseFile,
   fetch.file.args = list(),
-  fetch.range = NULL,
+  fetch.range = downloadDatabaseRange,
   fetch.range.args = list(),
   use.preloaded = TRUE
 )
@@ -18,15 +18,15 @@ fetchSetsForSomeGenes(
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
 
 \item{genes}{Integer vector containing gene indices.
-Each gene index refers to an entry of the lists returned by \code{\link{fetchAllGenes}}).}
+Each gene index refers to a row of the data frame returned by \code{\link{fetchAllGenes}}).}
 
-\item{fetch.file}{Function that accepts the name of the file in the Gesel index and returns an absolute path to the file.
+\item{fetch.file}{Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.
 If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.}
 
 \item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
 
 \item{fetch.range}{Function that accepts at least two arguments - 
-the name of the file in the Gesel index, and an integer vector of length 2 containing the zero-indexed half-open byte range to extract from the file
+the name of the file in the Gesel database, and an integer vector of length 2 containing the zero-indexed half-open byte range to extract from the file
 (see \code{\link{downloadIndexRange}} for details).
 It should return a string containing the contents of the specified byte range.
 If \code{NULL}, it defaults to \code{\link{downloadIndexRange}}.}
@@ -38,10 +38,10 @@ If \code{NULL}, it defaults to \code{\link{downloadIndexRange}}.}
 \value{
 List of integer vectors.
 Each vector corresponds to a gene in \code{genes} and contains the identities of the sets containing that gene.
-Each set is defined by its set index, which refers to a row of \code{\link{fetchAllSets}}.
+Each set is defined by its set index, which refers to a row of the data frame returned by \code{\link{fetchAllSets}}.
 }
 \description{
-Fetch all sets that contain some genes in the Gesel index.
+Fetch all sets that contain some genes in the Gesel database.
 This can be more efficient than \code{\link{fetchSetsForAllGenes}} if only a few genes are of interest.
 }
 \examples{

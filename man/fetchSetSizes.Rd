@@ -14,7 +14,7 @@ fetchSetSizes(
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
 
-\item{fetch.file}{Function that accepts the name of the file in the Gesel index and returns an absolute path to the file.
+\item{fetch.file}{Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.
 If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.}
 
 \item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
@@ -25,7 +25,7 @@ If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.}
 Integer vector containing the size of each set (i.e., the number of gene sets).
 }
 \description{
-Quickly get the size of the sets in the Gesel index.
+Quickly get the size of the sets in the Gesel database.
 This is more efficient than \code{\link{fetchAllSets}} when only the sizes are of interest.
 }
 \examples{

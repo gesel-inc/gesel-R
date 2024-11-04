@@ -1,6 +1,6 @@
 #' Fetch all gene sets
 #'
-#' Fetch information about all gene sets in the \pkg{gesel} index.
+#' Fetch information about all gene sets in the Gesel database.
 #'
 #' @inheritParams fetchAllCollections
 #' 
@@ -10,9 +10,10 @@
 #' \item \code{name}, string containing the name of the gene set.
 #' \item \code{description}, string containing a description for the gene set.
 #' \item \code{size}, integer scalar specifying the number of genes in this gene set.
-#' \item \code{collection}, integer scalar containing the index of the collection containing this gene set.
-#' This index refers to a row of the output of \code{\link{fetchAllCollections}}.
-#' \item \code{number}, integer scalar containing the index of the gene set inside the specified collection.
+#' \item \code{collection}, integer scalar containing the collection index of the collection that contains this gene set.
+#' The collection index refers to a row of the data frame returned by \code{\link{fetchAllCollections}}.
+#' \item \code{number}, integer scalar containing the position of the gene set inside the specified collection.
+#' The set index of the current gene set is defined by adding \code{number - 1} to the collection's \code{start}. 
 #' }
 #'
 #' @author Aaron Lun
@@ -21,16 +22,12 @@
 #' head(out)
 #'
 #' @export
-fetchAllSets <- function(species, fetch = NULL, fetch.args = list(), use.preloaded = TRUE) {
+fetchAllSets <- function(species, fetch = downloadDatabaseFile, fetch.args = list(), use.preloaded = TRUE) {
     if (use.preloaded) {
         candidate <- fetchAllSets.env$result[[species]]
         if (!is.null(candidate)) {
             return(candidate)
         }
-    }
-
-    if (is.null(fetch)) {
-        fetch <- downloadIndexFile
     }
 
     fname <- paste0(species, "_sets.tsv.gz")

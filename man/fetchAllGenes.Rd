@@ -7,7 +7,7 @@
 fetchAllGenes(
   species,
   types = NULL,
-  fetch = NULL,
+  fetch = downloadGeneFile,
   fetch.args = list(),
   use.preloaded = TRUE
 )
@@ -15,7 +15,7 @@ fetchAllGenes(
 \arguments{
 \item{species}{String specifying the taxonomy ID of the species of interest.}
 
-\item{types}{Character vector specifying the gene ID types to returnc.
+\item{types}{Character vector specifying the types of gene names to return.
 This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
 defaulting to all of them.}
 
@@ -27,16 +27,16 @@ If \code{NULL}, it defaults to \code{\link{downloadGeneFile}}.}
 \item{use.preloaded}{Logical scalar indicating whether to use the preloaded value from a previous call to this function.}
 }
 \value{
-List of length equal to \code{types}.
-Each element is another list of length equal to the number of genes,
-containing character vectors with the names of those genes.
+Data frame where each row represents a gene.
+Each column corresponds to one of the \code{types} and is a list of character vectors.
+Each vector in the column contains the names of the specified type for each gene.
 }
 \description{
 Fetch names for all genes.
 }
 \examples{
 out <- fetchAllGenes("9606")
-names(out)
+head(out)
 head(out$symbol)
 
 }

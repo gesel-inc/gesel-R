@@ -3,10 +3,11 @@
 #' Search for genes by converting gene identifiers to gene indices.
 #' 
 #' @inheritParams fetchAllGenes
-#' @param genes Character vector of gene identifiers of any type specified in \code{types}.
+#' @param genes Character vector of gene names of any type specified in \code{types}.
 #'
 #' @return List of length equal to \code{genes}.
-#' Each entry is an integer vector of gene indices, specifying the genes in \code{\link{fetchAllGenes}} that match to the corresponding entry of \code{genes}.
+#' Each entry is an integer vector of gene indices, 
+#' specifying zero, one or more rows of the data frame in \code{\link{fetchAllGenes}} that match to the corresponding entry of \code{genes}.
 #'
 #' @author Aaron Lun
 #' @examples

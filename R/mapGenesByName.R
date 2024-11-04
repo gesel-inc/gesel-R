@@ -1,35 +1,35 @@
-#' Map gene identifiers to indices
+#' Map gene names to indices
 #'
-#' Create a mapping of gene identifiers (Ensembl, symbol, etc.) to their indices.
+#' Create a mapping of gene names (Ensembl, symbol, etc.) to their gene indices.
 #' 
 #' @inheritParams fetchAllGenes
-#' @param type String specifying the type of identifier.
+#' @param type String specifying the type of name.
 #' This is typically one of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
 #' @param ignore.case Logical scalar indicating whether case should be ignored.
 #' @param more.args Named list of further arguments to pass to \code{\link{fetchAllGenes}}.
 #' 
 #' @return Named list of integer vectors.
-#' Each name corresponds to an identifier of the specified \code{type},
-#' and each vector contains the genes associated with that identifier (after ignoring case, if \code{ignore.case=TRUE}).
+#' Each name corresponds to an name of the specified \code{type},
+#' and each vector contains the genes associated with that name (after ignoring case, if \code{ignore.case=TRUE}).
 #' Vector entries should be interpreted as indices into any of the lists returned by \code{\link{fetchAllGenes}}.
 #'
 #' @author Aaron Lun
 #' @examples
-#' mapping <- mapGenesByIdentifier("9606", type="symbol")
+#' mapping <- mapGenesByName("9606", type="symbol")
 #'
 #' # Taking it for a spin:
 #' found <- mapping[["SNAP25"]]
 #' fetchAllGenes("9606")$symbol[found]
 #' 
 #' @export
-mapGenesByIdentifier <- function(species, type, ignore.case = FALSE, more.args=list()) {
+mapGenesByName <- function(species, type, ignore.case = FALSE, more.args=list()) {
     if (ignore.case) {
         store.name <- "lower"
     } else {
         store.name <- "cased"
     }
 
-    cached <- get(store.name, envir=mapGenesByIdentifier.env, inherits=FALSE)
+    cached <- get(store.name, envir=mapGenesByName.env, inherits=FALSE)
     sfound <- cached[[species]]
     restore <- FALSE
     if (is.null(sfound)) {
@@ -56,12 +56,12 @@ mapGenesByIdentifier <- function(species, type, ignore.case = FALSE, more.args=l
     if (restore) {
         sfound[[type]] <- tfound
         cached[[species]] <- sfound
-        assign(store.name, cached, envir=mapGenesByIdentifier.env)
+        assign(store.name, cached, envir=mapGenesByName.env)
     }
 
     tfound;
 }
 
-mapGenesByIdentifier.env <- new.env()
-mapGenesByIdentifier.env$cased <- list()
-mapGenesByIdentifier.env$lower <- list()
+mapGenesByName.env <- new.env()
+mapGenesByName.env$cased <- list()
+mapGenesByName.env$lower <- list()

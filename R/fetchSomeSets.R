@@ -1,6 +1,6 @@
 #' Fetch some sets
 #' 
-#' Fetch the details of some gene sets from the Gesel index.
+#' Fetch the details of some gene sets from the Gesel database.
 #' This can be more efficient than calling \code{\link{fetchAllSets}} when only a few sets are of interest.
 #'
 #' @inheritParams fetchGenesForSomeSets
@@ -62,7 +62,7 @@ get_single_set_ranges <- function(species, fname, fetch.file, fetch.file.args, u
 
 #' Size of gene sets
 #'
-#' Quickly get the size of the sets in the Gesel index.
+#' Quickly get the size of the sets in the Gesel database.
 #' This is more efficient than \code{\link{fetchAllSets}} when only the sizes are of interest.
 #'
 #' @inheritParams fetchSomeSets

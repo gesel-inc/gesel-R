@@ -10,7 +10,7 @@
 #' @param use.description Logical scalar indicating whether to search on the description of the set.
 #'
 #' @return Integer vector of set indices for the matching gene sets.
-#' Each index refers to a row in the data frame returned by \code{\link{fetchAllSets}}.
+#' Each set index refers to a row in the data frame returned by \code{\link{fetchAllSets}}.
 #'
 #' @author Aaron Lun
 #' @examples

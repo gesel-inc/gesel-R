@@ -15,15 +15,16 @@ searchGenes(
 \arguments{
 \item{species}{String specifying the taxonomy ID of the species of interest.}
 
-\item{genes}{Character vector of gene identifiers of any type specified in \code{types}.}
+\item{genes}{Character vector of gene names of any type specified in \code{types}.}
 
-\item{types}{Character vector specifying the gene ID types to returnc.
+\item{types}{Character vector specifying the types of gene names to return.
 This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
 defaulting to all of them.}
 }
 \value{
 List of length equal to \code{genes}.
-Each entry is an integer vector of gene indices, specifying the genes in \code{\link{fetchAllGenes}} that match to the corresponding entry of \code{genes}.
+Each entry is an integer vector of gene indices, 
+specifying zero, one or more rows of the data frame in \code{\link{fetchAllGenes}} that match to the corresponding entry of \code{genes}.
 }
 \description{
 Search for genes by converting gene identifiers to gene indices.
