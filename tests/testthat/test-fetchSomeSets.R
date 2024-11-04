@@ -19,7 +19,7 @@ test_that("fetchSomeSets matches our local ref", {
     expect_identical(everything, payload)
 
     # Works for sizes.
-    sizes <- fetchSetSizes("1111", fetch.file=getDatabaseFile)
+    sizes <- fetchSetSizes("1111", fetch=getDatabaseFile)
     expect_identical(sizes, everything$size)
 
     # Works with pre-loaded.
@@ -29,6 +29,9 @@ test_that("fetchSomeSets matches our local ref", {
 
     preloaded <- fetchSomeSets("1111", chosen, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
     expect_identical(payload, preloaded)
+
+    sizes <- fetchSetSizes("1111", fetch=getDatabaseFile)
+    expect_identical(sizes, everything$size)
 })
 
 test_that("fetchSomeSets yields a sensible remote ref", {

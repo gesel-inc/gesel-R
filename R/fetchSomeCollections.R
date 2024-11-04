@@ -25,7 +25,7 @@ fetchSomeCollections <- function(species, collections, fetch.file = downloadData
     }
 
     fname <- paste0(species, "_collections.tsv")
-    raw.cached <- get_single_collection_ranges(species, fname, fetch.file=fetch.file, fetch.file.args=fetch.file.args)
+    raw.cached <- get_single_collection_ranges(species, fname, fetch=fetch.file, fetch.args=fetch.file.args)
     cached <- raw.cached$cached
     modified <- raw.cached$modified
 
@@ -63,14 +63,14 @@ fetchSomeCollections <- function(species, collections, fetch.file = downloadData
     rownames(output) <- NULL
     output
 }
-    
-get_single_collection_ranges <- function(species, fname, fetch.file, fetch.file.args) {
+
+get_single_collection_ranges <- function(species, fname, fetch, fetch.args) {
     cached <- get_cache("fetchSomeCollections", species)
     if (!is.null(cached)) {
         return(list(cached=cached, modified=FALSE))
     }
 
-    range.info <- retrieve_ranges_with_sizes(fname, fetch=fetch.file, fetch.args=fetch.file.args)
+    range.info <- retrieve_ranges_with_sizes(fname, fetch=fetch, fetch.args=fetch.args)
 
     cached <- list(
         intervals = range.info$ranges,
@@ -95,7 +95,7 @@ get_single_collection_ranges <- function(species, fname, fetch.file, fetch.file.
 #' Quickly get the sizes of all gene set collections in the Gesel database.
 #' This is more efficient than \code{\link{fetchAllCollections}} when only the sizes are of interest.
 #'
-#' @inheritParams fetchSomeCollections
+#' @inheritParams fetchAllCollections 
 #'
 #' @return Integer vector containing the size of each collection (i.e., the number of gene sets).
 #'
@@ -104,14 +104,14 @@ get_single_collection_ranges <- function(species, fname, fetch.file, fetch.file.
 #' head(fetchCollectionSizes("9606"))
 #'
 #' @export
-fetchCollectionSizes <- function(species, fetch.file = NULL, fetch.file.args = list()) { 
+fetchCollectionSizes <- function(species, fetch = NULL, fetch.args = list()) { 
     candidate <- get_cache("fetchAllCollections", species)
     if (!is.null(candidate)) {
         return(candidate$size)
     }
 
     fname <- paste0(species, "_collections.tsv")
-    raw.cached <- get_single_collection_ranges(species, fname, fetch.file=fetch.file, fetch.file.args=fetch.file.args)
+    raw.cached <- get_single_collection_ranges(species, fname, fetch=fetch, fetch.args=fetch.args)
 
     cached <- raw.cached$cached
     if (raw.cached$modified) {

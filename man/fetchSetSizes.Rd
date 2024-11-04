@@ -4,14 +4,14 @@
 \alias{fetchSetSizes}
 \title{Size of gene sets}
 \usage{
-fetchSetSizes(species, fetch.file = NULL, fetch.file.args = list())
+fetchSetSizes(species, fetch = NULL, fetch.args = list())
 }
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
 
-\item{fetch.file}{Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.}
+\item{fetch}{Function that accepts the name of a Gesel database file and returns an absolute path to that file.}
 
-\item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
+\item{fetch.args}{Named list of arguments to pass to \code{fetch}.}
 }
 \value{
 Integer vector containing the size of each set (i.e., the number of gene sets).

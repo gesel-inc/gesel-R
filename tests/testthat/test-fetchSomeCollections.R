@@ -17,7 +17,7 @@ test_that("fetchSomeCollections matches our local ref", {
     expect_identical(everything, payload)
 
     # Works for sizes.
-    sizes <- fetchCollectionSizes("1111", fetch.file=getDatabaseFile)
+    sizes <- fetchCollectionSizes("1111", fetch=getDatabaseFile)
     expect_identical(sizes, everything$size)
 
     # Works with pre-loaded.
@@ -25,7 +25,7 @@ test_that("fetchSomeCollections matches our local ref", {
     preloaded <- fetchSomeCollections("1111", chosen, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
     expect_identical(everything, preloaded)
 
-    sizes <- fetchCollectionSizes("1111", fetch.file=getDatabaseFile)
+    sizes <- fetchCollectionSizes("1111", fetch=getDatabaseFile)
     expect_identical(sizes, everything$size)
 })
 
