@@ -26,6 +26,8 @@ This data frame should contain the same columns as that returned by \code{\link{
 All gene indices should be positive and no greater than \code{num.genes}.}
 
 \item{num.genes}{Integer scalar specifying the total number of genes available for this species.}
+
+\item{path}{String containing the path to a directory in which to create the database files.}
 }
 \value{
 Several files are produced at \code{path} with the \code{<species>_} prefix.

@@ -53,7 +53,7 @@ mapGenesByName <- function(species, type, ignore.case = FALSE, more.args=list())
         tfound <- lapply(tfound, unique)
     }
 
-    if (restore) {
+    if (modified) {
         sfound[[type]] <- tfound
         cached[[store.name]] <- sfound
         set_cache("mapGenesByName", species, cached)

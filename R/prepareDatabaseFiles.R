@@ -3,6 +3,7 @@
 #' Prepare Gesel database files from various pieces of gene set information.
 #'
 #' @param species String specifying the species in the form of its NCBI taxonomy ID.
+#' @param path String containing the path to a directory in which to create the database files.
 #' @param collections Data frame of information about each gene set collection, where each row corresponds to a collection.
 #' This data frame should contain the same columns as that returned by \code{\link{fetchAllCollections}}.
 #' @param set.info Data frame of information about each gene set, where each row corresponds to a set. 
@@ -119,6 +120,7 @@ prepareDatabaseFiles <- function(species, collections, set.info, set.membership,
     invisible(NULL)
 }
 
+#' @importFrom utils write.table
 save_integer_list <- function(x, prefix, include.names = FALSE) {
     lines <- character(length(x))
     for (i in seq_along(x)) {

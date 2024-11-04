@@ -7,13 +7,11 @@
 #' @param sets Integer vector containing set indices.
 #' Each set index refers to a row in the data frame returned by \code{\link{fetchAllSets}}.
 #' @param fetch.file Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.
-#' If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.
 #' @param fetch.file.args Named list of arguments to pass to \code{fetch.file}.
 #' @param fetch.range Function that accepts at least two arguments - 
 #' the name of the file in the Gesel database, and an integer vector of length 2 containing the zero-indexed half-open byte range to extract from the file
-#' (see \code{\link{downloadIndexRange}} for details).
+#' (see \code{\link{downloadDatabaseRanges}} for details).
 #' It should return a string containing the contents of the specified byte range.
-#' If \code{NULL}, it defaults to \code{\link{downloadIndexRange}}.
 #' @param fetch.range.args Named list of arguments to pass to \code{fetch.file}.
 #'
 #' @return List of integer vectors.

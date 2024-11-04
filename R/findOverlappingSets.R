@@ -5,8 +5,7 @@
 #' @inheritParams fetchAllSets
 #' @param genes Integer vector containing gene indices.
 #' Each gene index refers to a row of the data frame returned by \code{\link{fetchAllGenes}}.
-#' @param num.workers Integer scalar specifying the number of workers to use for parallelizing calls to \code{\link{fetchSetsForGene}}.
-#' @param more.args Further arguments to pass to \code{\link{fetchSetsPerGene}}.
+#' @param more.args Further arguments to pass to \code{\link{fetchSetsForSomeGenes}}.
 #'
 #' @return A list containing:
 #' \itemize{
@@ -25,7 +24,7 @@
 #' 
 #' @export
 findOverlappingSets <- function(species, genes, more.args = list()) {
-    info <- do.call(findSetsForGene, c(list(species=species, genes=genes), more.args))
+    info <- do.call(fetchSetsForSomeGenes, c(list(species=species, genes=genes), more.args))
     tab <- table(unlist(info))
     o <- order(tab, decreasing=TRUE)
 

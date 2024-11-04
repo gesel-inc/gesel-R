@@ -115,9 +115,6 @@ fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.ar
 
 	# Making a parallelized set of to.request for anything that we're missing.
     if (length(to.request)) {
-        if (is.null(fetch.range)) {
-            fetch.range <- downloadIndexRange
-        }
         ranges <- tfound$ranges
         starts <- ranges[to.request]
         ends <- ranges[to.request + 1L]

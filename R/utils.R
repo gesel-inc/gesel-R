@@ -1,6 +1,7 @@
 #' @import httr2
 handle_error <- function(req) {
     req_error(req, body = function(res) {
+        ct <- resp_content_type(res)
         if (ct == "text/plain") {
             resp_body_string(res)
         } else {
@@ -27,6 +28,7 @@ parse_remote_last_modified <- function(res) {
     return(remote_mod) 
 }
 
+#' @import methods
 #' @import httr2 
 #' @importFrom rappdirs user_cache_dir
 #' @importFrom utils URLencode

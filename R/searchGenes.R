@@ -4,10 +4,12 @@
 #' 
 #' @inheritParams fetchAllGenes
 #' @param genes Character vector of gene names of any type specified in \code{types}.
+#' @param ignore.case Logical scalar indicating whether case should be ignored.
+#' @param more.args Named list of further arguments to pass to \code{\link{fetchAllGenes}}.
 #'
 #' @return List of length equal to \code{genes}.
-#' Each entry is an integer vector of gene indices, 
-#' specifying zero, one or more rows of the data frame in \code{\link{fetchAllGenes}} that match to the corresponding entry of \code{genes}.
+#' Each entry is an integer vector of gene indices that refer to rows of the data frame returned by \code{\link{fetchAllGenes}};
+#' these rows represent the genes that match to the corresponding entry of \code{genes}.
 #'
 #' @author Aaron Lun
 #' @examples

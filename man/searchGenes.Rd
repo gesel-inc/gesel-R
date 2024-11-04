@@ -20,11 +20,15 @@ searchGenes(
 \item{types}{Character vector specifying the types of gene names to return.
 This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
 defaulting to all of them.}
+
+\item{ignore.case}{Logical scalar indicating whether case should be ignored.}
+
+\item{more.args}{Named list of further arguments to pass to \code{\link{fetchAllGenes}}.}
 }
 \value{
 List of length equal to \code{genes}.
-Each entry is an integer vector of gene indices, 
-specifying zero, one or more rows of the data frame in \code{\link{fetchAllGenes}} that match to the corresponding entry of \code{genes}.
+Each entry is an integer vector of gene indices that refer to rows of the data frame returned by \code{\link{fetchAllGenes}};
+these rows represent the genes that match to the corresponding entry of \code{genes}.
 }
 \description{
 Search for genes by converting gene identifiers to gene indices.

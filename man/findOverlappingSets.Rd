@@ -12,9 +12,7 @@ findOverlappingSets(species, genes, more.args = list())
 \item{genes}{Integer vector containing gene indices.
 Each gene index refers to a row of the data frame returned by \code{\link{fetchAllGenes}}.}
 
-\item{more.args}{Further arguments to pass to \code{\link{fetchSetsPerGene}}.}
-
-\item{num.workers}{Integer scalar specifying the number of workers to use for parallelizing calls to \code{\link{fetchSetsForGene}}.}
+\item{more.args}{Further arguments to pass to \code{\link{fetchSetsForSomeGenes}}.}
 }
 \value{
 A list containing:

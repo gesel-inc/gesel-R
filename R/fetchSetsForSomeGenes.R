@@ -24,7 +24,7 @@
 fetchSetsForSomeGenes <- function(species, genes, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRanges, fetch.range.args = list()) {
     candidate <- get_cache("fetchSetsForSomeGenes", species)
     if (!is.null(candidate)) {
-        return(candidate[sets])
+        return(candidate[genes])
     }
 
     fname <- paste0(species, "_gene2set.tsv")

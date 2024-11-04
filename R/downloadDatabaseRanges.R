@@ -12,14 +12,15 @@
 #'
 #' @author Aaron Lun
 #' @examples
-#' downloadDatabaseRange("9606_set2gene.tsv", 0L, 100L)
-#' downloadDatabaseRange("9606_set2gene.tsv", c(10, 100, 1000), c(20, 150, 1100))
+#' downloadDatabaseRanges("9606_set2gene.tsv", 0L, 100L)
+#' downloadDatabaseRanges("9606_set2gene.tsv", c(10, 100, 1000), c(20, 150, 1100))
 #'
 #' @export
 #' @importFrom parallel stopCluster makeCluster parLapplyLB
 downloadDatabaseRanges <- function(name, start, end, url = databaseUrl(), num.workers = 4L) {
     url <- paste0(url, "/", name)
     intervals <- mapply(c, start, end, SIMPLIFY=FALSE)
+
     if (num.workers == 1L) {
         return(vapply(X=intervals, FUN=range_request, url=url, FUN.VALUE=""))
     }
@@ -28,8 +29,24 @@ downloadDatabaseRanges <- function(name, start, end, url = databaseUrl(), num.wo
         if (!is.null(downloadDatabaseRanges.env$cluster)) {
             stopCluster(downloadDatabaseRanges.env$cluster)
         } 
-        downloadDatabaseRanges.env$cluster <- makeCluster(num.workers)
+
+        limit.cores <- Sys.getenv("_R_CHECK_LIMIT_CORES_", NA)
+        actual.workers <- num.workers
+        if (!is.na(limit.cores) && !identical(tolower(limit.cores), "false")) {
+            actual.workers <- 2L
+        }
+
+        downloadDatabaseRanges.env$cluster <- makeCluster(actual.workers)
         downloadDatabaseRanges.env$num.workers <- num.workers
+
+        left.open <- Sys.getenv("_R_CHECK_CONNECTIONS_LEFT_OPEN_", NA)
+        if (!is.na(left.open) && !identical(tolower(left.open), "false")) {
+            on.exit({
+                stopCluster(downloadDatabaseRanges.env$cluster)
+                downloadDatabaseRanges.env$cluster <- NULL
+                downloadDatabaseRanges.env$num.workers <- 0L
+            }, add=TRUE, after=FALSE)
+        }
     }
 
     out <- parLapplyLB(downloadDatabaseRanges.env$cluster, X=intervals, fun=range_request, url=url)

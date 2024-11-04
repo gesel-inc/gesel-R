@@ -9,8 +9,7 @@ fetchSetSizes(species, fetch.file = NULL, fetch.file.args = list())
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
 
-\item{fetch.file}{Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.
-If \code{NULL}, it defaults to \code{\link{downloadIndexFile}}.}
+\item{fetch.file}{Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.}
 
 \item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
 }

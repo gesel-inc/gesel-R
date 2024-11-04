@@ -27,8 +27,8 @@ Character vector of length equal to \code{length(start)}, containing the content
 Download any number of byte ranges from a Gesel database file.
 }
 \examples{
-downloadDatabaseRange("9606_set2gene.tsv", 0L, 100L)
-downloadDatabaseRange("9606_set2gene.tsv", c(10, 100, 1000), c(20, 150, 1100))
+downloadDatabaseRanges("9606_set2gene.tsv", 0L, 100L)
+downloadDatabaseRanges("9606_set2gene.tsv", c(10, 100, 1000), c(20, 150, 1100))
 
 }
 \author{
