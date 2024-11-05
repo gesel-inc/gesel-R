@@ -3,7 +3,7 @@ title: Gene set searches with the Gesel database
 author:
 - name: Aaron Lun
   email: infinite.monkeys.with.keyboards@gmail.com
-package: SewerRat
+package: gesel
 date: "Revised: November 4, 2024"
 output:
   BiocStyle::html_document
@@ -15,7 +15,7 @@ vignette: >
 
 ```{r, echo=FALSE}
 library(BiocStyle)
-self <- Githubpkg("gesel-inc/gesel-R")
+self <- Githubpkg("gesel-inc/gesel-R", "gesel")
 knitr::opts_chunk$set(error=FALSE, warning=FALSE, message=FALSE)
 ```
 
