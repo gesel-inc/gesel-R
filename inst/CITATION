@@ -1,0 +1,13 @@
+bibentry(
+    bibtype = "Article",
+    title = "gesel: a JavaScript package for client-side gene set enrichment",
+    author = c(
+        person(c("Aaron", "T.", "L."), "Lun"),
+        person("Jayaram", "Kancherla")
+    ),
+    journal = "Journal of Open Source Software",
+    year = "2023",
+    volume = 8,
+    number = 90,
+    doi = "10.21105/joss.05777"
+)

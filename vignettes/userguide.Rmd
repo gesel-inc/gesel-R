@@ -21,7 +21,7 @@ knitr::opts_chunk$set(error=FALSE, warning=FALSE, message=FALSE)
 
 # Introduction
 
-The `r self` package implements an R client for the [Gesel gene set database](https://github.com/LTLA/gesel-feedstock).
+The `r self` package implements an R client to the [Gesel database](https://doi.org/10.21105/joss.05777) for gene set searching.
 The Gesel database is a collection of static files containing information about gene sets, which can be hosted anywhere - via a file server, on a HPC's shared filesystem etc. 
 Clients like the `r self` package then use HTTP range requests to perform a variety of queries.
 No custom server logic is required, greatly reducing effort and cost required to keep Gesel up and running.
