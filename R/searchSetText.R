@@ -38,31 +38,31 @@ searchSetText <- function(
 
     gathered.names <- vector("list", length(tokens))
     if (use.name) {
-		gathered.names <- fetch_sets_by_token(
-			species,
-			tokens,
-			"names", 
-			fetch.file=fetch.file,
-			fetch.file.args=fetch.file.args,
-			fetch.range=fetch.range,
-			fetch.range.args=fetch.range.args
-		)
+        gathered.names <- fetch_sets_by_token(
+            species,
+            tokens,
+            "names", 
+            fetch.file=fetch.file,
+            fetch.file.args=fetch.file.args,
+            fetch.range=fetch.range,
+            fetch.range.args=fetch.range.args
+        )
     }
 
     gathered.descriptions <- vector("list", length(tokens))
     if (use.description) {
-		gathered.descriptions <- fetch_sets_by_token(
-			species,
-			tokens,
-			"descriptions", 
-			fetch.file=fetch.file,
-			fetch.file.args=fetch.file.args,
-			fetch.range=fetch.range,
-			fetch.range.args=fetch.range.args
-		)
+        gathered.descriptions <- fetch_sets_by_token(
+            species,
+            tokens,
+            "descriptions", 
+            fetch.file=fetch.file,
+            fetch.file.args=fetch.file.args,
+            fetch.range=fetch.range,
+            fetch.range.args=fetch.range.args
+        )
     }
 
-	gathered <- mapply(c, gathered.names, gathered.descriptions, SIMPLIFY=FALSE)
+    gathered <- mapply(union, gathered.names, gathered.descriptions, SIMPLIFY=FALSE)
     as.integer(Reduce(intersect, gathered))
 }
 
@@ -113,7 +113,7 @@ fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.ar
         }
     }
 
-	# Making a parallelized set of to.request for anything that we're missing.
+    # Making a parallelized set of to.request for anything that we're missing.
     if (length(to.request)) {
         ranges <- tfound$ranges
         starts <- ranges[to.request]
@@ -126,10 +126,10 @@ fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.ar
         modified <- TRUE
     }
 
-	# Filling up the caches for subsequent queries.
+    # Filling up the caches for subsequent queries.
     for (needed.token in names(partial.request)) {
         needed.actual.tokens <- partial.request[[needed.token]]
-		prior.actual.tokens <- prior[needed.actual.tokens]
+        prior.actual.tokens <- prior[needed.actual.tokens]
         prior[[needed.token]] <- unique(unlist(prior.actual.tokens))
         modified <- TRUE
     }
