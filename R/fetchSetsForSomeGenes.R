@@ -28,14 +28,9 @@ fetchSetsForSomeGenes <- function(species, genes, fetch.file = downloadDatabaseF
     }
 
     fname <- paste0(species, "_gene2set.tsv")
-    cached <- get_cache("fetchSetsForSomeGenes", species)
-    modified <- FALSE
-
-    if (is.null(cached)) {
-        intervals <- retrieve_ranges(fname, fetch=fetch.file, fetch.args=fetch.file.args)
-        cached <- list(intervals = intervals, prior = list(gene = integer(0), sets = list()))
-        modified <- TRUE
-    }
+    raw.cached <- get_sets_for_some_genes_ranges(species, fname, fetch=fetch.file, fetch.args=fetch.file.args)
+    cached <- raw.cached$cached
+    modified <- raw.cached$modified
 
     prior.gene <- cached$prior$gene
     prior.sets <- cached$prior$sets
@@ -57,4 +52,48 @@ fetchSetsForSomeGenes <- function(species, genes, fetch.file = downloadDatabaseF
 
     m <- match(genes, prior.gene)
     prior.sets[m]
+}
+
+get_sets_for_some_genes_ranges <- function(species, fname, fetch, fetch.args) {
+    cached <- get_cache("fetchSetsForSomeGenes", species)
+    if (!is.null(cached)) {
+        return(list(cached=cached, modified=FALSE))
+    }
+
+    intervals <- retrieve_ranges(fname, fetch=fetch, fetch.args=fetch.args)
+    cached <- list(intervals = intervals, prior = list(gene = integer(0), sets = list()))
+    return(list(cached=cached, modified=TRUE))
+}
+
+#' Effective number of genes
+#'
+#' Count the number of genes in the Gesel database that belong to at least one set.
+#'
+#' @inheritParams fetchAllCollections
+#'
+#' @details
+#' The return value should be used as the total number of balls when performing a hypergeometric test for gene set enrichment
+#' (see \code{\link{phyper}}), instead of \code{nrow(fetchAllGenes(species))}.
+#' This ensures that uninteresting genes like pseudo-genes or predicted genes are ignored during the calculation.
+#' Otherwise, unknown genes would inappropriately increase the number of balls and understate the enrichment p-values. 
+#'
+#' @return Integer scalar specifying the number of genes in Gesel that belong to at least one set.
+#'
+#' @author Aaron Lun
+#'
+#' @export
+effectiveNumberOfGenes <- function(species, fetch = downloadDatabaseFile, fetch.args = list()) {
+    candidate <- get_cache("fetchSetsForAllGenes", species)
+    if (!is.null(candidate)) {
+        return(sum(lengths(candidate) > 0L))
+    }
+
+    fname <- paste0(species, "_gene2set.tsv")
+    raw.cached <- get_sets_for_some_genes_ranges(species, fname, fetch=fetch, fetch.args=fetch.args)
+    cached <- raw.cached$cached
+    if (raw.cached$modified) {
+        set_cache("fetchSetsForSomeGenes", species, cached)
+    }
+
+    sum(diff(cached$intervals) > 1L) # for the newline character.
 }

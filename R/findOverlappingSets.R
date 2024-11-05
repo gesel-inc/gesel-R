@@ -21,8 +21,13 @@
 #' This is a list that contains the entries of \code{genes} that overlap with those in the set.
 #' }
 #' \item \code{present}, an integer scalar containing the number of genes in \code{genes} that are present in at least one set in the Gesel database for \code{species}.
-#' This can be used to remove genes outside of the universe prior to testing for enrichment.
 #' }
+#'
+#' @details
+#' The \code{present} number should be used as the number of draws when performing a hypergeomtric test for gene set enrichment
+#' (see \code{\link{phyper}}), instead of \code{length(genes)}.
+#' It ensures that genes outside of the Gesel universe are ignored, e.g., due to user error, different genome versions.
+#' Otherwise, unknown genes would inappropriately increase the number of draws and inflate the enrichment p-value.
 #'
 #' @author Aaron Lun
 #' @examples
