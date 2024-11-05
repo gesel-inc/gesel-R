@@ -1,0 +1,160 @@
+---
+title: Gene set searches with the Gesel database
+author:
+- name: Aaron Lun
+  email: infinite.monkeys.with.keyboards@gmail.com
+package: gesel
+date: "Revised: November 4, 2024"
+output:
+  BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Working with the Gesel database}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo=FALSE}
+library(BiocStyle)
+self <- Githubpkg("gesel-inc/gesel-R", "gesel")
+knitr::opts_chunk$set(error=FALSE, warning=FALSE, message=FALSE)
+```
+
+# Introduction
+
+The `r self` package implements an R client for the [Gesel gene set database](https://github.com/LTLA/gesel-feedstock).
+The Gesel database is a collection of static files containing information about gene sets, which can be hosted anywhere - via a file server, on a HPC's shared filesystem etc. 
+Clients like the `r self` package then use HTTP range requests to perform a variety of queries.
+No custom server logic is required, greatly reducing effort and cost required to keep Gesel up and running.
+Most database files do not need to be downloaded to the client, allowing us to easily scale with increasing numbers of gene sets in the database.
+
+# Finding overlaps
+
+The raison d'etre of the Gesel database is to find overlaps between known gene sets and a user-supplied list of genes.
+Let's say we have several human genes of interest:
+
+```{r}
+my.genes <- c("SNAP25", "NEUROD6", "GAD1", "GAD2", "RELN")
+```
+
+We map these to Gesel gene indices, which are Gesel's internal identifiers for each gene.
+
+```{r}
+library(gesel)
+gene.idx <- searchGenes("9606", my.genes)
+gene.idx # this is a list of integer vectors, in case of 1:many mappings.
+gene.idx <- unlist(gene.idx)
+fetchAllGenes("9606")[gene.idx,] # double-checking that we got it right.
+```
+
+Now we find all sets with overlapping genes.
+The `findOverlappingSets()` identifies all sets with one or more overlaps with the user-suppleid set.
+
+```{r}
+overlaps <- findOverlappingSets("9606", gene.idx, counts.only=FALSE)
+head(overlaps$overlap) # set index and the identities of overlapping genes.
+```
+
+The set index can be converted back to information about each set, along with the collection from which it came:
+
+```{r}
+set.info <- fetchSomeSets("9606", head(overlaps$overlap$set)) # getting details of the top sets
+set.info
+col.info <- fetchSomeCollections("9606", set.info$collection) # getting details of the collections
+col.info
+```
+
+The various statistics produced by `r self` can be also used to perform a simple hypergeometric test for enrichment.
+This often yields a more relevant ranking than the absolute number of overlaps as the hypergeometric p-value considers the size of the gene sets.
+
+```{r}
+set.sizes <- fetchSetSizes("9606")[overlaps$overlap$set]
+p <- phyper(
+    # Subtract 1 to account for probability mass at the observed number of
+    # overlaps when computing the upper tail.
+    q=lengths(overlaps$overlap$genes) - 1L,
+
+    # Number of genes in the gene set.
+    m=set.sizes,
+
+    # Number of genes not in the gene set. We use effectiveNumberOfGenes() to
+    # ignore irrelevant pseudogenes, predicted genes, etc. in the database.
+    n=effectiveNumberOfGenes("9606") - set.sizes,
+
+    # Number of genes in the user-supplied list of genes that are present in
+    # at least one Gesel set (ignore typos and other unknown genes).
+    k=overlaps$present,
+
+    lower.tail=FALSE
+)
+head(p)
+```
+
+# Searching on text
+
+We can also search for gene sets based on the text in their names or descriptions.
+The `searchSetText()` function accepts a query string with multiple words and the usual `*` (any characters) and `?` (one character) wildcards.
+
+```{r}
+chits <- searchSetText("9606", "cancer")
+fetchSomeSets("9606", head(chits))
+ihits <- searchSetText("9606", "innate immun*")
+fetchSomeSets("9606", head(ihits))
+thits <- searchSetText("9606", "cd? t cell")
+fetchSomeSets("9606", head(thits))
+```
+
+Users can construct powerful queries by intersecting the sets recovered from `searchSetText()` with those from `findOverlappingSets()`.
+
+```{r}
+cancer.sets <- intersect(chits, overlaps$overlap$set)
+info <- fetchSomeSets("9606", cancer.sets)
+m <- match(cancer.sets, overlaps$overlap$set)
+info$count <- lengths(overlaps$overlap$genes)[m]
+info$pvalue <- p[m]
+info[head(order(info$pvalue)),]
+```
+
+# Fetching all data
+
+Gesel is designed around partial extraction from the database files,
+but it may be more efficient to pull all of the data into the R session at once.
+This is most useful for the gene set details, which can be retrieved _en masse_:
+
+```{r}
+set.info <- fetchAllSets("9606")
+nrow(set.info)
+head(set.info)
+```
+
+The set indices can then be used to directly subset the `set.info` data frame by row.
+In fact, calling `fetchSomeSets()` after `fetchAllSets()` will automatically use the data frame created by the latter,
+instead of attempting another request to the database.
+
+```{r}
+head(set.info[cancer.sets,])
+head(fetchSomeSets("9606", cancer.sets)) # same results
+```
+
+The same approach can be used to extract collection information, via `fetchAllCollections()`;
+gene set membership, via `fetchGenesForAllSets()`;
+and the sets containing each gene, via `fetchSetsForAllGenes()`.
+
+# Advanced use 
+
+`r self` uses a lot of in-memory caching to reduce the number of requests to the database files within a single R session.
+On rare occasions, the cache may become outdated, e.g., if the database files are updated while an R session is running.
+Users can prompt `r self` to re-acquire all data by flusing the cache:
+
+```{r}
+flushMemoryCache()
+```
+
+Applications can specify their own functions for obtaining files (or byte ranges thereof) in each `r self` function.
+For example, on a shared HPC filesystem, we could point `r self` towards a directory of Gesel database files.
+This provides a performant alternative to HTTP requests for an institutional collection of gene sets.
+
+# Session information {-}
+
+```{r}
+sessionInfo()
+```
