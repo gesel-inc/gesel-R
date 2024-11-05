@@ -2,23 +2,32 @@
 % Please edit documentation in R/downloadDatabaseRanges.R
 \name{downloadDatabaseRanges}
 \alias{downloadDatabaseRanges}
+\alias{downloadMultipartRanges}
 \title{Fetch byte ranges from a Gesel database file}
 \usage{
-downloadDatabaseRanges(name, start, end, url = databaseUrl(), num.workers = 4L)
+downloadDatabaseRanges(
+  name,
+  start,
+  end,
+  url = databaseUrl(),
+  multipart = FALSE
+)
 }
 \arguments{
 \item{name}{String containing the name of the file.
 This usually has the species identifier as a prefix.}
 
-\item{start}{Integer vector containing the zero-indexed closed start of each byte range to extract from the file.}
+\item{start}{Integer vector containing the zero-indexed closed start of each byte range to extract from the file.
+This may be of zero length.}
 
 \item{end}{Integer vector containing the zero-indexed open end of each byte range to extract from the file.
-This should have the same length as \code{start} such that the \code{i}-th range is defined as \code{[start[i], end[i])}.}
+This should have the same length as \code{start} such that the \code{i}-th range is defined as \code{[start[i], end[i])}.
+All ranges supplied in a single call to this function should be non-overlapping.}
 
 \item{url}{String containing the base URL to the Gesel database files.
 For \code{databaseUrl}, this can be \code{NULL} to set it back to the default.}
 
-\item{num.workers}{Integer scalar specifying the number of workers to use for concurrent requests with multiple ranges.}
+\item{multipart}{Logical scalar indicating whether the server at \code{url} supports multi-part range requests.}
 }
 \value{
 Character vector of length equal to \code{length(start)}, containing the contents of the requested byte ranges.
