@@ -1,0 +1,89 @@
+---
+title: Gene set searches with the Gesel database
+author:
+- name: Aaron Lun
+  email: infinite.monkeys.with.keyboards@gmail.com
+package: SewerRat
+date: "Revised: November 4, 2024"
+output:
+  BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Working with the Gesel database}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, echo=FALSE}
+library(BiocStyle)
+self <- Githubpkg("gesel-inc/gesel-R")
+knitr::opts_chunk$set(error=FALSE, warning=FALSE, message=FALSE)
+```
+
+# Introduction
+
+The `r self` package implements an R client for the [Gesel gene set database](https://github.com/LTLA/gesel-feedstock).
+The Gesel database is a collection of static files containing information about gene sets, which can be hosted anywhere - via a file server, on a HPC's shared filesystem etc. 
+Clients like the `r self` package then use HTTP range requests to perform a variety of queries.
+No custom server logic is required, greatly reducing effort and cost required to keep Gesel up and running.
+Most database files do not need to be downloaded to the client, allowing us to easily scale with increasing numbers of gene sets in the database.
+
+# Finding overlaps
+
+The raison d'etre of the Gesel database is to find overlaps between known gene sets and an existing gene set.
+Let's say we have a few human genes of interest:
+
+```{r}
+my.genes <- c("SNAP25", "NEUROD6", "GAD1", "GAD2", "RELN")
+```
+
+We map these to Gesel gene indices, which are Gesel's internal identifiers for each gene.
+
+```{r}
+library(gesel)
+gene.idx <- searchGenes("9606", my.genes)
+gene.idx # this is a list of integer vectors, in case of 1:many mappings.
+gene.idx <- unlist(gene.idx)
+fetchAllGenes("9606")[gene.idx,] # double-checking that we got it right.
+```
+
+Now we find all sets with overlapping genes.
+The `findOverlappingSets()` identifies all sets with one or more overlaps with the user-suppleid set.
+
+```{r}
+overlaps <- findOverlappingSets("9606", gene.idx, counts.only=FALSE)
+head(overlaps$overlap) # set index and the identities of overlapping genes.
+```
+
+The set index can be converted back to information about each set, along with the collection from which it came:
+
+```{r}
+set.info <- fetchSomeSets("9606", head(overlaps$overlap$set)) # getting details of the top sets
+set.info
+col.info <- fetchSomeCollections("9606", set.info$collection) # getting details of the collections
+col.info
+```
+
+The various statistics produced by `r self` can be easily used to perform a simple hypergeometric test for enrichment:
+
+```{r}
+n.genes <- effectiveNumberOfGenes("9606")
+set.sizes <- fetchSetSizes("9606")[overlaps$overlap$set]
+p <- phyper(
+    q=lengths(overlaps$overlap$genes) - 1L, # -1 to account for probability mass.
+    m=set.sizes,
+    n=n.genes - set.sizes,
+    k=overlaps$present,
+    upper.tail=TRUE
+)
+head(p)
+```
+
+# Searching on text
+
+# Fetching all data
+
+# Session information {-}
+
+```{r}
+sessionInfo()
+```
