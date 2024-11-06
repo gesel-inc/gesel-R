@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
@@ -54,17 +54,26 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">flushMemoryCache</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">flushMemoryCache</span><span class="op">(</span>config <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
+    <div id="arguments">
+    <h2>Arguments</h2>
+
+
+<dl><dt id="arg-config">config<a class="anchor" aria-label="anchor" href="#arg-config"></a></dt>
+<dd><p>A configuration list.
+If <code>NULL</code>, the default configuration is used.</p></dd>
+
+</dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>The in-memory cache is cleared.
+    <p>The in-memory cache in <code>config</code> is cleared.
 <code>NULL</code> is invisibly returned.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>The <span class="pkg">gesel</span> package makes caches the data structures in the current R session to avoid unnecessary requests to the filesystem and remote server.
+    <p>By default, the <span class="pkg">gesel</span> package caches the data structures in the current R session to avoid unnecessary requests to the filesystem and remote server.
 On rare occasion, these cached data structures may be out of date when the Gesel database files change.
 In such cases, the cache can be flushed to ensure that the various <span class="pkg">gesel</span> functions operate on the latest version of the database.</p>
     </div>

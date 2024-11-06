@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
@@ -54,11 +54,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">effectiveNumberOfGenes</span><span class="op">(</span></span>
-<span>  <span class="va">species</span>,</span>
-<span>  fetch <span class="op">=</span> <span class="va">downloadDatabaseFile</span>,</span>
-<span>  fetch.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">effectiveNumberOfGenes</span><span class="op">(</span><span class="va">species</span>, config <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -69,12 +65,9 @@
 <dd><p>String containing the NCBI taxonomy ID of the species of interest.</p></dd>
 
 
-<dt id="arg-fetch">fetch<a class="anchor" aria-label="anchor" href="#arg-fetch"></a></dt>
-<dd><p>Function that accepts the name of a Gesel database file and returns an absolute path to that file.</p></dd>
-
-
-<dt id="arg-fetch-args">fetch.args<a class="anchor" aria-label="anchor" href="#arg-fetch-args"></a></dt>
-<dd><p>Named list of arguments to pass to <code>fetch</code>.</p></dd>
+<dt id="arg-config">config<a class="anchor" aria-label="anchor" href="#arg-config"></a></dt>
+<dd><p>Configuration list, typically created by <code><a href="newConfig.html">newConfig</a></code>.
+If <code>NULL</code>, the default configuration is used.</p></dd>
 
 </dl></div>
     <div id="value">

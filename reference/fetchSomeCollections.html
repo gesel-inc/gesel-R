@@ -18,7 +18,7 @@ This can be more efficient than fetchAllCollections when only a few collections 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
@@ -56,14 +56,7 @@ This can be more efficient than <code><a href="fetchAllCollections.html">fetchAl
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fetchSomeCollections</span><span class="op">(</span></span>
-<span>  <span class="va">species</span>,</span>
-<span>  <span class="va">collections</span>,</span>
-<span>  fetch.file <span class="op">=</span> <span class="va">downloadDatabaseFile</span>,</span>
-<span>  fetch.file.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  fetch.range <span class="op">=</span> <span class="va">downloadDatabaseRanges</span>,</span>
-<span>  fetch.range.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fetchSomeCollections</span><span class="op">(</span><span class="va">species</span>, <span class="va">collections</span>, config <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -79,23 +72,9 @@ This can be more efficient than <code><a href="fetchAllCollections.html">fetchAl
 Each entry refers to a row of the data frame returned by <code><a href="fetchAllCollections.html">fetchAllCollections</a></code>).</p></dd>
 
 
-<dt id="arg-fetch-file">fetch.file<a class="anchor" aria-label="anchor" href="#arg-fetch-file"></a></dt>
-<dd><p>Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.</p></dd>
-
-
-<dt id="arg-fetch-file-args">fetch.file.args<a class="anchor" aria-label="anchor" href="#arg-fetch-file-args"></a></dt>
-<dd><p>Named list of arguments to pass to <code>fetch.file</code>.</p></dd>
-
-
-<dt id="arg-fetch-range">fetch.range<a class="anchor" aria-label="anchor" href="#arg-fetch-range"></a></dt>
-<dd><p>Function that accepts at least two arguments -
-the name of the file in the Gesel database, and an integer vector of length 2 containing the zero-indexed half-open byte range to extract from the file
-(see <code><a href="downloadDatabaseRanges.html">downloadDatabaseRanges</a></code> for details).
-It should return a string containing the contents of the specified byte range.</p></dd>
-
-
-<dt id="arg-fetch-range-args">fetch.range.args<a class="anchor" aria-label="anchor" href="#arg-fetch-range-args"></a></dt>
-<dd><p>Named list of arguments to pass to <code>fetch.file</code>.</p></dd>
+<dt id="arg-config">config<a class="anchor" aria-label="anchor" href="#arg-config"></a></dt>
+<dd><p>Configuration list, typically created by <code><a href="newConfig.html">newConfig</a></code>.
+If <code>NULL</code>, the default configuration is used.</p></dd>
 
 </dl></div>
     <div id="value">

@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.1</span>
       </span>
     </div>
 
@@ -54,7 +54,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">findOverlappingSets</span><span class="op">(</span><span class="va">species</span>, <span class="va">genes</span>, counts.only <span class="op">=</span> <span class="cn">TRUE</span>, more.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">findOverlappingSets</span><span class="op">(</span><span class="va">species</span>, <span class="va">genes</span>, counts.only <span class="op">=</span> <span class="cn">TRUE</span>, config <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -74,8 +74,9 @@ Each gene index refers to a row of the data frame returned by <code><a href="fet
 <dd><p>Logical scalar indicating whether to only report the number of overlapping genes for each set.</p></dd>
 
 
-<dt id="arg-more-args">more.args<a class="anchor" aria-label="anchor" href="#arg-more-args"></a></dt>
-<dd><p>Further arguments to pass to <code><a href="fetchSetsForSomeGenes.html">fetchSetsForSomeGenes</a></code>.</p></dd>
+<dt id="arg-config">config<a class="anchor" aria-label="anchor" href="#arg-config"></a></dt>
+<dd><p>Configuration list, typically created by <code><a href="newConfig.html">newConfig</a></code>.
+If <code>NULL</code>, the default configuration is used.</p></dd>
 
 </dl></div>
     <div id="value">
