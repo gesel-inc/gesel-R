@@ -4,13 +4,7 @@
 \alias{searchGenes}
 \title{Search for genes}
 \usage{
-searchGenes(
-  species,
-  genes,
-  types = NULL,
-  ignore.case = TRUE,
-  more.args = list()
-)
+searchGenes(species, genes, types = NULL, ignore.case = TRUE, config = NULL)
 }
 \arguments{
 \item{species}{String specifying the taxonomy ID of the species of interest.}
@@ -23,7 +17,8 @@ defaulting to all of them.}
 
 \item{ignore.case}{Logical scalar indicating whether case should be ignored.}
 
-\item{more.args}{Named list of further arguments to pass to \code{\link{fetchAllGenes}}.}
+\item{config}{Configuration list, typically created by \code{\link{newConfig}}.
+If \code{NULL}, the default configuration is used.}
 }
 \value{
 List of length equal to \code{genes}.

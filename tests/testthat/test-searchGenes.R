@@ -7,7 +7,7 @@ test_that("searchGenes works for the local ref", {
         unlist(ref.genes$WHEE)[1]
     )
 
-    out <- searchGenes(species, chosen, types=ref.gene.types, more.args=list(fetch=getGeneFile))
+    out <- searchGenes(species, chosen, types=ref.gene.types, config=test.config) 
     expect_identical(length(out), length(chosen))
     expect_true(all(lengths(out) > 0L))
 
@@ -22,7 +22,7 @@ test_that("searchGenes works for the local ref", {
     }
 
     # Works after ignoring case.
-    lout <- searchGenes(species, tolower(chosen), types=ref.gene.types, ignore.case=TRUE, more.args=list(fetch=getGeneFile))
+    lout <- searchGenes(species, tolower(chosen), types=ref.gene.types, ignore.case=TRUE, config=test.config)
     for (i in lout[[3]]) {
         expect_true(chosen[3] %in% ref.genes$WHEE[[i]])
     }

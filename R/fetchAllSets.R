@@ -22,14 +22,15 @@
 #' head(out)
 #'
 #' @export
-fetchAllSets <- function(species, fetch = downloadDatabaseFile, fetch.args = list()) {
-    candidate <- get_cache("fetchAllSets", species)
+fetchAllSets <- function(species, config = NULL) {
+    config <- get_config(config)
+    candidate <- get_cache(config, "fetchAllSets", species)
     if (!is.null(candidate)) {
         return(candidate)
     }
 
     fname <- paste0(species, "_sets.tsv.gz")
-    path <- do.call(fetch, c(list(fname), fetch.args))
+    path <- fetch_file(config, fname)
     raw <- decompress_lines(path)
     details <- strsplit(raw, "\t")
 
@@ -41,7 +42,7 @@ fetchAllSets <- function(species, fetch = downloadDatabaseFile, fetch.args = lis
         size[i] <- current[3]
     }
 
-    info <- fetchAllCollections(species, fetch=fetch, fetch.args=fetch.args) 
+    info <- fetchAllCollections(species, config=config)
     output <- data.frame(
         name=names,
         description=desc,
@@ -50,6 +51,6 @@ fetchAllSets <- function(species, fetch = downloadDatabaseFile, fetch.args = lis
         number=sequence(info$size)
     )
 
-    set_cache("fetchAllSets", species, output)
+    set_cache(config, "fetchAllSets", species, output)
     output
 }

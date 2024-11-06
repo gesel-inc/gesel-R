@@ -1,37 +1,37 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-fetchSetsForSomeGenes.R")
 
 test_that("fetchSetsForSomeGenes matches our local ref", {
-    everything <- fetchSetsForAllGenes("1111", fetch=getDatabaseFile)
+    everything <- fetchSetsForAllGenes("1111", config=test.config)
     flushMemoryCache()
 
     evens <- seq(from=2, to=length(everything), by=2)
-    payload <- fetchSetsForSomeGenes("1111", evens, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    payload <- fetchSetsForSomeGenes("1111", evens, config=test.config)
     expect_identical(everything[evens], payload)
 
     odds <- seq(from=1, to=length(everything), by=2)
-    payload <- fetchSetsForSomeGenes("1111", odds, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    payload <- fetchSetsForSomeGenes("1111", odds, config=test.config)
     expect_identical(everything[odds], payload)
 
     together <- seq_along(everything)
-    payload <- fetchSetsForSomeGenes("1111", together, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    payload <- fetchSetsForSomeGenes("1111", together, config=test.config)
     expect_identical(everything, payload)
 
     # Works with pre-loading.
-    everything <- fetchSetsForAllGenes("1111", fetch=getDatabaseFile)
-    preloaded <- fetchSetsForSomeGenes("1111", together, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    everything <- fetchSetsForAllGenes("1111", config=test.config)
+    preloaded <- fetchSetsForSomeGenes("1111", together, config=test.config)
     expect_identical(everything, preloaded)
 })
 
 test_that("effectiveNumberOfGenes works a local ref", {
-    everything <- fetchSetsForAllGenes("1111", fetch=getDatabaseFile)
+    everything <- fetchSetsForAllGenes("1111", config=test.config)
     flushMemoryCache()
 
-    num <- effectiveNumberOfGenes("1111", fetch=getDatabaseFile)
+    num <- effectiveNumberOfGenes("1111", config=test.config)
     expect_identical(num, sum(lengths(everything) > 0L))
 
     # Works with pre-loaded.
-    everything <- fetchSetsForAllGenes("1111", fetch=getDatabaseFile)
-    tnum <- effectiveNumberOfGenes("1111", fetch=getDatabaseFile)
+    everything <- fetchSetsForAllGenes("1111", config=test.config)
+    tnum <- effectiveNumberOfGenes("1111", config=test.config)
     expect_identical(num, tnum)
 })
 

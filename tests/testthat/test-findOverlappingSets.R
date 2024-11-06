@@ -5,11 +5,11 @@ test_that("findOverlappingSets works for the local ref", {
     ref <- lapply(ref.set.membership, intersect, y=genes)
     keep <- which(lengths(ref) > 0)
 
-    overlaps <- findOverlappingSets(species, genes, counts.only=FALSE, more.args=list(fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges))
+    overlaps <- findOverlappingSets(species, genes, counts.only=FALSE, config=test.config)
     expect_identical(sort(overlaps$overlap$set), sort(keep))
     expect_identical(lapply(ref[overlaps$overlap$set], sort), lapply(overlaps$overlap$genes, sort))
 
-    counts <- findOverlappingSets(species, genes, more.args=list(fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges))
+    counts <- findOverlappingSets(species, genes, config=test.config)
     expect_identical(counts$overlap, data.frame(set=overlaps$overlap$set, count=lengths(overlaps$overlap$genes)))
 })
 

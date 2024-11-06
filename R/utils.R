@@ -88,14 +88,14 @@ compute_ranges <- function(bytes) {
     c(0L, cumsum(as.integer(bytes) + 1L)) # +1 for the newline.
 }
 
-retrieve_ranges <- function(name, fetch, fetch.args) {
-    path <- do.call(fetch, c(list(paste0(name, ".ranges.gz")), fetch.args))
+retrieve_ranges <- function(config, name) {
+    path <- fetch_file(config, paste0(name, ".ranges.gz"))
     contents <- decompress_lines(path)
     compute_ranges(contents)
 }
 
-retrieve_ranges_with_sizes <- function(name, fetch, fetch.args) {
-    path <- do.call(fetch, c(list(paste0(name, ".ranges.gz")), fetch.args))
+retrieve_ranges_with_sizes <- function(config, name) {
+    path <- fetch_file(config, paste0(name, ".ranges.gz"))
     contents <- decompress_lines(path)
     parsed <- strsplit(contents, "\t")
     bytes <- vapply(parsed, function(x) x[1], "")
@@ -103,8 +103,8 @@ retrieve_ranges_with_sizes <- function(name, fetch, fetch.args) {
     list(ranges=compute_ranges(bytes), sizes=as.integer(extra))
 }
 
-retrieve_ranges_with_names <- function(name, fetch, fetch.args) {
-    path <- do.call(fetch, c(list(paste0(name, ".ranges.gz")), fetch.args))
+retrieve_ranges_with_names <- function(config, name) {
+    path <- fetch_file(config, paste0(name, ".ranges.gz"))
     contents <- decompress_lines(path)
     parsed <- strsplit(contents, "\t")
     names <- vapply(parsed, function(x) x[1], "")

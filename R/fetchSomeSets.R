@@ -15,8 +15,9 @@
 #'
 #' @export
 #' @importFrom utils head
-fetchSomeSets <- function(species, sets, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRanges, fetch.range.args = list()) {
-    candidate <- get_cache("fetchAllSets", species)
+fetchSomeSets <- function(species, sets, config = NULL) {
+    config <- get_config(config)
+    candidate <- get_cache(config, "fetchAllSets", species)
     if (!is.null(candidate)) {
         output <- candidate[sets,]
         rownames(output) <- NULL
@@ -24,7 +25,7 @@ fetchSomeSets <- function(species, sets, fetch.file = downloadDatabaseFile, fetc
     }
 
     fname <- paste0(species, "_sets.tsv")
-    raw.cached <- get_single_set_ranges(species, fname, fetch=fetch.file, fetch.args=fetch.file.args)
+    raw.cached <- get_single_set_ranges(config, species, fname)
     cached <- raw.cached$cached
     modified <- raw.cached$modified
 
@@ -36,7 +37,7 @@ fetchSomeSets <- function(species, sets, fetch.file = downloadDatabaseFile, fetc
         intervals <- cached$intervals
         starts <- intervals[needed]
         ends <- intervals[needed + 1L] - 1L # remove the newline.
-        deets <- do.call(fetch.range, c(list(name=fname, start=starts, end=ends), fetch.range.args))
+        deets <- fetch_range(config, fname, starts, ends)
 
         prior.sets <- c(prior.sets, needed)
         split <- strsplit(deets, "\t")
@@ -51,7 +52,7 @@ fetchSomeSets <- function(species, sets, fetch.file = downloadDatabaseFile, fetc
     if (modified) {
         cached$prior$sets <- prior.sets
         cached$prior$details <- prior.details
-        set_cache("fetchSomeSets", species, cached)
+        set_cache(config, "fetchSomeSets", species, cached)
     }
 
     output <- prior.details[match(sets, prior.sets),]
@@ -62,14 +63,15 @@ fetchSomeSets <- function(species, sets, fetch.file = downloadDatabaseFile, fetc
     output
 }
 
-get_single_set_ranges <- function(species, fname, fetch, fetch.args) { 
-    cached <- get_cache("fetchSomeSets", species)
+get_single_set_ranges <- function(config, species, fname) {
+    config <- get_config(config)
+    cached <- get_cache(config, "fetchSomeSets", species)
     if (!is.null(cached)) {
         return(list(cached=cached, modified=FALSE))
     }
 
-    range.info <- retrieve_ranges_with_sizes(fname, fetch=fetch, fetch.args=fetch.args)
-    csizes <- fetchCollectionSizes(species, fetch=fetch, fetch.args=fetch.args)
+    range.info <- retrieve_ranges_with_sizes(config, fname)
+    csizes <- fetchCollectionSizes(species, config=config)
 
     cached <- list(
         intervals = range.info$ranges,
@@ -102,18 +104,19 @@ get_single_set_ranges <- function(species, fname, fetch, fetch.args) {
 #' head(fetchSetSizes("9606"))
 #'
 #' @export
-fetchSetSizes <- function(species, fetch = NULL, fetch.args = list()) {
-    candidate <- get_cache("fetchAllSets", species)
+fetchSetSizes <- function(species, config = NULL) {
+    config <- get_config(config)
+    candidate <- get_cache(config, "fetchAllSets", species)
     if (!is.null(candidate)) {
         return(candidate$size)
     }
 
     fname <- paste0(species, "_sets.tsv")
-    raw.cached <- get_single_set_ranges(species, fname, fetch=fetch, fetch.args=fetch.args)
+    raw.cached <- get_single_set_ranges(config, species, fname)
 
     cached <- raw.cached$cached
     if (raw.cached$modified) {
-        set_cache("fetchSomeSets", species, cached)
+        set_cache(config, "fetchSomeSets", species, cached)
     }
 
     cached$sizes

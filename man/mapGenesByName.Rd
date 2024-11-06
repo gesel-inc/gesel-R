@@ -4,7 +4,7 @@
 \alias{mapGenesByName}
 \title{Map gene names to indices}
 \usage{
-mapGenesByName(species, type, ignore.case = FALSE, more.args = list())
+mapGenesByName(species, type, ignore.case = FALSE, config = NULL)
 }
 \arguments{
 \item{species}{String specifying the taxonomy ID of the species of interest.}
@@ -14,7 +14,8 @@ This is typically one of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
 
 \item{ignore.case}{Logical scalar indicating whether case should be ignored.}
 
-\item{more.args}{Named list of further arguments to pass to \code{\link{fetchAllGenes}}.}
+\item{config}{Configuration list, typically created by \code{\link{newConfig}}.
+If \code{NULL}, the default configuration is used.}
 }
 \value{
 Named list of integer vectors.

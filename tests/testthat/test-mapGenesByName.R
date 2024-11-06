@@ -3,7 +3,7 @@
 flushMemoryCache()
 
 test_that("mapGenesByName works for the local ref", {
-    mapping <- mapGenesByName(species, type="foo", more.args=list(fetch=getGeneFile))
+    mapping <- mapGenesByName(species, type="foo", config=test.config) 
 
     set.seed(9)
     current.names <- unlist(ref.genes$foo)
@@ -15,7 +15,7 @@ test_that("mapGenesByName works for the local ref", {
     }
 
     # Works when ignoring the case.
-    lmapping <- mapGenesByName(species, type="WHEE", ignore.case=TRUE, more.args=list(fetch=getGeneFile))
+    lmapping <- mapGenesByName(species, type="WHEE", ignore.case=TRUE, config=test.config)
 
     current.names <- unlist(ref.genes$WHEE)
     current.idx <- rep(seq_along(ref.genes$WHEE), lengths(ref.genes$WHEE))

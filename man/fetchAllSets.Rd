@@ -4,14 +4,13 @@
 \alias{fetchAllSets}
 \title{Fetch all gene sets}
 \usage{
-fetchAllSets(species, fetch = downloadDatabaseFile, fetch.args = list())
+fetchAllSets(species, config = NULL)
 }
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
 
-\item{fetch}{Function that accepts the name of a Gesel database file and returns an absolute path to that file.}
-
-\item{fetch.args}{Named list of arguments to pass to \code{fetch}.}
+\item{config}{Configuration list, typically created by \code{\link{newConfig}}.
+If \code{NULL}, the default configuration is used.}
 }
 \value{
 Data frame of gene set information.

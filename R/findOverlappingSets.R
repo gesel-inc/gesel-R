@@ -6,7 +6,8 @@
 #' @param genes Integer vector containing gene indices.
 #' Each gene index refers to a row of the data frame returned by \code{\link{fetchAllGenes}}.
 #' @param counts.only Logical scalar indicating whether to only report the number of overlapping genes for each set.
-#' @param more.args Further arguments to pass to \code{\link{fetchSetsForSomeGenes}}.
+#' @param config Configuration list, typically created by \code{\link{newConfig}}.
+#' If \code{NULL}, the default configuration is used.
 #'
 #' @return A list containing:
 #' \itemize{
@@ -35,8 +36,8 @@
 #' head(overlaps$overlap)
 #' 
 #' @export
-findOverlappingSets <- function(species, genes, counts.only = TRUE, more.args = list()) {
-    info <- do.call(fetchSetsForSomeGenes, c(list(species=species, genes=genes), more.args))
+findOverlappingSets <- function(species, genes, counts.only = TRUE, config = NULL) {
+    info <- fetchSetsForSomeGenes(species=species, genes=genes, config=config)
 
     if (counts.only) {
         tab <- table(unlist(info))

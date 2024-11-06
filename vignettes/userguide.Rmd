@@ -149,7 +149,7 @@ Users can prompt `r self` to re-acquire all data by flusing the cache:
 flushMemoryCache()
 ```
 
-Applications can specify their own functions for obtaining files (or byte ranges thereof) in each `r self` function.
+Applications can specify their own functions for obtaining files (or byte ranges thereof) by passing a custom `config=` in each `r self` function.
 For example, on a shared HPC filesystem, we could point `r self` towards a directory of Gesel database files.
 This provides a performant alternative to HTTP requests for an institutional collection of gene sets.
 

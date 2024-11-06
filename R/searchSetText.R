@@ -21,59 +21,36 @@
 #' fetchSomeSets("9606", out[1])
 #' 
 #' @export
-searchSetText <- function(
-    species,
-    query,
-    use.name = TRUE, 
-    use.description = TRUE,
-    fetch.file = downloadDatabaseFile,
-    fetch.file.args = list(),
-    fetch.range = downloadDatabaseRanges,
-    fetch.range.args = list()) 
-{
+searchSetText <- function(species, query, use.name = TRUE, use.description = TRUE, config = NULL) {
     # Don't use tokenize() here, as we need to preserve ? and *.
     tokens <- gsub("[^a-zA-Z0-9?*-]", " ", tolower(query))
     tokens <- unique(unlist(strsplit(tokens, "\\s+")))
     tokens <- setdiff(tokens, c("", "-"))
 
+    config <- get_config(config)
+
     gathered.names <- vector("list", length(tokens))
     if (use.name) {
-        gathered.names <- fetch_sets_by_token(
-            species,
-            tokens,
-            "names", 
-            fetch.file=fetch.file,
-            fetch.file.args=fetch.file.args,
-            fetch.range=fetch.range,
-            fetch.range.args=fetch.range.args
-        )
+        gathered.names <- fetch_sets_by_token(config, species, tokens, "names")
     }
 
     gathered.descriptions <- vector("list", length(tokens))
     if (use.description) {
-        gathered.descriptions <- fetch_sets_by_token(
-            species,
-            tokens,
-            "descriptions", 
-            fetch.file=fetch.file,
-            fetch.file.args=fetch.file.args,
-            fetch.range=fetch.range,
-            fetch.range.args=fetch.range.args
-        )
+        gathered.descriptions <- fetch_sets_by_token(config, species, tokens, "descriptions")
     }
 
     gathered <- mapply(union, gathered.names, gathered.descriptions, SIMPLIFY=FALSE)
     as.integer(Reduce(intersect, gathered))
 }
 
-fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.args, fetch.range, fetch.range.args) {
-    cached <- get_cache("searchSetText", species)
+fetch_sets_by_token <- function(config, species, tokens, type) {
+    cached <- get_cache(config, "searchSetText", species)
     tfound <- cached[[type]]
     modified <- FALSE
 
     fname <- sprintf("%s_tokens-%s.tsv", species, type)
     if (is.null(tfound)) {
-        sraw <- retrieve_ranges_with_names(fname, fetch=fetch.file, fetch.args=fetch.file.args)
+        sraw <- retrieve_ranges_with_names(config, fname)
         tfound$ranges <- sraw$ranges
         tfound$names <- sraw$names
         tfound$prior <- list()
@@ -118,7 +95,7 @@ fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.ar
         ranges <- tfound$ranges
         starts <- ranges[to.request]
         ends <- ranges[to.request + 1L]
-        deets <- do.call(fetch.range, c(list(name=fname, start=starts, end=ends), fetch.range.args))
+        deets <- fetch_range(config, fname, starts, ends)
         requested.indices <- decode_indices(deets)
 
         names(requested.indices) <- tnames[to.request] 
@@ -137,7 +114,7 @@ fetch_sets_by_token <- function(species, tokens, type, fetch.file, fetch.file.ar
     if (modified) {
         tfound$prior <- prior
         cached[[type]] <- tfound
-        set_cache("searchSetText", species, cached)
+        set_cache(config, "searchSetText", species, cached)
     }
 
     prior[tokens]

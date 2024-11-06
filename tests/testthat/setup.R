@@ -93,3 +93,9 @@ for (i in 1:3) {
 getGeneFile <- function(name) {
     file.path(gene.dir, name)
 }
+
+test.config <- gesel::newConfig(
+    fetch.gene = getGeneFile,
+    fetch.file = getDatabaseFile,
+    fetch.range = getDatabaseRanges
+)

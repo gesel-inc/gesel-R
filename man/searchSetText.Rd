@@ -9,10 +9,7 @@ searchSetText(
   query,
   use.name = TRUE,
   use.description = TRUE,
-  fetch.file = downloadDatabaseFile,
-  fetch.file.args = list(),
-  fetch.range = downloadDatabaseRanges,
-  fetch.range.args = list()
+  config = NULL
 )
 }
 \arguments{
@@ -26,16 +23,8 @@ The \code{*} and \code{?} wildcards can be used to match to any or one character
 
 \item{use.description}{Logical scalar indicating whether to search on the description of the set.}
 
-\item{fetch.file}{Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.}
-
-\item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
-
-\item{fetch.range}{Function that accepts at least two arguments - 
-the name of the file in the Gesel database, and an integer vector of length 2 containing the zero-indexed half-open byte range to extract from the file
-(see \code{\link{downloadDatabaseRanges}} for details).
-It should return a string containing the contents of the specified byte range.}
-
-\item{fetch.range.args}{Named list of arguments to pass to \code{fetch.file}.}
+\item{config}{Configuration list, typically created by \code{\link{newConfig}}.
+If \code{NULL}, the default configuration is used.}
 }
 \value{
 Integer vector of set indices for the matching gene sets.

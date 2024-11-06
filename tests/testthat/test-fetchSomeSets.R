@@ -1,36 +1,36 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-fetchSomeSets.R")
 
 test_that("fetchSomeSets matches our local ref", {
-    everything <- fetchAllSets("1111", fetch=getDatabaseFile)
+    everything <- fetchAllSets("1111", config=test.config)
     flushMemoryCache()
 
-    payload <- fetchSomeSets("1111", 10:20, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    payload <- fetchSomeSets("1111", 10:20, config=test.config)
     expected <- everything[10:20,]
     rownames(expected) <- NULL
     expect_identical(expected, payload)
 
-    payload <- fetchSomeSets("1111", 40:60, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    payload <- fetchSomeSets("1111", 40:60, config=test.config)
     expected <- everything[40:60,]
     rownames(expected) <- NULL
     expect_identical(expected, payload)
 
     chosen <- seq_len(nrow(everything))
-    payload <- fetchSomeSets("1111", chosen, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    payload <- fetchSomeSets("1111", chosen, config=test.config)
     expect_identical(everything, payload)
 
     # Works for sizes.
-    sizes <- fetchSetSizes("1111", fetch=getDatabaseFile)
+    sizes <- fetchSetSizes("1111", config=test.config)
     expect_identical(sizes, everything$size)
 
     # Works with pre-loaded.
-    everything <- fetchAllSets("1111", fetch=getDatabaseFile)
-    payload <- fetchSomeSets("1111", chosen, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges) 
+    everything <- fetchAllSets("1111", config=test.config)
+    payload <- fetchSomeSets("1111", chosen, config=test.config)
     expect_identical(everything, payload)
 
-    preloaded <- fetchSomeSets("1111", chosen, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    preloaded <- fetchSomeSets("1111", chosen, config=test.config)
     expect_identical(payload, preloaded)
 
-    sizes <- fetchSetSizes("1111", fetch=getDatabaseFile)
+    sizes <- fetchSetSizes("1111", config=test.config)
     expect_identical(sizes, everything$size)
 })
 

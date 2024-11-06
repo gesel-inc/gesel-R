@@ -8,7 +8,7 @@ test_that("fetchSetsForAllGenes matches our local ref", {
     mapping <- split(set.ids, factor(gene.ids, seq_len(ref.num.genes)))
     mapping <- unname(lapply(mapping, function(x) sort(unique(x))))
 
-    payload <- fetchSetsForAllGenes("1111", fetch=getDatabaseFile)
+    payload <- fetchSetsForAllGenes("1111", config=test.config)
     expect_identical(payload, mapping)
 })
 

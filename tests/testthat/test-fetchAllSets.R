@@ -3,10 +3,10 @@
 flushMemoryCache()
 
 test_that("fetchAllSets matches our local ref", {
-    payload <- fetchAllSets("1111", fetch=getDatabaseFile)
+    payload <- fetchAllSets("1111", config=test.config)
     expect_identical(payload[,c("name", "description", "collection", "size")], ref.set.info)
 
-    preloaded <- fetchAllSets("1111", fetch=getDatabaseFile)
+    preloaded <- fetchAllSets("1111", config=test.config)
     expect_identical(payload, preloaded)
 })
 

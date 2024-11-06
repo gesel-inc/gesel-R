@@ -3,12 +3,12 @@
 flushMemoryCache()
 
 test_that("fetchAllGenes works for the local ref", {
-    roundtrip <- fetchAllGenes(species, types=ref.gene.types, fetch=getGeneFile)
+    roundtrip <- fetchAllGenes(species, types=ref.gene.types, config=test.config)
     expect_identical(unclass(roundtrip$foo), ref.genes$foo)
     expect_identical(unclass(roundtrip$bar), ref.genes$bar)
     expect_identical(unclass(roundtrip$whee), ref.genes$whee)
 
-    preloaded <- fetchAllGenes(species, types=ref.gene.types, fetch=getGeneFile)
+    preloaded <- fetchAllGenes(species, types=ref.gene.types, config=test.config)
     expect_identical(roundtrip, preloaded)
 })
 

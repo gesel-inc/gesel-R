@@ -21,14 +21,15 @@
 #' head(all.set.info[first.gene[[1]],])
 #' 
 #' @export
-fetchSetsForSomeGenes <- function(species, genes, fetch.file = downloadDatabaseFile, fetch.file.args = list(), fetch.range = downloadDatabaseRanges, fetch.range.args = list()) {
-    candidate <- get_cache("fetchSetsForAllGenes", species)
+fetchSetsForSomeGenes <- function(species, genes, config = NULL) {
+    config <- get_config(config)
+    candidate <- get_cache(config, "fetchSetsForAllGenes", species)
     if (!is.null(candidate)) {
         return(candidate[genes])
     }
 
     fname <- paste0(species, "_gene2set.tsv")
-    raw.cached <- get_sets_for_some_genes_ranges(species, fname, fetch=fetch.file, fetch.args=fetch.file.args)
+    raw.cached <- get_sets_for_some_genes_ranges(config, species, fname)
     cached <- raw.cached$cached
     modified <- raw.cached$modified
 
@@ -38,7 +39,7 @@ fetchSetsForSomeGenes <- function(species, genes, fetch.file = downloadDatabaseF
     needed <- sort(setdiff(genes, prior.gene))
     if (length(needed)) {
         intervals <- cached$intervals
-        deets <- do.call(fetch.range, c(list(name=fname, start=intervals[needed], end=intervals[needed + 1L]), fetch.range.args))
+        deets <- fetch_range(config, fname, intervals[needed], intervals[needed + 1L])
         prior.gene <- c(prior.gene, needed)
         prior.sets <- c(prior.sets, decode_indices(deets))
         modified <- TRUE
@@ -47,20 +48,20 @@ fetchSetsForSomeGenes <- function(species, genes, fetch.file = downloadDatabaseF
     if (modified) {
         cached$prior$gene <- prior.gene
         cached$prior$sets <- prior.sets
-        set_cache("fetchSetsForSomeGenes", species, cached)
+        set_cache(config, "fetchSetsForSomeGenes", species, cached)
     }
 
     m <- match(genes, prior.gene)
     prior.sets[m]
 }
 
-get_sets_for_some_genes_ranges <- function(species, fname, fetch, fetch.args) {
-    cached <- get_cache("fetchSetsForSomeGenes", species)
+get_sets_for_some_genes_ranges <- function(config, species, fname) {
+    cached <- get_cache(config, "fetchSetsForSomeGenes", species)
     if (!is.null(cached)) {
         return(list(cached=cached, modified=FALSE))
     }
 
-    intervals <- retrieve_ranges(fname, fetch=fetch, fetch.args=fetch.args)
+    intervals <- retrieve_ranges(config, fname)
     cached <- list(intervals = intervals, prior = list(gene = integer(0), sets = list()))
     return(list(cached=cached, modified=TRUE))
 }
@@ -82,17 +83,18 @@ get_sets_for_some_genes_ranges <- function(species, fname, fetch, fetch.args) {
 #' @author Aaron Lun
 #'
 #' @export
-effectiveNumberOfGenes <- function(species, fetch = downloadDatabaseFile, fetch.args = list()) {
-    candidate <- get_cache("fetchSetsForAllGenes", species)
+effectiveNumberOfGenes <- function(species, config = NULL) {
+    config <- get_config(config)
+    candidate <- get_cache(config, "fetchSetsForAllGenes", species)
     if (!is.null(candidate)) {
         return(sum(lengths(candidate) > 0L))
     }
 
     fname <- paste0(species, "_gene2set.tsv")
-    raw.cached <- get_sets_for_some_genes_ranges(species, fname, fetch=fetch, fetch.args=fetch.args)
+    raw.cached <- get_sets_for_some_genes_ranges(config, species, fname)
     cached <- raw.cached$cached
     if (raw.cached$modified) {
-        set_cache("fetchSetsForSomeGenes", species, cached)
+        set_cache(config, "fetchSetsForSomeGenes", species, cached)
     }
 
     sum(diff(cached$intervals) > 1L) # for the newline character.

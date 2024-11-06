@@ -3,21 +3,21 @@
 flushMemoryCache()
 
 test_that("basic search works for the local ref", {
-    out <- searchSetText(species, "foo 1", fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    out <- searchSetText(species, "foo 1", config=test.config)
     expect_identical(out, grep("foo 1$", ref.set.info$description, ignore.case=TRUE))
 
     # Name or description only.
-    nout <- searchSetText(species, "this", use.description=FALSE, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    nout <- searchSetText(species, "this", use.description=FALSE, config=test.config)
     expect_identical(nout, integer(0))
 
-    nout <- searchSetText(species, "this", use.name=FALSE, fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    nout <- searchSetText(species, "this", use.name=FALSE, config=test.config)
     expect_identical(nout, grep("this", ref.set.info$description))
 
     # Throwing in some wildcards.
-    pout <- searchSetText(species, "foo 1*", fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    pout <- searchSetText(species, "foo 1*", config=test.config)
     expect_identical(pout, grep("foo 1", ref.set.info$description, ignore.case=TRUE))
 
-    pout <- searchSetText(species, "foo ?", fetch.file=getDatabaseFile, fetch.range=getDatabaseRanges)
+    pout <- searchSetText(species, "foo ?", config=test.config)
     expect_identical(pout, grep("foo .$", ref.set.info$description, ignore.case=TRUE))
 })
 

@@ -4,14 +4,7 @@
 \alias{fetchSomeCollections}
 \title{Fetch some collections}
 \usage{
-fetchSomeCollections(
-  species,
-  collections,
-  fetch.file = downloadDatabaseFile,
-  fetch.file.args = list(),
-  fetch.range = downloadDatabaseRanges,
-  fetch.range.args = list()
-)
+fetchSomeCollections(species, collections, config = NULL)
 }
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
@@ -19,16 +12,8 @@ fetchSomeCollections(
 \item{collections}{Integer vector containing collection indices.
 Each entry refers to a row of the data frame returned by \code{\link{fetchAllCollections}}).}
 
-\item{fetch.file}{Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.}
-
-\item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
-
-\item{fetch.range}{Function that accepts at least two arguments - 
-the name of the file in the Gesel database, and an integer vector of length 2 containing the zero-indexed half-open byte range to extract from the file
-(see \code{\link{downloadDatabaseRanges}} for details).
-It should return a string containing the contents of the specified byte range.}
-
-\item{fetch.range.args}{Named list of arguments to pass to \code{fetch.file}.}
+\item{config}{Configuration list, typically created by \code{\link{newConfig}}.
+If \code{NULL}, the default configuration is used.}
 }
 \value{
 Data frame with the same columns as the return value of \code{\link{fetchAllCollections}},

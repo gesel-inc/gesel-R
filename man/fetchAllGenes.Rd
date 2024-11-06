@@ -4,12 +4,7 @@
 \alias{fetchAllGenes}
 \title{Fetch all genes}
 \usage{
-fetchAllGenes(
-  species,
-  types = NULL,
-  fetch = downloadGeneFile,
-  fetch.args = list()
-)
+fetchAllGenes(species, types = NULL, config = NULL)
 }
 \arguments{
 \item{species}{String specifying the taxonomy ID of the species of interest.}
@@ -18,10 +13,8 @@ fetchAllGenes(
 This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
 defaulting to all of them.}
 
-\item{fetch}{Function that accepts the name of the file in the Gesel gene descriptions and returns an absolute path to the file.
-If \code{NULL}, it defaults to \code{\link{downloadGeneFile}}.}
-
-\item{fetch.args}{Named list of arguments to pass to \code{fetch}.}
+\item{config}{Configuration list, typically created by \code{\link{newConfig}}.
+If \code{NULL}, the default configuration is used.}
 }
 \value{
 Data frame where each row represents a gene.

@@ -63,12 +63,8 @@
 #' )
 #'
 #' # We can then read directly from them:
-#' head(fetchAllSets(
-#'     "9606",
-#'     fetch=function(x) {
-#'         file.path(output, x) 
-#'     }
-#' ))
+#' config <- newConfig(fetch.file=function(x) file.path(output, x))
+#' head(fetchAllSets("9606", config))
 #'
 #' @export
 prepareDatabaseFiles <- function(species, collections, set.info, set.membership, num.genes, path = ".") {

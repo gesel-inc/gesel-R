@@ -4,7 +4,7 @@
 \alias{findOverlappingSets}
 \title{Find sets overlapping a list of genes}
 \usage{
-findOverlappingSets(species, genes, counts.only = TRUE, more.args = list())
+findOverlappingSets(species, genes, counts.only = TRUE, config = NULL)
 }
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
@@ -14,7 +14,8 @@ Each gene index refers to a row of the data frame returned by \code{\link{fetchA
 
 \item{counts.only}{Logical scalar indicating whether to only report the number of overlapping genes for each set.}
 
-\item{more.args}{Further arguments to pass to \code{\link{fetchSetsForSomeGenes}}.}
+\item{config}{Configuration list, typically created by \code{\link{newConfig}}.
+If \code{NULL}, the default configuration is used.}
 }
 \value{
 A list containing:

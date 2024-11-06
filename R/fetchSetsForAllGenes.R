@@ -21,17 +21,18 @@
 #' fetchAllGenes("9606")$symbol[1]
 #' 
 #' @export
-fetchSetsForAllGenes <- function(species, fetch = downloadDatabaseFile, fetch.args = list()) {
-    candidate <- get_cache("fetchSetsForAllGenes", species)
+fetchSetsForAllGenes <- function(species, config = NULL) {
+    config <- get_config(config)
+    candidate <- get_cache(config, "fetchSetsForAllGenes", species)
     if (!is.null(candidate)) {
         return(candidate)
     }
 
     fname <- paste0(species, "_gene2set.tsv.gz")
-    path <- do.call(fetch, c(list(fname), fetch.args))
+    path <- fetch_file(config, fname)
     raw <- decompress_lines(path)
     output <- decode_indices(raw)
 
-    set_cache("fetchSetsForAllGenes", species, output)
+    set_cache(config, "fetchSetsForAllGenes", species, output)
     output
 }
