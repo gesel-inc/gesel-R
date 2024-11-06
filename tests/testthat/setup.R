@@ -59,7 +59,7 @@ getDatabaseRanges <- function(name, starts, ends) {
     o <- order(starts)
     output <- character(length(o))
     for (i in o) {
-        seek(handle, where=starts[i])
+        seek(handle, where=starts[i]) # where= seems to be zero-based in terms of its position.
         output[i] <- rawToChar(readBin(handle, what=raw(), n=ends[i] - starts[i]))
     }
 
