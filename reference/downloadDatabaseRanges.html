@@ -54,7 +54,13 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">downloadDatabaseRanges</span><span class="op">(</span><span class="va">name</span>, <span class="va">start</span>, <span class="va">end</span>, url <span class="op">=</span> <span class="fu"><a href="downloadDatabaseFile.html">databaseUrl</a></span><span class="op">(</span><span class="op">)</span>, num.workers <span class="op">=</span> <span class="fl">4L</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">downloadDatabaseRanges</span><span class="op">(</span></span>
+<span>  <span class="va">name</span>,</span>
+<span>  <span class="va">start</span>,</span>
+<span>  <span class="va">end</span>,</span>
+<span>  url <span class="op">=</span> <span class="fu"><a href="downloadDatabaseFile.html">databaseUrl</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  multipart <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -67,12 +73,14 @@ This usually has the species identifier as a prefix.</p></dd>
 
 
 <dt id="arg-start">start<a class="anchor" aria-label="anchor" href="#arg-start"></a></dt>
-<dd><p>Integer vector containing the zero-indexed closed start of each byte range to extract from the file.</p></dd>
+<dd><p>Integer vector containing the zero-indexed closed start of each byte range to extract from the file.
+This may be of zero length.</p></dd>
 
 
 <dt id="arg-end">end<a class="anchor" aria-label="anchor" href="#arg-end"></a></dt>
 <dd><p>Integer vector containing the zero-indexed open end of each byte range to extract from the file.
-This should have the same length as <code>start</code> such that the <code>i</code>-th range is defined as <code>[start[i], end[i])</code>.</p></dd>
+This should have the same length as <code>start</code> such that the <code>i</code>-th range is defined as <code>[start[i], end[i])</code>.
+All ranges supplied in a single call to this function should be non-overlapping.</p></dd>
 
 
 <dt id="arg-url">url<a class="anchor" aria-label="anchor" href="#arg-url"></a></dt>
@@ -80,8 +88,8 @@ This should have the same length as <code>start</code> such that the <code>i</co
 For <code>databaseUrl</code>, this can be <code>NULL</code> to set it back to the default.</p></dd>
 
 
-<dt id="arg-num-workers">num.workers<a class="anchor" aria-label="anchor" href="#arg-num-workers"></a></dt>
-<dd><p>Integer scalar specifying the number of workers to use for concurrent requests with multiple ranges.</p></dd>
+<dt id="arg-multipart">multipart<a class="anchor" aria-label="anchor" href="#arg-multipart"></a></dt>
+<dd><p>Logical scalar indicating whether the server at <code>url</code> supports multi-part range requests.</p></dd>
 
 </dl></div>
     <div id="value">
