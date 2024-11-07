@@ -62,13 +62,15 @@ downloadMultipartRanges <- function(url, start, end) {
 
     req <- request(url)
     o <- order(start)
-    ranges <- paste(sprintf("%s-%s", start[o], end[o] - 1L), collapse=", ") # byte ranges are closed intervals, not half-open.
+    start <- start[o]
+    end <- end[o]
+    ranges <- paste(sprintf("%s-%s", start, end - 1L), collapse=", ") # byte ranges are closed intervals, not half-open.
     req <- req_headers(req, Range=paste0("bytes=", ranges))
     resp <- req_perform(req)
 
     if (length(start) == 1L) {
         content <- resp_body_string(resp)
-        output[keep] <- substr(content, 1L, end - start)
+        output[keep[o]] <- substr(content, 1L, end - start)
         return(output)
     }
 
@@ -82,7 +84,7 @@ downloadMultipartRanges <- function(url, start, end) {
     parsed <- parse_multipart_response(resp_body_string(resp), boundary)
     chosen <- findInterval(start, parsed$start)
     offset <- parsed$start
-    output[keep] <- substr(parsed$content[chosen], start - offset + 1L, end - offset)
+    output[keep[o]] <- substr(parsed$content[chosen], start - offset + 1L, end - offset)
     output
 }
 
