@@ -9,7 +9,7 @@
 #' @param set.info Data frame of information about each gene set, where each row corresponds to a set. 
 #' This data frame should contain the same columns as that returned by \code{\link{fetchAllSets}}.
 #' @param set.membership List of integer vectors, where each vector corresponds to a gene set and contains the indices of its constituent genes.
-#' All gene indices should be positive and no greater than \code{num.genes}.
+#' All gene indices should be positive, no greater than \code{num.genes}, and unique within each set.
 #' @param num.genes Integer scalar specifying the total number of genes available for this species.
 #'
 #' @return Several files are produced at \code{path} with the \code{<species>_} prefix.
@@ -48,6 +48,7 @@
 #'         seq_len(nrow(set.info))
 #'     )
 #' )
+#' set.membership <- lapply(set.membership, unique)
 #' set.info$size <- lengths(set.membership)
 #'
 #' # Now making the database files.
@@ -122,7 +123,7 @@ save_integer_list <- function(x, prefix, include.names = FALSE) {
     for (i in seq_along(x)) {
         z <- x[[i]]
         if (length(z)) {
-            z <- sort(unique(z)) # convert to diffs to reduce integer size
+            z <- sort(z) # convert to diffs to reduce integer size
             z <- c(z[1] - 1L, diff(z)) # get to 0-based indexing with delta encoding.
             lines[i] <- paste(z, collapse="\t")
         }

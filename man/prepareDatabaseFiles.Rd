@@ -23,7 +23,7 @@ This data frame should contain the same columns as that returned by \code{\link{
 This data frame should contain the same columns as that returned by \code{\link{fetchAllSets}}.}
 
 \item{set.membership}{List of integer vectors, where each vector corresponds to a gene set and contains the indices of its constituent genes.
-All gene indices should be positive and no greater than \code{num.genes}.}
+All gene indices should be positive, no greater than \code{num.genes}, and unique within each set.}
 
 \item{num.genes}{Integer scalar specifying the total number of genes available for this species.}
 
@@ -68,6 +68,7 @@ set.membership <- split(
         seq_len(nrow(set.info))
     )
 )
+set.membership <- lapply(set.membership, unique)
 set.info$size <- lengths(set.membership)
 
 # Now making the database files.

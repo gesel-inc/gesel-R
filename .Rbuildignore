@@ -1,2 +1,4 @@
 ^\.github$
 ^\.gitignore$
+^vendor.sh$
+^_spec$

@@ -1,6 +1,6 @@
 Package: gesel
-Version: 0.1.1
-Date: 2024-11-06
+Version: 0.1.2
+Date: 2024-11-15
 Title: Search for Interesting Gene Sets
 License: MIT + file LICENSE
 Description:
@@ -13,12 +13,16 @@ Imports:
     utils,
     methods,
     rappdirs,
-    httr2
+    httr2,
+    Rcpp
 Suggests:
     BiocStyle,
     knitr,
     testthat,
     rmarkdown
+LinkingTo:
+    assorthead,
+    Rcpp
 VignetteBuilder: knitr
 Encoding: UTF-8
 RoxygenNote: 7.3.2

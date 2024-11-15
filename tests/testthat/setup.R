@@ -32,6 +32,7 @@ ref.set.membership <- split(
         seq_len(nrow(ref.set.info))
     )
 )
+ref.set.membership <- lapply(ref.set.membership, unique)
 ref.set.membership[1:4 * 10] <- rep(list(integer(0)), 4L) # spiking in a few empty sets, for good measure.
 ref.set.membership <- unname(ref.set.membership)
 ref.set.info$size <- lengths(ref.set.membership)
@@ -47,6 +48,7 @@ prepareDatabaseFiles(
     ref.num.genes,
     ref.dir 
 )
+validateDatabaseFiles(ref.dir, species, ref.num.genes)
 
 getDatabaseFile <- function(name) {
     file.path(ref.dir, name)

@@ -1,2 +1,5 @@
 *.swp
 *.html
+_spec
+*.o
+*.so
