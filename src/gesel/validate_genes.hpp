@@ -23,6 +23,7 @@ namespace gesel {
  * @param prefix Prefix for the Gesel gene mapping files.
  * This should be of the form `<DIRECTORY>/<SPECIES>_`, where `<SPECIES>` is an NCBI taxonomy ID.
  * @param types Vector of gene name types, e.g., `"ensembl"`, `"symbol"`.
+ * This should contain at least one value.
  *
  * @return Number of genes.
  */
@@ -38,6 +39,11 @@ inline uint64_t validate_genes(const std::string& prefix, const std::vector<std:
             throw std::runtime_error("inconsistent number of genes between types (" + std::to_string(num_genes) + " for " + types.front() + ", " + std::to_string(candidate) + " for " + t + ")");
         }
     }
+
+    if (first) {
+        throw std::runtime_error("at least one gene name type should be present");
+    }
+
     return num_genes;
 }
 

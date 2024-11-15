@@ -51,6 +51,10 @@ inline void tokenize(uint64_t index, const std::string& text, std::unordered_map
 inline void check_tokens(const std::vector<std::string>& tokens, const std::string& path) {
     for (size_t t = 0, end = tokens.size(); t < end; ++t) {
         const auto& token = tokens[t];
+        if (token.empty()) {
+            throw std::runtime_error("token should not be an empty string in '" + path + "' " + append_line_number(t));
+        }
+
         for (auto x : token) {
             if (invalid_token_character(x)) {
                 throw std::runtime_error("tokens should only contain lower-case alphabetical characters, digits or a dash in '" + path + "' " + append_line_number(t));

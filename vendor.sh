@@ -6,7 +6,7 @@ then
 else
     git clone https://github.com/gesel-inc/gesel-spec _spec
 fi
-git -C _spec checkout master
+git -C _spec checkout v0.1.0
 
 rm -rf src/gesel
 cp -r _spec/include/gesel src
