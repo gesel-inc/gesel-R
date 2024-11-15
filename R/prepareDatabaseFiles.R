@@ -166,5 +166,6 @@ tokenize <- function(x) {
     tokens <- strsplit(out, "\\s+")
     ids <- rep(seq_along(tokens), lengths(tokens))
     by.token <- split(ids, unlist(tokens))
-    by.token[!(names(by.token) %in% c("", "-"))]
+    by.token <- by.token[!(names(by.token) %in% "")]
+    lapply(by.token, unique)
 }
