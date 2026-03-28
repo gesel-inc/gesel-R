@@ -36,8 +36,8 @@ fetchSomeCollections <- function(species, collections, config = NULL) {
     needed <- setdiff(collections, prior.collections)
     if (length(needed)) {
         intervals <- cached$intervals
-        starts <- intervals[collections]
-        ends <- intervals[collections + 1L] - 1L # remove the newline.
+        starts <- intervals[needed]
+        ends <- intervals[needed + 1L] - 1L # remove the newline.
         deets <- fetch_range(config, fname, starts, ends)
 
         prior.collections <- c(prior.collections, needed)
