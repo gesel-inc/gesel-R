@@ -16,11 +16,8 @@
 #' If \code{url} is provided, it instead stores \code{url} as the URL to the database, and the previous value of \code{url} is invisibly returned.
 #' 
 #' @details
-#' The default database URL is set to the GitHub releases at \url{https://github.com/LTLA/gesel-feedstock}.
+#' The database URL defaults to the GitHub releases at \url{https://github.com/LTLA/gesel-feedstock}.
 #' This can be altered by setting the \code{GESEL_DATABASE_URL} environment variable.
-#'
-#' On first use of a cached file in an R session, \code{downloadDatabaseFile} will automatically check for updates at \code{url}. 
-#' If the file on the remote has been updated, the new copy will be downloaded to the cache.
 #' 
 #' @author Aaron Lun
 #'
@@ -51,7 +48,7 @@ databaseUrl <- function(url) {
     } else {
         previous <- downloadDatabaseUrl.env$url
         downloadDatabaseUrl.env$url <- url
-        invisible(NULL)
+        invisible(previous)
     }
 }
 

@@ -30,11 +30,8 @@ If \code{url} is provided, it instead stores \code{url} as the URL to the indice
 Default function to download Gesel gene description files.
 }
 \details{
-The default gene URL is set to the GitHub releases at \url{https://github.com/LTLA/gesel-feedstock}.
+The gene URL defaults to the GitHub releases at \url{https://github.com/LTLA/gesel-feedstock}.
 This can be altered by setting the \code{GESEL_GENE_URL} environment variable.
-
-On first use of a cached file in an R session, \code{downloadGeneFile} will automatically check for updates at \code{url}. 
-If the file on the remote has been updated, the new copy will be downloaded to the cache.
 }
 \examples{
 # Download file.

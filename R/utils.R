@@ -5,27 +5,9 @@ handle_error <- function(req) {
         if (ct == "text/plain") {
             resp_body_string(res)
         } else {
-            NULL
+            character()
         }
     })
-}
-
-#' @import httr2
-parse_remote_last_modified <- function(res) {
-    remote_mod <- resp_header(res, "last-modified")
-
-    if (is.null(remote_mod)) {
-        warning("failed to find 'last-modified' header from the SewerRat API")
-        return(NULL)
-    }
-
-    remote_mod <- as.POSIXct(remote_mod, format="%a, %d %b %Y %H:%M:%S", tz="GMT")
-    if (is.na(remote_mod)) {
-        warning("invalid 'last-modified' header from the SewerRat API")
-        return(NULL)
-    }
-
-    return(remote_mod) 
 }
 
 #' @import methods
@@ -35,27 +17,11 @@ parse_remote_last_modified <- function(res) {
 download_file <- function(cache, url, overwrite) {
     if (is.null(cache)) {
         cache <- user_cache_dir("gesel")
-        dir.create(cache, recursive=TRUE, showWarnings=FALSE)
     }
+    dir.create(cache, recursive=TRUE, showWarnings=FALSE)
     target <- file.path(cache, URLencode(url, reserved=TRUE))
 
-    if (!file.exists(target)) {
-        overwrite <- TRUE
-    } else if (!overwrite) {
-        req <- request(url)
-        req <- req_method(req, "HEAD")
-        req <- handle_error(req)
-        res <- try(req_perform(req), silent=TRUE)
-        if (!is(res, "try-error")) { # don't throw an error if there is no internet.
-            remote_mod <- parse_remote_last_modified(res)
-            last_mod <- file.info(target)$mtime
-            if (!is.null(remote_mod) && remote_mod > last_mod) {
-                overwrite <- TRUE
-            }
-        }
-    }
-
-    if (overwrite) {
+    if (overwrite || !file.exists(target)) {
         # Saving to a temporary file and renaming it on success,
         # so we don't fail with a partially downloaded file in the cache.
         tempf <- tempfile(tmpdir=cache)
@@ -64,13 +30,6 @@ download_file <- function(cache, url, overwrite) {
         req <- request(url)
         req <- handle_error(req)
         res <- req_perform(req, path=tempf)
-
-        # The key part here is to set the modification time correctly,
-        # so that any updating mechanisms work correctly.
-        mod <- parse_remote_last_modified(res)
-        if (!is.null(mod)) {
-            Sys.setFileTime(target, mod)
-        }
 
         file.rename(tempf, target) # this should be more or less atomic, so no need for locks.
     }
