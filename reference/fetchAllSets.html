@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
       </span>
     </div>
 
@@ -81,6 +81,10 @@ The collection index refers to a row of the data frame returned by <code><a href
 <li><p><code>number</code>, integer scalar containing the position of the gene set inside the specified collection.
 The set index of the current gene set is defined by adding <code>number - 1</code> to the collection's <code>start</code>.</p></li>
 </ul></div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>If this function is called once, the data frame will be cached in memory and re-used in subsequent calls to this function or <code><a href="fetchSomeSets.html">fetchSomeSets</a></code>.</p>
+    </div>
     <div id="author">
     <h2>Author</h2>
     <p>Aaron Lun</p>

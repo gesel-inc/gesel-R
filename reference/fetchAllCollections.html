@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
       </span>
     </div>
 
@@ -81,6 +81,10 @@ Each row represents a collection and contains:</p><ul><li><p><code>title</code>,
 The set index refers to a row in the data frame returned by <code><a href="fetchAllSets.html">fetchAllSets</a></code>.</p></li>
 <li><p><code>size</code>, integer scalar specifying the number of gene sets in the collection.</p></li>
 </ul></div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>If this function is called once, the data frame will be cached in memory and re-used in subsequent calls to this function or <code><a href="fetchSomeCollections.html">fetchSomeCollections</a></code>.</p>
+    </div>
     <div id="author">
     <h2>Author</h2>
     <p>Aaron Lun</p>

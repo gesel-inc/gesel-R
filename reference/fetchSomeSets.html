@@ -18,7 +18,7 @@ This can be more efficient than calling fetchAllSets when only a few sets are of
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.4</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.5</span>
       </span>
     </div>
 
@@ -80,6 +80,13 @@ If <code>NULL</code>, the default configuration is used.</p></dd>
     <h2>Value</h2>
     <p>Data frame with the same columns as the return value of <code><a href="fetchAllSets.html">fetchAllSets</a></code>,
 where each row corresponds to an entry of <code>sets</code>.</p>
+    </div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>Every time this function is called, information from the requested <code>sets</code> will be added to an in-memory cache.
+Subsequent calls to this function will re-use as many of the cached sets as possible.</p>
+<p>If <code><a href="fetchAllSets.html">fetchAllSets</a></code> is called, information from all sets are cached in memory and will be retrieved when <code>fetchSomeSets</code> is called.
+If <code>sets</code> is large, it may be beneficial to call <code><a href="fetchAllSets.html">fetchAllSets</a></code> first before calling this function.</p>
     </div>
     <div id="author">
     <h2>Author</h2>
