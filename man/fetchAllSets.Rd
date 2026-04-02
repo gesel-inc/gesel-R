@@ -28,6 +28,9 @@ The set index of the current gene set is defined by adding \code{number - 1} to 
 \description{
 Fetch information about all gene sets in the Gesel database.
 }
+\details{
+If this function is called once, the data frame will be cached in memory and re-used in subsequent calls to this function or \code{\link{fetchSomeSets}}.
+}
 \examples{
 out <- fetchAllSets("9606")
 head(out)

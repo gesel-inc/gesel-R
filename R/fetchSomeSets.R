@@ -9,6 +9,13 @@
 #' @return Data frame with the same columns as the return value of \code{\link{fetchAllSets}},
 #' where each row corresponds to an entry of \code{sets}.
 #'
+#' @details
+#' Every time this function is called, information from the requested \code{sets} will be added to an in-memory cache.
+#' Subsequent calls to this function will re-use as many of the cached sets as possible.
+#'
+#' If \code{\link{fetchAllSets}} is called, information from all sets are cached in memory and will be retrieved when \code{fetchSomeSets} is called.
+#' If \code{sets} is large, it may be beneficial to call \code{\link{fetchAllSets}} first before calling this function.
+#'
 #' @author Aaron Lun
 #' @examples
 #' fetchSomeSets("9606", 1)

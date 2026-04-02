@@ -28,6 +28,9 @@ The set index refers to a row in the data frame returned by \code{\link{fetchAll
 \description{
 Fetch information about all gene set collections in the Gesel database.
 }
+\details{
+If this function is called once, the data frame will be cached in memory and re-used in subsequent calls to this function or \code{\link{fetchSomeCollections}}.
+}
 \examples{
 out <- fetchAllCollections("9606")
 head(out)

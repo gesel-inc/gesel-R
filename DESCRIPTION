@@ -1,5 +1,5 @@
 Package: gesel
-Version: 0.1.4
+Version: 0.1.5
 Date: 2026-04-02
 Title: Search for Interesting Gene Sets
 License: MIT + file LICENSE
@@ -25,4 +25,4 @@ LinkingTo:
     Rcpp
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3

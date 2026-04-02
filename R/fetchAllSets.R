@@ -16,6 +16,9 @@
 #' The set index of the current gene set is defined by adding \code{number - 1} to the collection's \code{start}. 
 #' }
 #'
+#' @details
+#' If this function is called once, the data frame will be cached in memory and re-used in subsequent calls to this function or \code{\link{fetchSomeSets}}.
+#'
 #' @author Aaron Lun
 #' @examples
 #' out <- fetchAllSets("9606")

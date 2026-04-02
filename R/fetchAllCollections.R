@@ -18,6 +18,9 @@
 #' \item \code{size}, integer scalar specifying the number of gene sets in the collection.
 #' }
 #' 
+#' @details
+#' If this function is called once, the data frame will be cached in memory and re-used in subsequent calls to this function or \code{\link{fetchSomeCollections}}.
+#'
 #' @author Aaron Lun
 #' @examples
 #' out <- fetchAllCollections("9606")

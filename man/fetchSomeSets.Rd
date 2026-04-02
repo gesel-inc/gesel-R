@@ -22,6 +22,13 @@ where each row corresponds to an entry of \code{sets}.
 Fetch the details of some gene sets from the Gesel database.
 This can be more efficient than calling \code{\link{fetchAllSets}} when only a few sets are of interest.
 }
+\details{
+Every time this function is called, information from the requested \code{sets} will be added to an in-memory cache.
+Subsequent calls to this function will re-use as many of the cached sets as possible.
+
+If \code{\link{fetchAllSets}} is called, information from all sets are cached in memory and will be retrieved when \code{fetchSomeSets} is called.
+If \code{sets} is large, it may be beneficial to call \code{\link{fetchAllSets}} first before calling this function.
+}
 \examples{
 fetchSomeSets("9606", 1)
 

@@ -10,6 +10,13 @@
 #' @return Data frame with the same columns as the return value of \code{\link{fetchAllCollections}},
 #' where each row corresponds to an entry of \code{collections}.
 #'
+#' @details
+#' Every time this function is called, information from the requested \code{collections} will be added to an in-memory cache.
+#' Subsequent calls to this function will re-use as many of the cached collections as possible.
+#'
+#' If \code{\link{fetchAllCollections}} is called, information from all collections are cached in memory and will be retrieved when \code{fetchSomeCollections} is called.
+#' If \code{collections} is large, it may be beneficial to call \code{\link{fetchAllCollections}} first before calling this function.
+#'
 #' @author Aaron Lun
 #' @examples
 #' fetchSomeCollections("9606", 1)
