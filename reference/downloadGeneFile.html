@@ -56,7 +56,7 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">downloadGeneFile</span><span class="op">(</span><span class="va">name</span>, url <span class="op">=</span> <span class="fu">geneUrl</span><span class="op">(</span><span class="op">)</span>, cache <span class="op">=</span> <span class="cn">NULL</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">geneUrl</span><span class="op">(</span><span class="va">url</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">geneUrl</span><span class="op">(</span>url <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -68,8 +68,7 @@
 
 
 <dt id="arg-url">url<a class="anchor" aria-label="anchor" href="#arg-url"></a></dt>
-<dd><p>String containing the base URL to the Gesel gene descriptions.
-For <code>geneUrl</code>, this can be <code>NULL</code> to set it back to the default.</p></dd>
+<dd><p>String containing the base URL to the Gesel gene descriptions.</p></dd>
 
 
 <dt id="arg-cache">cache<a class="anchor" aria-label="anchor" href="#arg-cache"></a></dt>
@@ -84,13 +83,13 @@ If <code>NULL</code>, a cache location is automatically chosen.</p></dd>
     <div id="value">
     <h2>Value</h2>
     <p><code>downloadGeneFile</code> returns a string containing a local path to the downloaded file.</p>
-<p>For <code>geneUrl</code>, if <code>url</code> is missing, the function returns a string containing the URL to the Gesel gene descriptions.
+<p>For <code>geneUrl</code>, if <code>url=NULL</code>, the function returns a string containing the URL to the Gesel gene descriptions.
 If <code>url</code> is provided, it instead stores <code>url</code> as the URL to the indices, and the previous value of <code>url</code> is invisibly returned.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
     <p>The gene URL defaults to the GitHub releases at <a href="https://github.com/LTLA/gesel-feedstock" class="external-link">https://github.com/LTLA/gesel-feedstock</a>.
-This can be altered by setting the <code>GESEL_GENE_URL</code> environment variable.</p>
+This can be altered by setting the <code>GESEL_GENE_URL</code> environment variable prior to the first call to this function.</p>
     </div>
     <div id="author">
     <h2>Author</h2>

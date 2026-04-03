@@ -61,7 +61,7 @@
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">databaseUrl</span><span class="op">(</span><span class="va">url</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">databaseUrl</span><span class="op">(</span>url <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -74,8 +74,7 @@ This usually has the species identifier as a prefix.</p></dd>
 
 
 <dt id="arg-url">url<a class="anchor" aria-label="anchor" href="#arg-url"></a></dt>
-<dd><p>String containing the base URL to the Gesel database files.
-For <code>databaseUrl</code>, this can be <code>NULL</code> to set it back to the default.</p></dd>
+<dd><p>String containing the base URL to the Gesel database files.</p></dd>
 
 
 <dt id="arg-cache">cache<a class="anchor" aria-label="anchor" href="#arg-cache"></a></dt>
@@ -90,13 +89,13 @@ If <code>NULL</code>, a cache location is automatically chosen.</p></dd>
     <div id="value">
     <h2>Value</h2>
     <p><code>downloadDatabaseFile</code> returns a string containing a path to the downloaded file.</p>
-<p>For <code>databaseUrl</code>, if <code>url</code> is missing, the function returns a string containing the URL to the Gesel database.
+<p>For <code>databaseUrl</code>, if <code>url=NULL</code>, the function returns a string containing the URL to the Gesel database.
 If <code>url</code> is provided, it instead stores <code>url</code> as the URL to the database, and the previous value of <code>url</code> is invisibly returned.</p>
     </div>
     <div id="details">
     <h2>Details</h2>
     <p>The database URL defaults to the GitHub releases at <a href="https://github.com/LTLA/gesel-feedstock" class="external-link">https://github.com/LTLA/gesel-feedstock</a>.
-This can be altered by setting the <code>GESEL_DATABASE_URL</code> environment variable.</p>
+This can be altered by setting the <code>GESEL_DATABASE_URL</code> environment variable prior to the first call to this function.</p>
     </div>
     <div id="author">
     <h2>Author</h2>
