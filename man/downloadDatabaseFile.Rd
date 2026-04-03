@@ -12,14 +12,13 @@ downloadDatabaseFile(
   overwrite = FALSE
 )
 
-databaseUrl(url)
+databaseUrl(url = NULL)
 }
 \arguments{
 \item{name}{String containing the name of the file.
 This usually has the species identifier as a prefix.}
 
-\item{url}{String containing the base URL to the Gesel database files.
-For \code{databaseUrl}, this can be \code{NULL} to set it back to the default.}
+\item{url}{String containing the base URL to the Gesel database files.}
 
 \item{cache}{String specifying the path to a cache directory.
 If \code{NULL}, a cache location is automatically chosen.}
@@ -29,7 +28,7 @@ If \code{NULL}, a cache location is automatically chosen.}
 \value{
 \code{downloadDatabaseFile} returns a string containing a path to the downloaded file.
 
-For \code{databaseUrl}, if \code{url} is missing, the function returns a string containing the URL to the Gesel database.
+For \code{databaseUrl}, if \code{url=NULL}, the function returns a string containing the URL to the Gesel database.
 If \code{url} is provided, it instead stores \code{url} as the URL to the database, and the previous value of \code{url} is invisibly returned.
 }
 \description{
@@ -37,7 +36,7 @@ Default function to download Gesel database files.
 }
 \details{
 The database URL defaults to the GitHub releases at \url{https://github.com/LTLA/gesel-feedstock}.
-This can be altered by setting the \code{GESEL_DATABASE_URL} environment variable.
+This can be altered by setting the \code{GESEL_DATABASE_URL} environment variable prior to the first call to this function.
 }
 \examples{
 # Download file.

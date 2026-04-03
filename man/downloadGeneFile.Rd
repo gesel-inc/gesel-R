@@ -7,13 +7,12 @@
 \usage{
 downloadGeneFile(name, url = geneUrl(), cache = NULL, overwrite = FALSE)
 
-geneUrl(url)
+geneUrl(url = NULL)
 }
 \arguments{
 \item{name}{String containing the name of the file, typically of the form \code{<species>_<type>.tsv.gz}, e.g., \code{"9606_symbol.tsv.gz"}.}
 
-\item{url}{String containing the base URL to the Gesel gene descriptions. 
-For \code{geneUrl}, this can be \code{NULL} to set it back to the default.}
+\item{url}{String containing the base URL to the Gesel gene descriptions.}
 
 \item{cache}{String specifying the path to a cache directory.
 If \code{NULL}, a cache location is automatically chosen.}
@@ -23,7 +22,7 @@ If \code{NULL}, a cache location is automatically chosen.}
 \value{
 \code{downloadGeneFile} returns a string containing a local path to the downloaded file.
 
-For \code{geneUrl}, if \code{url} is missing, the function returns a string containing the URL to the Gesel gene descriptions.
+For \code{geneUrl}, if \code{url=NULL}, the function returns a string containing the URL to the Gesel gene descriptions.
 If \code{url} is provided, it instead stores \code{url} as the URL to the indices, and the previous value of \code{url} is invisibly returned.
 }
 \description{
@@ -31,7 +30,7 @@ Default function to download Gesel gene description files.
 }
 \details{
 The gene URL defaults to the GitHub releases at \url{https://github.com/LTLA/gesel-feedstock}.
-This can be altered by setting the \code{GESEL_GENE_URL} environment variable.
+This can be altered by setting the \code{GESEL_GENE_URL} environment variable prior to the first call to this function.
 }
 \examples{
 # Download file.

@@ -20,6 +20,7 @@ test_that("databaseUrl works correctly", {
     expect_type(url, "character")
 
     old <- databaseUrl("https://foo.bar")
+    expect_identical(old, url)
     expect_identical(databaseUrl(), "https://foo.bar")
 
     databaseUrl(old)

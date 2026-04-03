@@ -5,19 +5,18 @@
 #' @param name String containing the name of the file.
 #' This usually has the species identifier as a prefix.
 #' @param url String containing the base URL to the Gesel database files.
-#' For \code{databaseUrl}, this can be \code{NULL} to set it back to the default.
 #' @param cache String specifying the path to a cache directory.
 #' If \code{NULL}, a cache location is automatically chosen.
 #' @param overwrite Logical scalar indicating whether any cached file should be overwritten.
 #'
 #' @return \code{downloadDatabaseFile} returns a string containing a path to the downloaded file.
 #'
-#' For \code{databaseUrl}, if \code{url} is missing, the function returns a string containing the URL to the Gesel database.
+#' For \code{databaseUrl}, if \code{url=NULL}, the function returns a string containing the URL to the Gesel database.
 #' If \code{url} is provided, it instead stores \code{url} as the URL to the database, and the previous value of \code{url} is invisibly returned.
 #' 
 #' @details
 #' The database URL defaults to the GitHub releases at \url{https://github.com/LTLA/gesel-feedstock}.
-#' This can be altered by setting the \code{GESEL_DATABASE_URL} environment variable.
+#' This can be altered by setting the \code{GESEL_DATABASE_URL} environment variable prior to the first call to this function.
 #' 
 #' @author Aaron Lun
 #'
@@ -38,15 +37,15 @@ downloadDatabaseFile <- function(name, url = databaseUrl(), cache = NULL, overwr
 
 #' @export
 #' @rdname downloadDatabaseFile
-databaseUrl <- function(url) {
-    if (missing(url)) {
-        url <- downloadDatabaseUrl.env$url
-        if (is.null(url)) {
-            url <- Sys.getenv("GESEL_DATABASE_URL", "https://github.com/LTLA/gesel-feedstock/releases/download/indices-v0.2.1")
-        }
-        url
+databaseUrl <- function(url = NULL) {
+    previous <- downloadDatabaseUrl.env$url
+    if (is.null(previous)) {
+        previous <- Sys.getenv("GESEL_DATABASE_URL", "https://github.com/LTLA/gesel-feedstock/releases/download/indices-v0.2.1")
+        downloadDatabaseUrl.env$url <- previous
+    }
+    if (is.null(url)) {
+        previous 
     } else {
-        previous <- downloadDatabaseUrl.env$url
         downloadDatabaseUrl.env$url <- url
         invisible(previous)
     }

@@ -24,8 +24,7 @@ This may be of zero length.}
 This should have the same length as \code{start} such that the \code{i}-th range is defined as \code{[start[i], end[i])}.
 All ranges supplied in a single call to this function should be non-overlapping.}
 
-\item{url}{String containing the base URL to the Gesel database files.
-For \code{databaseUrl}, this can be \code{NULL} to set it back to the default.}
+\item{url}{String containing the base URL to the Gesel database files.}
 
 \item{multipart}{Logical scalar indicating whether the server at \code{url} supports multi-part range requests.}
 }
