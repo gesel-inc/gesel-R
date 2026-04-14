@@ -12,7 +12,7 @@ findOverlappingSets(species, genes, counts.only = TRUE, config = NULL)
 \item{genes}{Integer vector containing gene indices.
 Each gene index refers to a row of the data frame returned by \code{\link{fetchAllGenes}}.}
 
-\item{counts.only}{Logical scalar indicating whether to only report the number of overlapping genes for each set.}
+\item{counts.only}{Boolean indicating whether to only report the number of overlapping genes for each set.}
 
 \item{config}{Configuration list, typically created by \code{\link{newConfig}}.
 If \code{NULL}, the default configuration is used.}
@@ -30,21 +30,25 @@ This specifies the number of overlaps between the genes in the set and those in 
 \item The \code{genes} column, if \code{counts.only=FALSE}.
 This is a list that contains the entries of \code{genes} that overlap with those in the set.
 }
-\item \code{present}, an integer scalar containing the number of genes in \code{genes} that are present in at least one set in the Gesel database for \code{species}.
+Rows are sorted by the number of overlapping genes, in decreasing order.
+\item \code{present}, an integer indicating the number of genes in \code{genes} that are present in at least one set in the Gesel database for \code{species}.
 }
 }
 \description{
 Find all sets overlapping any gene in a user-supplied list, and return the number of overlaps per set.
 }
 \details{
-The \code{present} number should be used as the number of draws when performing a hypergeomtric test for gene set enrichment
-(see \code{\link{phyper}}), instead of \code{length(genes)}.
-It ensures that genes outside of the Gesel universe are ignored, e.g., due to user error, different genome versions.
+\code{present} number be used as the number of draws when performing a hypergeomtric test for gene set enrichment (see \code{\link{phyper}}), instead of \code{length(genes)}.
+Thisensures that genes outside of the Gesel universe are ignored, e.g., due to user error, different genome versions.
 Otherwise, unknown genes would inappropriately increase the number of draws and inflate the enrichment p-value.
 }
 \examples{
 overlaps <- findOverlappingSets("9606", 1:10)
 head(overlaps$overlap)
+
+# More details on the overlapping sets.
+all.sets <- fetchAllSets("9606")
+all.sets[head(overlaps$overlap$set),]
 
 }
 \author{

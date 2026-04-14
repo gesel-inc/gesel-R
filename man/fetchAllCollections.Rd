@@ -16,20 +16,21 @@ If \code{NULL}, the default configuration is used.}
 Data frame of gene set collection information.
 Each row represents a collection and contains:
 \itemize{
-\item \code{title}, string containing the title for the collection.
-\item \code{description}, string containing a description for the collection.
+\item \code{title}, string containing the title of the collection.
+\item \code{description}, string containing a description of the collection.
 \item \code{maintainer}, string containing the identity of the collection's maintainer.
 \item \code{source}, string containing the source of origin of the collection.
-\item \code{start}, integer containing the set index for the first gene set in this collection.
+\item \code{start}, integer containing the set index of the first gene set in this collection.
 The set index refers to a row in the data frame returned by \code{\link{fetchAllSets}}.
-\item \code{size}, integer scalar specifying the number of gene sets in the collection.
+\item \code{size}, integer specifying the number of gene sets in the collection.
 }
 }
 \description{
 Fetch information about all gene set collections in the Gesel database.
 }
 \details{
-If this function is called once, the data frame will be cached in memory and re-used in subsequent calls to this function or \code{\link{fetchSomeCollections}}.
+If this function is called once, the data frame will be cached in memory and re-used in subsequent calls to this function.
+The cached data will also be used to speed up calls to \code{\link{fetchSomeCollections}}.
 }
 \examples{
 out <- fetchAllCollections("9606")

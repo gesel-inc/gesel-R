@@ -6,8 +6,7 @@
 #' This usually has the species identifier as a prefix.
 #' @param url String containing the base URL to the Gesel database files.
 #' @param cache String specifying the path to a cache directory.
-#' If \code{NULL}, a cache location is automatically chosen.
-#' @param overwrite Logical scalar indicating whether any cached file should be overwritten.
+#' @param overwrite Boolean indicating whether any cached file should be overwritten.
 #'
 #' @return \code{downloadDatabaseFile} returns a string containing a path to the downloaded file.
 #'
@@ -31,7 +30,7 @@
 #' databaseUrl(old)
 #' 
 #' @export
-downloadDatabaseFile <- function(name, url = databaseUrl(), cache = NULL, overwrite = FALSE) {
+downloadDatabaseFile <- function(name, url = databaseUrl(), cache = cacheDirectory(), overwrite = FALSE) {
     download_file(cache, paste0(url, "/", name), overwrite)
 }
 

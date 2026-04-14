@@ -1,18 +1,25 @@
 #' Search for genes
 #'
-#' Search for genes by converting gene identifiers to gene indices.
+#' Search for genes by converting gene names/identifiers to gene indices.
 #' 
 #' @inheritParams fetchAllGenes
-#' @param genes Character vector of gene names of any type specified in \code{types}.
-#' @param ignore.case Logical scalar indicating whether case should be ignored.
+#' @param genes Character vector of gene names/identifiers  of any type specified in \code{types}.
+#' @param ignore.case Boolean indicating whether case should be ignored.
 #'
 #' @return List of length equal to \code{genes}.
 #' Each entry is an integer vector of gene indices that refer to rows of the data frame returned by \code{\link{fetchAllGenes}};
-#' these rows represent the genes that match to the corresponding entry of \code{genes}.
+#' these rows represent the genes with names/identifiers that match to the corresponding entry of \code{genes}.
 #'
 #' @author Aaron Lun
 #' @examples
-#' searchGenes("9606", c("SNAP25", "NEUROD6", "ENSG00000139618"))
+#' mapping <- searchGenes("9606", c("SNAP25", "NEUROD6", "ENSG00000139618"))
+#' str(mapping)
+#'
+#' # Checking that our genes were correctly identified:
+#' ref <- fetchAllGenes("9606")
+#' ref[mapping[[1]],]
+#' ref[mapping[[2]],]
+#' ref[mapping[[3]],]
 #' 
 #' @export
 searchGenes <- function(species, genes, types = NULL, ignore.case = TRUE, config = NULL) {

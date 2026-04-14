@@ -21,16 +21,26 @@ Each vector corresponds to a gene in \code{genes} and contains the identities of
 Each set is defined by its set index, which refers to a row of the data frame returned by \code{\link{fetchAllSets}}.
 }
 \description{
-Fetch all sets that contain some genes in the Gesel database.
+Fetch the identities of sets that contain some genes in the Gesel database.
 This can be more efficient than \code{\link{fetchSetsForAllGenes}} if only a few genes are of interest.
 }
+\details{
+Every time this function is called, information from the requested \code{genes} will be added to an in-memory cache.
+Subsequent calls to this function will re-use as many of the cached genes as possible before making new requests to the Gesel database.
+
+If \code{\link{fetchSetsForAllGenes}} is called, its cached data will be directly used by \code{fetchSomeSets} to avoid extra requests to the database.
+If \code{genes} is large, it may be more efficient to call \code{\link{fetchSetsForAllGenes}} to prepare the cache before calling this function.
+}
 \examples{
-first.gene <- fetchSetsForSomeGenes("9606", 1)
+first.gene <- fetchSetsForSomeGenes("9606", 1:5)
 str(first.gene)
 
-# Sets containing the first gene
+# Sets containing the first gene.
 all.set.info <- fetchAllSets("9606")
 head(all.set.info[first.gene[[1]],])
+
+# Identities of the requested genes.
+fetchAllGenes("9606")[1:5,]
 
 }
 \author{

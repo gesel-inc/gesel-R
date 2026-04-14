@@ -1,6 +1,6 @@
 #' Fetch genes for some sets
 #'
-#' Fetch genes for some sets in the Gesel database.
+#' Fetch the gene membership of some sets in the Gesel database.
 #' This can be more efficient than \code{\link{fetchGenesForAllSets}} if only a few sets are of interest.
 #' 
 #' @param species String containing the NCBI taxonomy ID of the species of interest.
@@ -13,14 +13,24 @@
 #' Each vector corresponds to a set in \code{sets} and contains the identities of its member genes.
 #' Each gene is defined by its gene index, which refers to a row of the data frame returned by \code{\link{fetchAllGenes}}.
 #'
+#' @details
+#' Every time this function is called, information from the requested \code{sets} will be added to an in-memory cache.
+#' Subsequent calls to this function will re-use as many of the cached sets as possible before making new requests to the Gesel database.
+#'
+#' If \code{\link{fetchGenesForAllSets}} was previously called, its cached data will be directly used by \code{fetchGenesForSomeSets} to avoid performing extra requests to the database.
+#' If \code{sets} is large, it may be more efficient to call \code{\link{fetchGenesForAllSets}} to prepare the cache before calling this function.
+#'
 #' @author Aaron Lun
 #' @examples
-#' first.set <- fetchGenesForSomeSets("9606", 1)
+#' first.set <- fetchGenesForSomeSets("9606", 1:5)
 #' str(first.set)
 #' 
 #' # Genes in the first set:
 #' gene.symbols <- fetchAllGenes("9606")$symbol
 #' head(gene.symbols[first.set[[1]]])
+#'
+#' # Identities of the requested sets.
+#' set.info <- fetchAllSets("9606")[1:5,]
 #' 
 #' @export
 fetchGenesForSomeSets <- function(species, sets, config = NULL) {

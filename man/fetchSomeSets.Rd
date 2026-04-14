@@ -24,13 +24,13 @@ This can be more efficient than calling \code{\link{fetchAllSets}} when only a f
 }
 \details{
 Every time this function is called, information from the requested \code{sets} will be added to an in-memory cache.
-Subsequent calls to this function will re-use as many of the cached sets as possible.
+Subsequent calls to this function will re-use as many of the cached sets as possible before making new requests to the Gesel database.
 
-If \code{\link{fetchAllSets}} is called, information from all sets are cached in memory and will be retrieved when \code{fetchSomeSets} is called.
-If \code{sets} is large, it may be beneficial to call \code{\link{fetchAllSets}} first before calling this function.
+If \code{\link{fetchAllSets}} was previously called, its cached data will be directly used by \code{fetchSomeSets} to avoid performing extra requests to the database.
+If \code{sets} is large, it may be more efficient to call \code{\link{fetchAllSets}} to prepare the cache before calling this function.
 }
 \examples{
-fetchSomeSets("9606", 1)
+fetchSomeSets("9606", 1:5)
 
 }
 \author{

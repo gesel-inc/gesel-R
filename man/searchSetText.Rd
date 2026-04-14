@@ -19,9 +19,9 @@ searchSetText(
 A set is only matched if it matches to all of the tokens in the query.
 The \code{*} and \code{?} wildcards can be used to match to any or one character, respectively.}
 
-\item{use.name}{Logical scalar indicating whether to search on the name of the set.}
+\item{use.name}{Boolean indicating whether to search on the name of the set.}
 
-\item{use.description}{Logical scalar indicating whether to search on the description of the set.}
+\item{use.description}{Boolean indicating whether to search on the description of the set.}
 
 \item{config}{Configuration list, typically created by \code{\link{newConfig}}.
 If \code{NULL}, the default configuration is used.}
@@ -35,10 +35,10 @@ Search for sets based on their names and descriptions.
 }
 \examples{
 out <- searchSetText("9606", "cancer")
-fetchSomeSets("9606", out[1])
+fetchSomeSets("9606", head(out))
 
 out <- searchSetText("9606", "innate immun*")
-fetchSomeSets("9606", out[1])
+fetchSomeSets("9606", head(out))
 
 }
 \author{

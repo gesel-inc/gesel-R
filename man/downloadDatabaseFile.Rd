@@ -8,7 +8,7 @@
 downloadDatabaseFile(
   name,
   url = databaseUrl(),
-  cache = NULL,
+  cache = cacheDirectory(),
   overwrite = FALSE
 )
 
@@ -20,10 +20,9 @@ This usually has the species identifier as a prefix.}
 
 \item{url}{String containing the base URL to the Gesel database files.}
 
-\item{cache}{String specifying the path to a cache directory.
-If \code{NULL}, a cache location is automatically chosen.}
+\item{cache}{String specifying the path to a cache directory.}
 
-\item{overwrite}{Logical scalar indicating whether any cached file should be overwritten.}
+\item{overwrite}{Boolean indicating whether any cached file should be overwritten.}
 }
 \value{
 \code{downloadDatabaseFile} returns a string containing a path to the downloaded file.

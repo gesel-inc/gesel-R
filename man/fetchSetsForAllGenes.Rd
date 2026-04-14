@@ -14,12 +14,16 @@ If \code{NULL}, the default configuration is used.}
 }
 \value{
 List of integer vectors.
-Each vector corresponds to a gene in the same order as \code{\link{fetchAllGenes}}.
+Each vector corresponds to a gene, corresponding to a row of the data frame returned by \code{\link{fetchAllGenes}}.
 Each vector contains the identities of the sets that contain that gene, 
 where each integer is a set index that refers to a row of the data frame returned by \code{\link{fetchAllSets}}.
 }
 \description{
 Fetch the identities of the sets that contain each gene in the Gesel database.
+}
+\details{
+If this function is called once, the returned list will be cached in memory and re-used in subsequent calls to this function.
+The cached data will also be used to speed up calls to \code{\link{fetchSetsForSomeGenes}}.
 }
 \examples{
 all.genes <- fetchSetsForAllGenes("9606")

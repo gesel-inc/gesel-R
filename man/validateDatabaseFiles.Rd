@@ -14,9 +14,9 @@ validateGeneFiles(path, species, types = NULL)
 
 \item{species}{String specifying the species in the form of its NCBI taxonomy ID.}
 
-\item{num.genes}{Integer scalar specifying the total number of genes available for this species.}
+\item{num.genes}{Integer specifying the total number of genes available for this species.}
 
-\item{types}{Character vector specifying the types of gene names to validate, e.g.,\code{"symbol"}, \code{"entrez"}, or \code{"ensembl"},
+\item{types}{Character vector specifying the types of gene names/identifiers to validate, e.g.,\code{"symbol"}, \code{"entrez"}, or \code{"ensembl"},
 If \code{NULL}, all detected files for \code{species} in \code{path} are checked.}
 }
 \value{

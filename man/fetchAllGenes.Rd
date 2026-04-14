@@ -4,14 +4,13 @@
 \alias{fetchAllGenes}
 \title{Fetch all genes}
 \usage{
-fetchAllGenes(species, types = NULL, config = NULL)
+fetchAllGenes(species, types = c("symbol", "entrez", "ensembl"), config = NULL)
 }
 \arguments{
 \item{species}{String specifying the taxonomy ID of the species of interest.}
 
-\item{types}{Character vector specifying the types of gene names to return.
-This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
-defaulting to all of them.}
+\item{types}{Character vector specifying the types of gene names/identifiers to return.
+This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"}.}
 
 \item{config}{Configuration list, typically created by \code{\link{newConfig}}.
 If \code{NULL}, the default configuration is used.}
@@ -19,10 +18,10 @@ If \code{NULL}, the default configuration is used.}
 \value{
 Data frame where each row represents a gene.
 Each column corresponds to one of the \code{types} and is a list of character vectors.
-Each vector in the column contains the names of the specified type for each gene.
+Each vector contains names/identifiers of the specified type for each gene.
 }
 \description{
-Fetch names for all genes.
+Fetch names/identifiers for all genes.
 }
 \examples{
 out <- fetchAllGenes("9606")

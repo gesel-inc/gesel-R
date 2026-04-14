@@ -13,7 +13,7 @@ effectiveNumberOfGenes(species, config = NULL)
 If \code{NULL}, the default configuration is used.}
 }
 \value{
-Integer scalar specifying the number of genes in Gesel that belong to at least one set.
+Integer specifying the number of genes in Gesel that belong to at least one set.
 }
 \description{
 Count the number of genes in the Gesel database that belong to at least one set.

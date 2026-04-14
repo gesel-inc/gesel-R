@@ -18,8 +18,7 @@ test_that("fetchAllSets yields a sensible remote ref", {
 
     coll.info <- fetchAllCollections("9606")
     expect_true(!is.unsorted(test$collection))
-    expect_identical(tabulate(test$collection, nbins=nrow(coll.info)), coll.info$size)
-    expect_identical(test$number, sequence(coll.info$size))
+    expect_identical(test$number + coll.info$start[test$collection] - 1L, seq_len(nrow(test)))
 
     preloaded <- fetchAllSets("9606")
     expect_identical(test, preloaded)

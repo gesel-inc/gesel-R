@@ -19,7 +19,11 @@ Each vector contains the identities of the genes in that set,
 where each integer is a gene index that refers to a row of the data frame returned by \code{\link{fetchAllGenes}}.
 }
 \description{
-Fetch the identities for genes in all sets in the Gesel database.
+Fetch the gene membership of all sets in the Gesel database.
+}
+\details{
+If this function is called once, the returned list will be cached in memory and re-used in subsequent calls to this function.
+The cached data will also be used to speed up calls to \code{\link{fetchGenesForSomeSets}}.
 }
 \examples{
 all.sets <- fetchGenesForAllSets("9606")

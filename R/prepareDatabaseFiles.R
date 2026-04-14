@@ -10,7 +10,7 @@
 #' This data frame should contain the same columns as that returned by \code{\link{fetchAllSets}}.
 #' @param set.membership List of integer vectors, where each vector corresponds to a gene set and contains the indices of its constituent genes.
 #' All gene indices should be positive, no greater than \code{num.genes}, and unique within each set.
-#' @param num.genes Integer scalar specifying the total number of genes available for this species.
+#' @param num.genes Integer specifying the total number of genes available for this species.
 #'
 #' @return Several files are produced at \code{path} with the \code{<species>_} prefix.
 #' These can be made available for download with \code{\link{downloadDatabaseFile}}.

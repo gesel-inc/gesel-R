@@ -5,7 +5,12 @@
 \alias{geneUrl}
 \title{Fetch Gesel gene description files}
 \usage{
-downloadGeneFile(name, url = geneUrl(), cache = NULL, overwrite = FALSE)
+downloadGeneFile(
+  name,
+  url = geneUrl(),
+  cache = cacheDirectory(),
+  overwrite = FALSE
+)
 
 geneUrl(url = NULL)
 }
@@ -14,10 +19,9 @@ geneUrl(url = NULL)
 
 \item{url}{String containing the base URL to the Gesel gene descriptions.}
 
-\item{cache}{String specifying the path to a cache directory.
-If \code{NULL}, a cache location is automatically chosen.}
+\item{cache}{String specifying the path to a cache directory.}
 
-\item{overwrite}{Logical scalar indicating whether any cached file should be overwritten.}
+\item{overwrite}{Boolean indicating whether any cached file should be overwritten.}
 }
 \value{
 \code{downloadGeneFile} returns a string containing a local path to the downloaded file.

@@ -5,8 +5,7 @@
 #' @param name String containing the name of the file, typically of the form \code{<species>_<type>.tsv.gz}, e.g., \code{"9606_symbol.tsv.gz"}.
 #' @param url String containing the base URL to the Gesel gene descriptions. 
 #' @param cache String specifying the path to a cache directory.
-#' If \code{NULL}, a cache location is automatically chosen.
-#' @param overwrite Logical scalar indicating whether any cached file should be overwritten.
+#' @param overwrite Boolean indicating whether any cached file should be overwritten.
 #'
 #' @return \code{downloadGeneFile} returns a string containing a local path to the downloaded file.
 #'
@@ -30,7 +29,7 @@
 #' geneUrl(old)
 #' 
 #' @export
-downloadGeneFile <- function(name, url = geneUrl(), cache = NULL, overwrite = FALSE) {
+downloadGeneFile <- function(name, url = geneUrl(), cache = cacheDirectory(), overwrite = FALSE) {
     download_file(cache, paste0(url, "/", name), overwrite)
 }
 

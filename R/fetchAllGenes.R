@@ -1,17 +1,16 @@
 #' Fetch all genes
 #'
-#' Fetch names for all genes.
+#' Fetch names/identifiers for all genes.
 #'
 #' @param species String specifying the taxonomy ID of the species of interest.
-#' @param types Character vector specifying the types of gene names to return.
-#' This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
-#' defaulting to all of them.
+#' @param types Character vector specifying the types of gene names/identifiers to return.
+#' This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"}.
 #' @param config Configuration list, typically created by \code{\link{newConfig}}.
 #' If \code{NULL}, the default configuration is used.
 #'
 #' @return Data frame where each row represents a gene.
 #' Each column corresponds to one of the \code{types} and is a list of character vectors.
-#' Each vector in the column contains the names of the specified type for each gene.
+#' Each vector contains names/identifiers of the specified type for each gene.
 #'
 #' @author Aaron Lun
 #' @examples
@@ -20,11 +19,11 @@
 #' head(out$symbol)
 #' 
 #' @export
-fetchAllGenes <- function(species, types = NULL, config = NULL) {
-    if (is.null(types)) {
-        types <- c("symbol", "entrez", "ensembl")
-    }
-
+fetchAllGenes <- function(
+    species,
+    types = c("symbol", "entrez", "ensembl"),
+    config = NULL
+) {
     config <- get_config(config)
     cached <- get_cache(config, "fetchAllGenes", species)
     modified <- FALSE

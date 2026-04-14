@@ -44,4 +44,8 @@ test_that("mapGenesByName works for the remote ref", {
     for (f in lmapping[["neurod6"]]) {
         expect_true("NEUROD6" %in% genes$symbol[[f]])
     }
+
+    # Fetches it from the cache.
+    reloaded <- mapGenesByName("9606", type="symbol") 
+    expect_identical(mapping, reloaded)
 })

@@ -8,16 +8,17 @@
 #' Each row represents a gene set and contains:
 #' \itemize{
 #' \item \code{name}, string containing the name of the gene set.
-#' \item \code{description}, string containing a description for the gene set.
-#' \item \code{size}, integer scalar specifying the number of genes in this gene set.
-#' \item \code{collection}, integer scalar containing the collection index of the collection that contains this gene set.
+#' \item \code{description}, string containing a description of the gene set.
+#' \item \code{size}, integer specifying the number of genes in this gene set.
+#' \item \code{collection}, integer containing the collection index of the collection that contains this gene set.
 #' The collection index refers to a row of the data frame returned by \code{\link{fetchAllCollections}}.
-#' \item \code{number}, integer scalar containing the position of the gene set inside the specified collection.
+#' \item \code{number}, integer containing the position of the gene set inside the specified collection.
 #' The set index of the current gene set is defined by adding \code{number - 1} to the collection's \code{start}. 
 #' }
 #'
 #' @details
-#' If this function is called once, the data frame will be cached in memory and re-used in subsequent calls to this function or \code{\link{fetchSomeSets}}.
+#' If this function is called once, the data frame will be cached in memory and re-used in subsequent calls to this function.
+#' The cached data will also be used to speed up calls to \code{\link{fetchSomeSets}}.
 #'
 #' @author Aaron Lun
 #' @examples

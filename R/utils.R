@@ -12,12 +12,8 @@ handle_error <- function(req) {
 
 #' @import methods
 #' @import httr2 
-#' @importFrom rappdirs user_cache_dir
 #' @importFrom utils URLencode
 download_file <- function(cache, url, overwrite) {
-    if (is.null(cache)) {
-        cache <- user_cache_dir("gesel")
-    }
     dir.create(cache, recursive=TRUE, showWarnings=FALSE)
     target <- file.path(cache, URLencode(url, reserved=TRUE))
 

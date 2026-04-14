@@ -47,4 +47,7 @@ test_that("searchGenes works for the remote", {
     for (i in out[[4]]) {
         expect_true("10023" %in% all.genes$entrez[[i]])
     }
+
+    out2 <- searchGenes("9606", chosen, ignore.case=FALSE)
+    expect_identical(length(out2[[2]]), 0L) # no hits for lower-case NEUROD6.
 })

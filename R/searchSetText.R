@@ -6,8 +6,8 @@
 #' @param query String containing one or more words to search on.
 #' A set is only matched if it matches to all of the tokens in the query.
 #' The \code{*} and \code{?} wildcards can be used to match to any or one character, respectively.
-#' @param use.name Logical scalar indicating whether to search on the name of the set.
-#' @param use.description Logical scalar indicating whether to search on the description of the set.
+#' @param use.name Boolean indicating whether to search on the name of the set.
+#' @param use.description Boolean indicating whether to search on the description of the set.
 #'
 #' @return Integer vector of set indices for the matching gene sets.
 #' Each set index refers to a row in the data frame returned by \code{\link{fetchAllSets}}.
@@ -15,16 +15,16 @@
 #' @author Aaron Lun
 #' @examples
 #' out <- searchSetText("9606", "cancer")
-#' fetchSomeSets("9606", out[1])
+#' fetchSomeSets("9606", head(out))
 #' 
 #' out <- searchSetText("9606", "innate immun*")
-#' fetchSomeSets("9606", out[1])
+#' fetchSomeSets("9606", head(out))
 #' 
 #' @export
 searchSetText <- function(species, query, use.name = TRUE, use.description = TRUE, config = NULL) {
     # Don't use tokenize() here, as we need to preserve ? and *.
-    tokens <- gsub("[^a-zA-Z0-9?*-]", " ", tolower(query))
-    tokens <- unique(unlist(strsplit(tokens, "\\s+")))
+    tokens <- strsplit(tolower(query), "[^a-zA-Z0-9?*-]")
+    tokens <- unique(unlist(tokens))
     tokens <- setdiff(tokens, c("", "-"))
 
     config <- get_config(config)

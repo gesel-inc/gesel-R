@@ -25,13 +25,13 @@ This can be more efficient than \code{\link{fetchAllCollections}} when only a fe
 }
 \details{
 Every time this function is called, information from the requested \code{collections} will be added to an in-memory cache.
-Subsequent calls to this function will re-use as many of the cached collections as possible.
+Subsequent calls to this function will re-use as many of the cached collections as possible before making new requests to the Gesel database.
 
-If \code{\link{fetchAllCollections}} is called, information from all collections are cached in memory and will be retrieved when \code{fetchSomeCollections} is called.
-If \code{collections} is large, it may be beneficial to call \code{\link{fetchAllCollections}} first before calling this function.
+If \code{\link{fetchAllCollections}} was previously called, its cached data will be used by \code{fetchSomeCollections} to avoid extra requests to the database.
+If \code{collections} is large, it may be more efficient to call \code{\link{fetchAllCollections}} to prepare the cache before calling this function.
 }
 \examples{
-fetchSomeCollections("9606", 1)
+fetchSomeCollections("9606", 1:5)
 
 }
 \author{

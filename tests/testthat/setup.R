@@ -3,24 +3,26 @@ species <- "1111"
 
 # Mocking up some information.
 ref.collections <- data.frame(
-    title=c("FOO", "BAR"),
-    description=c("I am a foo", "I am a bar"),
-    maintainer=c("Aaron", "Aaron"),
-    source=c("https://foo", "https://bar"),
-    start=c(1L, 21L),
-    size=c(20L, 50L)
+    title=c("FOO", "BAR", "WHE"),
+    description=c("I am a foo", "I am a bar", "I am a whe"),
+    maintainer=c("Aaron", "Aaron", "Aaron"),
+    source=c("https://foo", "https://bar", "https://whe"),
+    start=c(1L, 21L, 71L),
+    size=c(20L, 50L, 10L)
 )
 
 ref.set.info <- data.frame(
     name=c(
         sprintf("FOO_%i", seq_len(20)),
-        sprintf("BAR_%i", seq_len(50))
+        sprintf("BAR_%i", seq_len(50)),
+        sprintf("WHE_%i", seq_len(10))
     ),
     description=c(
         sprintf("this is FOO %i", seq_len(20)),
-        sprintf("this is BAR %i", seq_len(50))
+        sprintf("this is BAR %i", seq_len(50)),
+        sprintf("this is WHE %i", seq_len(10))
     ),
-    collection=rep(1:2, c(20L, 50L))
+    collection=rep(1:3, c(20L, 50L, 10L))
 )
 
 # Mocking up the gene sets.

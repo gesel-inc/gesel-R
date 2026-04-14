@@ -12,9 +12,16 @@ test_that("fetchSomeCollections matches our local ref", {
     rownames(expected) <- NULL
     expect_identical(expected, payload)
 
+    # Works with partial caching.
     chosen <- seq_len(nrow(everything))
     payload <- fetchSomeCollections("1111", chosen, config=test.config)
     expect_identical(everything, payload)
+
+    # Works with full caching
+    payload <- fetchSomeCollections("1111", 3:2, config=test.config)
+    expected <- everything[3:2,]
+    rownames(expected) <- NULL
+    expect_identical(expected, payload)
 
     # Works for sizes.
     sizes <- fetchCollectionSizes("1111", config=test.config)
@@ -22,8 +29,10 @@ test_that("fetchSomeCollections matches our local ref", {
 
     # Works with pre-loaded.
     everything <- fetchAllCollections("1111", config=test.config)
-    preloaded <- fetchSomeCollections("1111", chosen, config=test.config)
-    expect_identical(everything, preloaded)
+    preloaded <- fetchSomeCollections("1111", c(3,1,2), config=test.config)
+    expected <- everything[c(3,1,2),]
+    rownames(expected) <- NULL
+    expect_identical(expected, preloaded)
 
     sizes <- fetchCollectionSizes("1111", config=test.config)
     expect_identical(sizes, everything$size)
@@ -44,7 +53,18 @@ test_that("fetchSomeCollections yields a sensible remote ref", {
 
     expect_identical(fetchCollectionSizes("9606"), everything$size)
 
-    # Works with pre-loading.
+    # Works with partial caching.
     preloaded <- fetchSomeCollections("9606", chosen)
     expect_identical(test, preloaded)
+
+    extras <- head(setdiff(seq_len(nrow(everything)), chosen), 10)
+    reloaded.plus <- fetchSomeCollections("9606", c(chosen, extras))
+    plus <- fetchSomeCollections("9606", extras) 
+    expect_identical(reloaded.plus, rbind(test, plus))
+
+    # Works with pre-loading.
+    invisible(fetchAllCollections("9606"))
+    preloaded <- fetchSomeCollections("9606", chosen)
+    expect_identical(test, preloaded)
+    expect_identical(fetchCollectionSizes("9606"), everything$size)
 })
