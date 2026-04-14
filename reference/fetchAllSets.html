@@ -74,16 +74,17 @@ If <code>NULL</code>, the default configuration is used.</p></dd>
     <h2>Value</h2>
     <p>Data frame of gene set information.
 Each row represents a gene set and contains:</p><ul><li><p><code>name</code>, string containing the name of the gene set.</p></li>
-<li><p><code>description</code>, string containing a description for the gene set.</p></li>
-<li><p><code>size</code>, integer scalar specifying the number of genes in this gene set.</p></li>
-<li><p><code>collection</code>, integer scalar containing the collection index of the collection that contains this gene set.
+<li><p><code>description</code>, string containing a description of the gene set.</p></li>
+<li><p><code>size</code>, integer specifying the number of genes in this gene set.</p></li>
+<li><p><code>collection</code>, integer containing the collection index of the collection that contains this gene set.
 The collection index refers to a row of the data frame returned by <code><a href="fetchAllCollections.html">fetchAllCollections</a></code>.</p></li>
-<li><p><code>number</code>, integer scalar containing the position of the gene set inside the specified collection.
+<li><p><code>number</code>, integer containing the position of the gene set inside the specified collection.
 The set index of the current gene set is defined by adding <code>number - 1</code> to the collection's <code>start</code>.</p></li>
 </ul></div>
     <div id="details">
     <h2>Details</h2>
-    <p>If this function is called once, the data frame will be cached in memory and re-used in subsequent calls to this function or <code><a href="fetchSomeSets.html">fetchSomeSets</a></code>.</p>
+    <p>If this function is called once, the data frame will be cached in memory and re-used in subsequent calls to this function.
+The cached data will also be used to speed up calls to <code><a href="fetchSomeSets.html">fetchSomeSets</a></code>.</p>
     </div>
     <div id="author">
     <h2>Author</h2>

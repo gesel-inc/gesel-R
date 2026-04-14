@@ -78,11 +78,11 @@ The <code>*</code> and <code>?</code> wildcards can be used to match to any or o
 
 
 <dt id="arg-use-name">use.name<a class="anchor" aria-label="anchor" href="#arg-use-name"></a></dt>
-<dd><p>Logical scalar indicating whether to search on the name of the set.</p></dd>
+<dd><p>Boolean indicating whether to search on the name of the set.</p></dd>
 
 
 <dt id="arg-use-description">use.description<a class="anchor" aria-label="anchor" href="#arg-use-description"></a></dt>
-<dd><p>Logical scalar indicating whether to search on the description of the set.</p></dd>
+<dd><p>Boolean indicating whether to search on the description of the set.</p></dd>
 
 
 <dt id="arg-config">config<a class="anchor" aria-label="anchor" href="#arg-config"></a></dt>
@@ -103,22 +103,52 @@ Each set index refers to a row in the data frame returned by <code><a href="fetc
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">searchSetText</span><span class="op">(</span><span class="st">"9606"</span>, <span class="st">"cancer"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="fetchSomeSets.html">fetchSomeSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="va">out</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                            name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 SOGA_COLORECTAL_CANCER_MYC_DN</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                          description</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SOGA_COLORECTAL_CANCER_MYC_DN</span>
+<span class="r-in"><span><span class="fu"><a href="fetchSomeSets.html">fetchSomeSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                     SOGA_COLORECTAL_CANCER_MYC_DN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                     SOGA_COLORECTAL_CANCER_MYC_UP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 WATANABE_RECTAL_CANCER_RADIOTHERAPY_RESPONSIVE_UP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                            LIU_PROSTATE_CANCER_UP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     BERTUCCI_MEDULLARY_VS_DUCTAL_BREAST_CANCER_UP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6               WATANABE_COLON_CANCER_MSI_VS_MSS_UP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                              description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                     http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SOGA_COLORECTAL_CANCER_MYC_DN</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                     http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SOGA_COLORECTAL_CANCER_MYC_UP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WATANABE_RECTAL_CANCER_RADIOTHERAPY_RESPONSIVE_UP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                            http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/LIU_PROSTATE_CANCER_UP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/BERTUCCI_MEDULLARY_VS_DUCTAL_BREAST_CANCER_UP</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6               http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WATANABE_COLON_CANCER_MSI_VS_MSS_UP</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   size collection number</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1   71          3      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   82          3      3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  113          3     65</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4   99          3     67</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  207          3     69</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   29          3     79</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">searchSetText</span><span class="op">(</span><span class="st">"9606"</span>, <span class="st">"innate immun*"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="fetchSomeSets.html">fetchSomeSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="va">out</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                            name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 REACTOME_INNATE_IMMUNE_SYSTEM</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                          description</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_INNATE_IMMUNE_SYSTEM</span>
+<span class="r-in"><span><span class="fu"><a href="fetchSomeSets.html">fetchSomeSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                           name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                                                REACTOME_INNATE_IMMUNE_SYSTEM</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              REACTOME_REGULATION_OF_INNATE_IMMUNE_RESPONSES_TO_CYTOSOLIC_DNA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3              REACTOME_SARS_COV_1_ACTIVATES_MODULATES_INNATE_IMMUNE_RESPONSES</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 REACTOME_SARS_COV_2_ACTIVATES_MODULATES_INNATE_AND_ADAPTIVE_IMMUNE_RESPONSES</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                WP_SARSCOV2_B117_VARIANT_ANTAGONISES_INNATE_IMMUNE_ACTIVATION</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                      WP_SARS_CORONAVIRUS_AND_INNATE_IMMUNITY</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                         description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                                                http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_INNATE_IMMUNE_SYSTEM</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2              http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_REGULATION_OF_INNATE_IMMUNE_RESPONSES_TO_CYTOSOLIC_DNA</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3              http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_SARS_COV_1_ACTIVATES_MODULATES_INNATE_IMMUNE_RESPONSES</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_SARS_COV_2_ACTIVATES_MODULATES_INNATE_AND_ADAPTIVE_IMMUNE_RESPONSES</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_SARSCOV2_B117_VARIANT_ANTAGONISES_INNATE_IMMUNE_ACTIVATION</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                      http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_SARS_CORONAVIRUS_AND_INNATE_IMMUNITY</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   size collection number</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 1118          5    230</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2   15          5    553</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3   41          5   1563</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  126          5   1581</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    9          6    186</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   31          6    190</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

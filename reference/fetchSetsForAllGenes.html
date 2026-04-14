@@ -73,9 +73,14 @@ If <code>NULL</code>, the default configuration is used.</p></dd>
     <div id="value">
     <h2>Value</h2>
     <p>List of integer vectors.
-Each vector corresponds to a gene in the same order as <code><a href="fetchAllGenes.html">fetchAllGenes</a></code>.
+Each vector corresponds to a gene, corresponding to a row of the data frame returned by <code><a href="fetchAllGenes.html">fetchAllGenes</a></code>.
 Each vector contains the identities of the sets that contain that gene,
 where each integer is a set index that refers to a row of the data frame returned by <code><a href="fetchAllSets.html">fetchAllSets</a></code>.</p>
+    </div>
+    <div id="details">
+    <h2>Details</h2>
+    <p>If this function is called once, the returned list will be cached in memory and re-used in subsequent calls to this function.
+The cached data will also be used to speed up calls to <code><a href="fetchSetsForSomeGenes.html">fetchSetsForSomeGenes</a></code>.</p>
     </div>
     <div id="author">
     <h2>Author</h2>

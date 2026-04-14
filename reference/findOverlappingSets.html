@@ -71,7 +71,7 @@ Each gene index refers to a row of the data frame returned by <code><a href="fet
 
 
 <dt id="arg-counts-only">counts.only<a class="anchor" aria-label="anchor" href="#arg-counts-only"></a></dt>
-<dd><p>Logical scalar indicating whether to only report the number of overlapping genes for each set.</p></dd>
+<dd><p>Boolean indicating whether to only report the number of overlapping genes for each set.</p></dd>
 
 
 <dt id="arg-config">config<a class="anchor" aria-label="anchor" href="#arg-config"></a></dt>
@@ -88,14 +88,13 @@ It also has:</p><ul><li><p>The <code>count</code> column, if <code>counts.only=T
 This specifies the number of overlaps between the genes in the set and those in <code>genes</code>.</p></li>
 <li><p>The <code>genes</code> column, if <code>counts.only=FALSE</code>.
 This is a list that contains the entries of <code>genes</code> that overlap with those in the set.</p></li>
-</ul></li>
-<li><p><code>present</code>, an integer scalar containing the number of genes in <code>genes</code> that are present in at least one set in the Gesel database for <code>species</code>.</p></li>
+</ul><p>Rows are sorted by the number of overlapping genes, in decreasing order.</p></li>
+<li><p><code>present</code>, an integer indicating the number of genes in <code>genes</code> that are present in at least one set in the Gesel database for <code>species</code>.</p></li>
 </ul></div>
     <div id="details">
     <h2>Details</h2>
-    <p>The <code>present</code> number should be used as the number of draws when performing a hypergeomtric test for gene set enrichment
-(see <code><a href="https://rdrr.io/r/stats/Hypergeometric.html" class="external-link">phyper</a></code>), instead of <code>length(genes)</code>.
-It ensures that genes outside of the Gesel universe are ignored, e.g., due to user error, different genome versions.
+    <p><code>present</code> number be used as the number of draws when performing a hypergeomtric test for gene set enrichment (see <code><a href="https://rdrr.io/r/stats/Hypergeometric.html" class="external-link">phyper</a></code>), instead of <code>length(genes)</code>.
+Thisensures that genes outside of the Gesel universe are ignored, e.g., due to user error, different genome versions.
 Otherwise, unknown genes would inappropriately increase the number of draws and inflate the enrichment p-value.</p>
     </div>
     <div id="author">
@@ -114,6 +113,31 @@ Otherwise, unknown genes would inappropriately increase the number of draws and 
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4 22837     4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5 24037     4</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6 28862     4</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># More details on the overlapping sets.</span></span></span>
+<span class="r-in"><span><span class="va">all.sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="fetchAllSets.html">fetchAllSets</a></span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">all.sets</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">set</span><span class="op">)</span>,<span class="op">]</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                         name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2311                                              GO:0005515</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2483                                              GO:0005829</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13273                                             GO:0070062</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22837                                    REACTOME_HEMOSTASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24037 REACTOME_PLATELET_ACTIVATION_SIGNALING_AND_AGGREGATION</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28862                                             MODULE_212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                       description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2311                                                                                              protein binding</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2483                                                                                                      cytosol</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13273                                                                                       extracellular exosome</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22837                                    http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_HEMOSTASIS</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24037 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_PLATELET_ACTIVATION_SIGNALING_AND_AGGREGATION</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28862                                             http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_212</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        size collection number</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2311  12505          1   2311</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2483   5359          1   2483</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 13273  2193          1  13273</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 22837   678          5      3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 24037   261          5   1203</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 28862   329         10    332</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

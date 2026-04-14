@@ -85,9 +85,9 @@ where each row corresponds to an entry of <code>collections</code>.</p>
     <div id="details">
     <h2>Details</h2>
     <p>Every time this function is called, information from the requested <code>collections</code> will be added to an in-memory cache.
-Subsequent calls to this function will re-use as many of the cached collections as possible.</p>
-<p>If <code><a href="fetchAllCollections.html">fetchAllCollections</a></code> is called, information from all collections are cached in memory and will be retrieved when <code>fetchSomeCollections</code> is called.
-If <code>collections</code> is large, it may be beneficial to call <code><a href="fetchAllCollections.html">fetchAllCollections</a></code> first before calling this function.</p>
+Subsequent calls to this function will re-use as many of the cached collections as possible before making new requests to the Gesel database.</p>
+<p>If <code><a href="fetchAllCollections.html">fetchAllCollections</a></code> was previously called, its cached data will be used by <code>fetchSomeCollections</code> to avoid extra requests to the database.
+If <code>collections</code> is large, it may be more efficient to call <code><a href="fetchAllCollections.html">fetchAllCollections</a></code> to prepare the cache before calling this function.</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -96,17 +96,37 @@ If <code>collections</code> is large, it may be beneficial to call <code><a href
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">fetchSomeCollections</span><span class="op">(</span><span class="st">"9606"</span>, <span class="fl">1</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>           title</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Gene ontology</span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">fetchSomeCollections</span><span class="op">(</span><span class="st">"9606"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                title</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                                      Gene ontology</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                   MSigDB positional gene sets (C1)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 MSigDB chemical and genetic perturbations (C2 CGP)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                 MSigDB canonical pathways (C2 PID)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5            MSigDB canonical pathways (C2 Reactome)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                 description</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      Gene annotations for this collection are derived from the Chromosome and Karyotype band tracks from Ensembl BioMart.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3                                     Gene sets that represent expression signatures of genetic and chemical perturbations.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                                  Gene sets derived from the Pathway Interaction Database.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                       Reactome gene sets are derived from Reactome and have been filtered to remove inter-set redundancy.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   maintainer</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  Aaron Lun</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2  Aaron Lun</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3  Aaron Lun</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4  Aaron Lun</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5  Aaron Lun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>                                                                         source</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2           https://github.com/LTLA/gesel-feedstock/blob/master/msigdb/build.R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3           https://github.com/LTLA/gesel-feedstock/blob/master/msigdb/build.R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4           https://github.com/LTLA/gesel-feedstock/blob/master/msigdb/build.R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5           https://github.com/LTLA/gesel-feedstock/blob/master/msigdb/build.R</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   start  size</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1     1 18933</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 18934   300</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 19234  3405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 22639   196</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 22835  1654</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

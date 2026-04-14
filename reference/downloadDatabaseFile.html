@@ -57,7 +57,7 @@
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">downloadDatabaseFile</span><span class="op">(</span></span>
 <span>  <span class="va">name</span>,</span>
 <span>  url <span class="op">=</span> <span class="fu">databaseUrl</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  cache <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  cache <span class="op">=</span> <span class="fu"><a href="cacheDirectory.html">cacheDirectory</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -78,12 +78,11 @@ This usually has the species identifier as a prefix.</p></dd>
 
 
 <dt id="arg-cache">cache<a class="anchor" aria-label="anchor" href="#arg-cache"></a></dt>
-<dd><p>String specifying the path to a cache directory.
-If <code>NULL</code>, a cache location is automatically chosen.</p></dd>
+<dd><p>String specifying the path to a cache directory.</p></dd>
 
 
 <dt id="arg-overwrite">overwrite<a class="anchor" aria-label="anchor" href="#arg-overwrite"></a></dt>
-<dd><p>Logical scalar indicating whether any cached file should be overwritten.</p></dd>
+<dd><p>Boolean indicating whether any cached file should be overwritten.</p></dd>
 
 </dl></div>
     <div id="value">
