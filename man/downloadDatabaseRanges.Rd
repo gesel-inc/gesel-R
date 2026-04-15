@@ -10,7 +10,8 @@ downloadDatabaseRanges(
   start,
   end,
   url = databaseUrl(),
-  multipart = FALSE
+  multipart = FALSE,
+  concurrency = rangeConcurrency()
 )
 }
 \arguments{
@@ -26,7 +27,10 @@ All ranges supplied in a single call to this function should be non-overlapping.
 
 \item{url}{String containing the base URL to the Gesel database files.}
 
-\item{multipart}{Logical scalar indicating whether the server at \code{url} supports multi-part range requests.}
+\item{multipart}{Boolean indicating whether the server at \code{url} supports multi-part range requests.}
+
+\item{concurrency}{Integer specifying the maximum number of concurrent range requests per minute.
+Ignored if \code{multipart=TRUE}.}
 }
 \value{
 Character vector of length equal to \code{length(start)}, containing the contents of the requested byte ranges.

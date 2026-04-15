@@ -10,6 +10,17 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// parse_multipart_ranges
+Rcpp::List parse_multipart_ranges(Rcpp::RawVector body, std::string boundary);
+RcppExport SEXP _gesel_parse_multipart_ranges(SEXP bodySEXP, SEXP boundarySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::RawVector >::type body(bodySEXP);
+    Rcpp::traits::input_parameter< std::string >::type boundary(boundarySEXP);
+    rcpp_result_gen = Rcpp::wrap(parse_multipart_ranges(body, boundary));
+    return rcpp_result_gen;
+END_RCPP
+}
 // validate_database_files
 SEXP validate_database_files(std::string db_prefix, int num_genes);
 RcppExport SEXP _gesel_validate_database_files(SEXP db_prefixSEXP, SEXP num_genesSEXP) {
@@ -34,6 +45,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_gesel_parse_multipart_ranges", (DL_FUNC) &_gesel_parse_multipart_ranges, 2},
     {"_gesel_validate_database_files", (DL_FUNC) &_gesel_validate_database_files, 2},
     {"_gesel_validate_gene_files", (DL_FUNC) &_gesel_validate_gene_files, 2},
     {NULL, NULL, 0}

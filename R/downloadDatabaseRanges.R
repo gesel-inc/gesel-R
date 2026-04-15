@@ -1,3 +1,39 @@
+concurrency.env <- new.env()
+concurrency.env$workers <- 100L
+
+#' Concurrency of range requests
+#'
+#' Get or set the maximum number of concurrent HTTP range requests that can be performed per minute in \code{\link{downloadDatabaseRanges}}.
+#' Setting this to a smaller number avoids excessive load on the server.
+#'
+#' @param concurrency Integer containing the maximum number of concurrent requests per minute. 
+#'
+#' @return If \code{concurrency=NULL}, the maximum number of concurrent requests is returned.
+#'
+#' If \code{concurrency} is provided, it is set to the maximum number of concurrent requests, and the previous maximum is returned.
+#'
+#' @author Aaron Lun
+#' @examples
+#' rangeConcurrency()
+#' old <- rangeConcurrency(5)
+#' rangeConcurrency()
+#' rangeConcurrency(old)
+#' rangeConcurrency()
+#'
+#' @seealso
+#' \code{\link[httr2]{req_throttle}}, for the logic behind the requests-per-minute limit.
+#'
+#' @export
+rangeConcurrency <- function(concurrency = NULL) {
+    previous <- concurrency.env$workers
+    if (is.null(concurrency)) {
+        previous
+    } else {
+        concurrency.env$workers <- concurrency
+        invisible(previous)
+    }
+}
+
 #' Fetch byte ranges from a Gesel database file
 #'
 #' Download any number of byte ranges from a Gesel database file.
@@ -8,7 +44,9 @@
 #' @param end Integer vector containing the zero-indexed open end of each byte range to extract from the file.
 #' This should have the same length as \code{start} such that the \code{i}-th range is defined as \code{[start[i], end[i])}.
 #' All ranges supplied in a single call to this function should be non-overlapping.
-#' @param multipart Logical scalar indicating whether the server at \code{url} supports multi-part range requests.
+#' @param multipart Boolean indicating whether the server at \code{url} supports multi-part range requests.
+#' @param concurrency Integer specifying the maximum number of concurrent range requests per minute.
+#' Ignored if \code{multipart=TRUE}.
 #'
 #' @return Character vector of length equal to \code{length(start)}, containing the contents of the requested byte ranges.
 #'
@@ -20,7 +58,7 @@
 #' @export
 #' @import httr2
 #' @aliases downloadMultipartRanges
-downloadDatabaseRanges <- function(name, start, end, url = databaseUrl(), multipart = FALSE) {
+downloadDatabaseRanges <- function(name, start, end, url = databaseUrl(), multipart = FALSE, concurrency = rangeConcurrency()) {
     url <- paste0(url, "/", name)
     if (multipart) {
         return(downloadMultipartRanges(url, start, end))
@@ -37,13 +75,16 @@ downloadDatabaseRanges <- function(name, start, end, url = databaseUrl(), multip
     reqs <- vector("list", length(start))
     for (i in seq_along(start)) {
         req <- request(url)
-        reqs[[i]] <- req_headers(req, Range=paste0("bytes=", start[i], "-", end[i] - 1L)) # byte ranges are closed intervals, not half-open.
+        req <- req_headers(req, Range=paste0("bytes=", start[i], "-", end[i] - 1L)) # byte ranges are closed intervals, not half-open.
+        req <- req_throttle(req, capacity = concurrency)
+        reqs[[i]] <- req
     }
 
     resps <- req_perform_parallel(reqs, progress=FALSE)
     for (i in seq_along(resps)) {
-        payload <- resp_body_string(resps[[i]])
-        output[keep[i]] <- substr(payload, 1L, end[i] - start[i])
+        # Process raw bytes to avoid issues with multi-byte characters.
+        payload <- resp_body_raw(resps[[i]])
+        output[keep[i]] <- rawToChar(head(payload, end[i] - start[i]))
     }
 
     output
@@ -54,23 +95,28 @@ downloadDatabaseRanges <- function(name, start, end, url = databaseUrl(), multip
 downloadMultipartRanges <- function(url, start, end) {
     output <- character(length(start))
     keep <- which(start < end)
-    start <- start[keep]
-    end <- end[keep]
     if (length(keep) == 0L) {
         return(output)
     }
 
+    start <- start[keep]
+    end <- end[keep]
+    if (is.unsorted(start)) {
+        o <- order(start)
+        start <- start[o]
+        end <- end[o]
+        keep <- keep[o]
+    }
+
     req <- request(url)
-    o <- order(start)
-    start <- start[o]
-    end <- end[o]
     ranges <- paste(sprintf("%s-%s", start, end - 1L), collapse=", ") # byte ranges are closed intervals, not half-open.
     req <- req_headers(req, Range=paste0("bytes=", ranges))
     resp <- req_perform(req)
 
     if (length(start) == 1L) {
-        content <- resp_body_string(resp)
-        output[keep[o]] <- substr(content, 1L, end - start)
+        # Process raw bytes to avoid issues with multi-byte characters.
+        content <- resp_body_raw(resp)
+        output[keep] <- rawToChar(head(content, end - start))
         return(output)
     }
 
@@ -81,65 +127,54 @@ downloadMultipartRanges <- function(url, start, end) {
     }
     boundary <- substring(ct, nchar(prefix) + 1L, nchar(ct))
 
-    parsed <- parse_multipart_response(resp_body_string(resp), boundary)
-    chosen <- findInterval(start, parsed$start)
-    offset <- parsed$start
-    output[keep[o]] <- substr(parsed$content[chosen], start - offset + 1L, end - offset)
+    output[keep] <- extract_multipart_strings(resp_body_raw(resp), boundary)
     output
 }
 
-# WARNING: this part only works when the contents of body are fully string-able;
-# otherwise, if it's binary data, we really should be working with them as raw data.
-parse_multipart_response <- function(body, boundary) {
-    position <- 1L
+extract_multipart_strings <- function(body, boundary, start, end) {
+    parsed <- parse_multipart_ranges(body, boundary)
 
-    rx <- paste0("--", boundary)
-    nrx <- nchar(rx)
-    pos.boundaries <- gregexpr(rx, body)[[1]]
-
-    starts <- integer(0) 
-    contents <- character(0)
-
-    for (i in seq_along(pos.boundaries)) {
-        p <- pos.boundaries[i]
-        if (i != 1L) {
-            if (substr(body, p - 2L, p - 1L) != "\r\n") {
-                stop("each non-first multipart boundary should be preceded by a CRLF")
-            }
+    part.starts <- part.ends <- integer(length(parsed))
+    for (i in seq_along(parsed)) {
+        current <- parsed[[i]]
+        attrs <- attributes(current)
+        attr.names <- tolower(names(attrs))
+        if (!("content-range" %in% attr.names)) {
+            stop("expected a 'Content-Range' header for each part of a multipart response")
         }
 
-        bound.end <- p + nrx
-        next2 <- substr(body, bound.end, bound.end + 1)
-        if (next2 == "--") {
-            if (i != length(pos.boundaries)) {
-                stop("unexpected location for the terminating multipart boundary")
-            }
-            break
-        } else if (next2 != "\r\n") {
-            stop("expected a CRLF at each multipart boundary")
+        content.range <- attrs[[match("content-range", attr.names)]] 
+        if (!startsWith(content.range, "bytes ")) {
+            stop("expected the 'Content-Range' header to start with 'bytes '")
         }
 
-        subbody <- substr(body, bound.end + 2L, pos.boundaries[i + 1] - 3L)
-        empty <- regexpr("\r\n\r\n", subbody)[[1]]
-        if (empty == -1) {
-            stop("could not find an empty line to separate headers in a multipart response")
+        content.range <- substr(content.range, 6, nchar(content.range))
+        current.start <- as.integer(sub("-.*", "", content.range))
+        if (is.na(current.start)) {
+            stop("failed to extract start of the content range");
         }
-        contents <- c(contents, substr(subbody, empty + 4L, nchar(subbody)))
+        part.starts[i] <- current.start
 
-        part.headers <- substr(subbody, 1L, empty - 1L)
-        components <- strsplit(part.headers, "\r\n", fixed=TRUE)[[1]]
-        range.idx <- grep("^Content-Range: ", components)
-        if (length(range.idx) != 1L) {
-            stop("expected a single content range header at each multipart boundary")
+        current.end <- as.integer(sub("/.*", "", sub(".*-", "", content.range)))
+        if (is.na(current.end)) {
+            stop("failed to extract end of the content range");
         }
-
-        range.info <- components[range.idx]
-        curstart <- as.integer(gsub("^Content-Range: bytes ([0-9]+)-[0-9]+/[0-9]+$", "\\1", range.info))
-        if (is.na(curstart)) {
-            stop("invalid format for the content range header at each multipart boundary")
-        }
-        starts <- c(starts, curstart)
+        part.ends[i] <- current.end
     }
 
-    list(start=starts, content=contents)
+    chosen <- findInterval(start, part.starts)
+    if (any(chosen == 0) || any(end > part.ends[chosen] + 1)) { # remember, content-range has a closed end, while our 'end' is open.
+        stop("multipart response does not contain the requested byte ranges")
+    }
+
+    offset <- part.starts[chosen]
+    s <- start - offset + 1L
+    e <- end - offset
+
+    collected <- character(length(start))
+    for (i in seq_along(collected)) {
+        collected[i] <- rawToChar(parsed[[chosen[i]]][s[i]:e[i]])
+    }
+
+    collected
 }
