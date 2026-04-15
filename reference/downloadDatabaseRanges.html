@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.6</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.7</span>
       </span>
     </div>
 
@@ -59,7 +59,8 @@
 <span>  <span class="va">start</span>,</span>
 <span>  <span class="va">end</span>,</span>
 <span>  url <span class="op">=</span> <span class="fu"><a href="downloadDatabaseFile.html">databaseUrl</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  multipart <span class="op">=</span> <span class="cn">FALSE</span></span>
+<span>  multipart <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  concurrency <span class="op">=</span> <span class="fu"><a href="rangeConcurrency.html">rangeConcurrency</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -88,7 +89,12 @@ All ranges supplied in a single call to this function should be non-overlapping.
 
 
 <dt id="arg-multipart">multipart<a class="anchor" aria-label="anchor" href="#arg-multipart"></a></dt>
-<dd><p>Logical scalar indicating whether the server at <code>url</code> supports multi-part range requests.</p></dd>
+<dd><p>Boolean indicating whether the server at <code>url</code> supports multi-part range requests.</p></dd>
+
+
+<dt id="arg-concurrency">concurrency<a class="anchor" aria-label="anchor" href="#arg-concurrency"></a></dt>
+<dd><p>Integer specifying the maximum number of concurrent range requests per minute.
+Ignored if <code>multipart=TRUE</code>.</p></dd>
 
 </dl></div>
     <div id="value">
