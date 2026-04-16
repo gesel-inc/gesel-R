@@ -127,7 +127,7 @@ downloadMultipartRanges <- function(url, start, end) {
     }
     boundary <- substring(ct, nchar(prefix) + 1L, nchar(ct))
 
-    output[keep] <- extract_multipart_strings(resp_body_raw(resp), boundary)
+    output[keep] <- extract_multipart_strings(resp_body_raw(resp), boundary, start, end)
     output
 }
 
