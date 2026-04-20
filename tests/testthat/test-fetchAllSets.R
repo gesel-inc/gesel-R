@@ -3,8 +3,13 @@
 flushMemoryCache()
 
 test_that("fetchAllSets matches our local ref", {
+    full.set.info <- do.call(rbind, ref.set.info)
+    full.set.info$size <- unlist(lapply(ref.set.membership, lengths))
+    full.set.info$collection <- rep(seq_along(ref.set.info), vapply(ref.set.info, nrow, 0L)) 
+    full.set.info$number <- unlist(lapply(ref.set.info, function(y) seq_len(nrow(y))))
+
     payload <- fetchAllSets("1111", config=test.config)
-    expect_identical(payload[,c("name", "description", "collection", "size")], ref.set.info)
+    expect_identical(payload, full.set.info)
 
     preloaded <- fetchAllSets("1111", config=test.config)
     expect_identical(payload, preloaded)

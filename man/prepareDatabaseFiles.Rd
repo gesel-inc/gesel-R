@@ -10,24 +10,30 @@ prepareDatabaseFiles(
   set.info,
   set.membership,
   num.genes,
-  path = "."
+  path = ".",
+  validate = TRUE
 )
 }
 \arguments{
 \item{species}{String specifying the species in the form of its NCBI taxonomy ID.}
 
 \item{collections}{Data frame of information about each gene set collection, where each row corresponds to a collection.
-This data frame should contain the same columns as that returned by \code{\link{fetchAllCollections}}.}
+This data frame should contain the \code{title}, \code{description}, \code{source} and \code{maintainer} columns as described in \code{?\link{fetchAllCollections}}.}
 
-\item{set.info}{Data frame of information about each gene set, where each row corresponds to a set. 
-This data frame should contain the same columns as that returned by \code{\link{fetchAllSets}}.}
+\item{set.info}{List of data frames of length equal to \code{nrow(collections)}.
+Each data frame corresponds to a collection where each row corresponds to a gene set.
+Each data frame should have the \code{name} and \code{description} columns as described in \code{?\link{fetchAllSets}}.}
 
-\item{set.membership}{List of integer vectors, where each vector corresponds to a gene set and contains the indices of its constituent genes.
-All gene indices should be positive, no greater than \code{num.genes}, and unique within each set.}
+\item{set.membership}{List of list of integer vectors.
+Each inner list corresponds to a collection and each vector corresponds to a gene set in that collection.
+Each vector contains the identities of its constituent genes, as indices into the data frame returned by \code{\link{fetchAllGenes}}.
+All gene indices should be positive and no greater than \code{num.genes}.}
 
 \item{num.genes}{Integer specifying the total number of genes available for this species.}
 
 \item{path}{String containing the path to a directory in which to create the database files.}
+
+\item{validate}{Boolean indicating whether to run \code{\link{validateDatabaseFiles}} on the newly created files.}
 }
 \value{
 Several files are produced at \code{path} with the \code{<species>_} prefix.
@@ -42,34 +48,30 @@ collections <- data.frame(
     title=c("FOO", "BAR"),
     description=c("I am a foo", "I am a bar"),
     maintainer=c("Aaron", "Aaron"),
-    source=c("https://foo", "https://bar"),
-    start=c(1L, 21L),
-    size=c(20L, 50L)
+    source=c("https://foo", "https://bar")
 )
 
-set.info <- data.frame(
-    name=c(
-        sprintf("FOO_\%i", seq_len(20)),
-        sprintf("BAR_\%i", seq_len(50))
+set.info <- list(
+    data.frame(
+        name=sprintf("FOO_\%i", seq_len(20)),
+        description=sprintf("this is FOO \%i", seq_len(20))
     ),
-    description=c(
-        sprintf("this is FOO \%i", seq_len(20)),
-        sprintf("this is BAR \%i", seq_len(50))
-    ),
-    collection=rep(1:2, c(20L, 50L))
+    data.frame(
+        name=sprintf("BAR_\%i", seq_len(50)),
+        description=sprintf("this is BAR \%i", seq_len(50))
+    )
 )
 
 # Mocking up the gene sets.
 num.genes <- 10000
-set.membership <- split(
-    sample(num.genes, 5000, replace=TRUE),
-    factor(
-        sample(nrow(set.info), 5000, replace=TRUE),
-        seq_len(nrow(set.info))
-    )
+set.membership <- list(
+    lapply(seq_len(nrow(set.info[[1]])), function(i) {
+        sample(num.genes, sample(num.genes, 1))
+    }),
+    lapply(seq_len(nrow(set.info[[2]])), function(i) {
+        sample(num.genes, sample(num.genes, 1))
+    })
 )
-set.membership <- lapply(set.membership, unique)
-set.info$size <- lengths(set.membership)
 
 # Now making the database files.
 output <- tempfile()

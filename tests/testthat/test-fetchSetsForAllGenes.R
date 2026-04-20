@@ -3,8 +3,9 @@
 flushMemoryCache()
 
 test_that("fetchSetsForAllGenes matches our local ref", {
-    gene.ids <- unlist(ref.set.membership)
-    set.ids <- rep(seq_along(ref.set.membership), lengths(ref.set.membership))
+    full.set.membership <- unlist(ref.set.membership, recursive=FALSE)
+    gene.ids <- unlist(full.set.membership)
+    set.ids <- rep(seq_along(full.set.membership), lengths(full.set.membership))
     mapping <- split(set.ids, factor(gene.ids, seq_len(ref.num.genes)))
     mapping <- unname(lapply(mapping, function(x) sort(unique(x))))
 

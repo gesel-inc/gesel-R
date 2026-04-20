@@ -2,23 +2,25 @@
 
 flushMemoryCache()
 
+full.set.info <- fetchAllSets(species, config=test.config)
+
 test_that("basic search works for the local ref", {
     out <- searchSetText(species, "foo 1", config=test.config)
-    expect_identical(out, grep("foo 1$", ref.set.info$description, ignore.case=TRUE))
+    expect_identical(out, grep("foo 1$", full.set.info$description, ignore.case=TRUE))
 
     # Name or description only.
     nout <- searchSetText(species, "this", use.description=FALSE, config=test.config)
     expect_identical(nout, integer(0))
 
     nout <- searchSetText(species, "this", use.name=FALSE, config=test.config)
-    expect_identical(nout, grep("this", ref.set.info$description))
+    expect_identical(nout, grep("this", full.set.info$description))
 
     # Throwing in some wildcards.
     pout <- searchSetText(species, "foo 1*", config=test.config)
-    expect_identical(pout, grep("foo 1", ref.set.info$description, ignore.case=TRUE))
+    expect_identical(pout, grep("foo 1", full.set.info$description, ignore.case=TRUE))
 
     pout <- searchSetText(species, "foo ?", config=test.config)
-    expect_identical(pout, grep("foo .$", ref.set.info$description, ignore.case=TRUE))
+    expect_identical(pout, grep("foo .$", full.set.info$description, ignore.case=TRUE))
 })
 
 test_that("basic search works for the remote ref", {

@@ -11,38 +11,33 @@ ref.collections <- data.frame(
     size=c(20L, 50L, 10L)
 )
 
-ref.set.info <- data.frame(
-    name=c(
-        sprintf("FOO_%i", seq_len(20)),
-        sprintf("BAR_%i", seq_len(50)),
-        sprintf("WHE_%i", seq_len(10))
+ref.set.info <- list(
+    data.frame(
+        name=sprintf("FOO_%i", seq_len(20)),
+        description=sprintf("this is FOO %i", seq_len(20))
     ),
-    description=c(
-        sprintf("this is FOO %i", seq_len(20)),
-        sprintf("this is BAR %i", seq_len(50)),
-        sprintf("this is WHE %i", seq_len(10))
+    data.frame(
+        name=sprintf("BAR_%i", seq_len(50)),
+        description=sprintf("this is BAR %i", seq_len(50))
     ),
-    collection=rep(1:3, c(20L, 50L, 10L))
+    data.frame(
+        name=sprintf("WHE_%i", seq_len(10)),
+        description=sprintf("this is WHE %i", seq_len(10))
+    )
 )
 
 # Mocking up the gene sets.
 ref.num.genes <- 10000
-ref.set.membership <- split(
-    sample(ref.num.genes - 10L, 5000, replace=TRUE) + 5L, # first and last 5 genes don't get involved.
-    factor(
-        sample(nrow(ref.set.info), 5000, replace=TRUE),
-        seq_len(nrow(ref.set.info))
-    )
+ref.set.membership <- list(
+    lapply(seq_len(nrow(ref.set.info[[1]])), function(y) sample(ref.num.genes, sample(200, 1))),
+    lapply(seq_len(nrow(ref.set.info[[2]])), function(y) sample(ref.num.genes, sample(500, 1))),
+    lapply(seq_len(nrow(ref.set.info[[3]])), function(y) sample(ref.num.genes, sample(100, 1)))
 )
-ref.set.membership <- lapply(ref.set.membership, unique)
-ref.set.membership[1:4 * 10] <- rep(list(integer(0)), 4L) # spiking in a few empty sets, for good measure.
-ref.set.membership <- unname(ref.set.membership)
-ref.set.info$size <- lengths(ref.set.membership)
 
 # Now making the database files.
 ref.dir <- tempfile()
 dir.create(ref.dir)
-prepareDatabaseFiles(
+gesel::prepareDatabaseFiles(
     species,
     ref.collections, 
     ref.set.info, 
@@ -50,14 +45,9 @@ prepareDatabaseFiles(
     ref.num.genes,
     ref.dir 
 )
-validateDatabaseFiles(ref.dir, species, ref.num.genes)
 
-getDatabaseFile <- function(name) {
-    file.path(ref.dir, name)
-}
-
-getDatabaseRanges <- function(name, starts, ends) {
-    handle <- file(file.path(ref.dir, name), open="rb")
+getDatabaseRanges <- function(dir, name, starts, ends) {
+    handle <- file(file.path(dir, name), open="rb")
     on.exit(close(handle))
 
     o <- order(starts)
@@ -94,12 +84,8 @@ for (i in 1:3) {
     close(handle)
 }
 
-getGeneFile <- function(name) {
-    file.path(gene.dir, name)
-}
-
 test.config <- gesel::newConfig(
-    fetch.gene = getGeneFile,
-    fetch.file = getDatabaseFile,
-    fetch.range = getDatabaseRanges
+    fetch.gene = function(name) file.path(gene.dir, name),
+    fetch.file = function(name) file.path(ref.dir, name),
+    fetch.range = function(name, starts, ends) getDatabaseRanges(ref.dir, name, starts, ends)
 )

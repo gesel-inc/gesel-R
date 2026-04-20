@@ -1,8 +1,9 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-findOverlappingSets.R")
 
 test_that("findOverlappingSets works for the local ref", {
+    full.set.membership <- unlist(ref.set.membership, recursive=FALSE)
     genes <- sample(ref.num.genes, 100)
-    ref <- lapply(ref.set.membership, intersect, y=genes)
+    ref <- lapply(full.set.membership, intersect, y=genes)
     keep <- which(lengths(ref) > 0)
 
     overlaps <- findOverlappingSets(species, genes, counts.only=FALSE, config=test.config)

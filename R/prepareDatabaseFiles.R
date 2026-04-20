@@ -5,12 +5,17 @@
 #' @param species String specifying the species in the form of its NCBI taxonomy ID.
 #' @param path String containing the path to a directory in which to create the database files.
 #' @param collections Data frame of information about each gene set collection, where each row corresponds to a collection.
-#' This data frame should contain the same columns as that returned by \code{\link{fetchAllCollections}}.
-#' @param set.info Data frame of information about each gene set, where each row corresponds to a set. 
-#' This data frame should contain the same columns as that returned by \code{\link{fetchAllSets}}.
-#' @param set.membership List of integer vectors, where each vector corresponds to a gene set and contains the indices of its constituent genes.
-#' All gene indices should be positive, no greater than \code{num.genes}, and unique within each set.
+#' This data frame should contain the \code{title}, \code{description}, \code{source} and \code{maintainer} columns as described in \code{?\link{fetchAllCollections}}.
+#' @param set.info List of data frames of length equal to \code{nrow(collections)}.
+#' Each data frame corresponds to a collection where each row corresponds to a gene set.
+#' Each data frame should have the \code{name} and \code{description} columns as described in \code{?\link{fetchAllSets}}.
+#' @param set.membership List of list of integer vectors.
+#' Each inner list corresponds to a collection and each vector corresponds to a gene set in that collection.
+#' Each vector contains the identities of its constituent genes, as row indices into the data frame returned by \code{\link{fetchAllGenes}}.
+#' All gene indices should be positive and no greater than \code{num.genes}.
+#' (Unsorted and duplicate entries are allowed.)
 #' @param num.genes Integer specifying the total number of genes available for this species.
+#' @param validate Boolean indicating whether to run \code{\link{validateDatabaseFiles}} on the newly created files.
 #'
 #' @return Several files are produced at \code{path} with the \code{<species>_} prefix.
 #' These can be made available for download with \code{\link{downloadDatabaseFile}}.
@@ -22,34 +27,30 @@
 #'     title=c("FOO", "BAR"),
 #'     description=c("I am a foo", "I am a bar"),
 #'     maintainer=c("Aaron", "Aaron"),
-#'     source=c("https://foo", "https://bar"),
-#'     start=c(1L, 21L),
-#'     size=c(20L, 50L)
+#'     source=c("https://foo", "https://bar")
 #' )
 #'
-#' set.info <- data.frame(
-#'     name=c(
-#'         sprintf("FOO_%i", seq_len(20)),
-#'         sprintf("BAR_%i", seq_len(50))
+#' set.info <- list(
+#'     data.frame(
+#'         name=sprintf("FOO_%i", seq_len(20)),
+#'         description=sprintf("this is FOO %i", seq_len(20))
 #'     ),
-#'     description=c(
-#'         sprintf("this is FOO %i", seq_len(20)),
-#'         sprintf("this is BAR %i", seq_len(50))
-#'     ),
-#'     collection=rep(1:2, c(20L, 50L))
+#'     data.frame(
+#'         name=sprintf("BAR_%i", seq_len(50)),
+#'         description=sprintf("this is BAR %i", seq_len(50))
+#'     )
 #' )
 #'
 #' # Mocking up the gene sets.
 #' num.genes <- 10000
-#' set.membership <- split(
-#'     sample(num.genes, 5000, replace=TRUE),
-#'     factor(
-#'         sample(nrow(set.info), 5000, replace=TRUE),
-#'         seq_len(nrow(set.info))
-#'     )
+#' set.membership <- list(
+#'     lapply(seq_len(nrow(set.info[[1]])), function(i) {
+#'         sample(num.genes, sample(500, 1))
+#'     }),
+#'     lapply(seq_len(nrow(set.info[[2]])), function(i) {
+#'         sample(num.genes, sample(200, 1))
+#'     })
 #' )
-#' set.membership <- lapply(set.membership, unique)
-#' set.info$size <- lengths(set.membership)
 #'
 #' # Now making the database files.
 #' output <- tempfile()
@@ -68,7 +69,19 @@
 #' head(fetchAllSets("9606", config))
 #'
 #' @export
-prepareDatabaseFiles <- function(species, collections, set.info, set.membership, num.genes, path = ".") {
+prepareDatabaseFiles <- function(species, collections, set.info, set.membership, num.genes, path = ".", validate = TRUE) {
+    if (nrow(collections) != length(set.info)) {
+        stop("length of 'set.info' should equal number of rows in 'collections'")
+    }
+    if (nrow(collections) != length(set.membership)) {
+        stop("length of 'set.membership' should equal number of rows in 'collections'")
+    }
+
+    num.sets <- unname(vapply(set.info, nrow, 0L))
+    if (!identical(num.sets, unname(lengths(set.membership)))) {
+        stop("number of sets in each collection of 'set.info' and 'set.membership' should be the same")
+    }
+
     prefix <- file.path(path, paste0(species, "_"))
 
     save_data_frame_with_sizes(
@@ -80,12 +93,12 @@ prepareDatabaseFiles <- function(species, collections, set.info, set.membership,
             `source`=collections$source
         ), 
         paste0(prefix, "collections.tsv"),
-        size=collections$size
+        size=num.sets
     )
 
-    if (!identical(rep(seq_len(nrow(collections)), collections$size), set.info$collection)) {
-        stop("'collections$size' is not consistent with 'set.info$collection'")
-    }
+    set.info <- do.call(rbind, set.info)
+    set.membership <- do.call(c, set.membership)
+    set.membership <- lapply(set.membership, function(set) sort(unique(set)))
 
     save_data_frame_with_sizes(
         data.frame(
@@ -93,12 +106,9 @@ prepareDatabaseFiles <- function(species, collections, set.info, set.membership,
             description=set.info$description
         ), 
         paste0(prefix, "sets.tsv"),
-        size=set.info$size
+        size=lengths(set.membership)
     )
 
-    if (!identical(set.info$size, unname(lengths(set.membership)))) {
-        stop("'set.info$size' is not consistent with 'lengths(set.membership)'")
-    }
     save_integer_list(set.membership, paste0(prefix, "set2gene.tsv"))
 
     reversed <- rep(seq_along(set.membership), lengths(set.membership))
@@ -114,6 +124,10 @@ prepareDatabaseFiles <- function(species, collections, set.info, set.membership,
     save_integer_list(by.ntoken, paste0(prefix, "tokens-names.tsv"), include.names=TRUE)
     save_integer_list(by.dtoken, paste0(prefix, "tokens-descriptions.tsv"), include.names=TRUE)
 
+    if (validate) {
+        validateDatabaseFiles(path, species, num.genes)
+    }
+
     invisible(NULL)
 }
 
@@ -123,8 +137,8 @@ save_integer_list <- function(x, prefix, include.names = FALSE) {
     for (i in seq_along(x)) {
         z <- x[[i]]
         if (length(z)) {
-            z <- sort(z) # convert to diffs to reduce integer size
-            z <- c(z[1] - 1L, diff(z)) # get to 0-based indexing with delta encoding.
+            # Assume we're already sorted and unique, then get to 0-based indexing with delta encoding.
+            z <- c(z[1] - 1L, diff(z))
             lines[i] <- paste(z, collapse="\t")
         }
     }
