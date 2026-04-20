@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.8</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9</span>
       </span>
     </div>
 
@@ -60,7 +60,8 @@
 <span>  <span class="va">set.info</span>,</span>
 <span>  <span class="va">set.membership</span>,</span>
 <span>  <span class="va">num.genes</span>,</span>
-<span>  path <span class="op">=</span> <span class="st">"."</span></span>
+<span>  path <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  validate <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -74,17 +75,20 @@
 
 <dt id="arg-collections">collections<a class="anchor" aria-label="anchor" href="#arg-collections"></a></dt>
 <dd><p>Data frame of information about each gene set collection, where each row corresponds to a collection.
-This data frame should contain the same columns as that returned by <code><a href="fetchAllCollections.html">fetchAllCollections</a></code>.</p></dd>
+This data frame should contain the <code>title</code>, <code>description</code>, <code>source</code> and <code>maintainer</code> columns as described in <code>?<a href="fetchAllCollections.html">fetchAllCollections</a></code>.</p></dd>
 
 
 <dt id="arg-set-info">set.info<a class="anchor" aria-label="anchor" href="#arg-set-info"></a></dt>
-<dd><p>Data frame of information about each gene set, where each row corresponds to a set.
-This data frame should contain the same columns as that returned by <code><a href="fetchAllSets.html">fetchAllSets</a></code>.</p></dd>
+<dd><p>List of data frames of length equal to <code>nrow(collections)</code>.
+Each data frame corresponds to a collection where each row corresponds to a gene set.
+Each data frame should have the <code>name</code> and <code>description</code> columns as described in <code>?<a href="fetchAllSets.html">fetchAllSets</a></code>.</p></dd>
 
 
 <dt id="arg-set-membership">set.membership<a class="anchor" aria-label="anchor" href="#arg-set-membership"></a></dt>
-<dd><p>List of integer vectors, where each vector corresponds to a gene set and contains the indices of its constituent genes.
-All gene indices should be positive, no greater than <code>num.genes</code>, and unique within each set.</p></dd>
+<dd><p>List of list of integer vectors.
+Each inner list corresponds to a collection and each vector corresponds to a gene set in that collection.
+Each vector contains the identities of its constituent genes, as indices into the data frame returned by <code><a href="fetchAllGenes.html">fetchAllGenes</a></code>.
+All gene indices should be positive and no greater than <code>num.genes</code>.</p></dd>
 
 
 <dt id="arg-num-genes">num.genes<a class="anchor" aria-label="anchor" href="#arg-num-genes"></a></dt>
@@ -93,6 +97,10 @@ All gene indices should be positive, no greater than <code>num.genes</code>, and
 
 <dt id="arg-path">path<a class="anchor" aria-label="anchor" href="#arg-path"></a></dt>
 <dd><p>String containing the path to a directory in which to create the database files.</p></dd>
+
+
+<dt id="arg-validate">validate<a class="anchor" aria-label="anchor" href="#arg-validate"></a></dt>
+<dd><p>Boolean indicating whether to run <code><a href="validateDatabaseFiles.html">validateDatabaseFiles</a></code> on the newly created files.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -112,34 +120,30 @@ These can be made available for download with <code><a href="downloadDatabaseFil
 <span class="r-in"><span>    title<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"FOO"</span>, <span class="st">"BAR"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    description<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I am a foo"</span>, <span class="st">"I am a bar"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    maintainer<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aaron"</span>, <span class="st">"Aaron"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    source<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://foo"</span>, <span class="st">"https://bar"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    start<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1L</span>, <span class="fl">21L</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    size<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20L</span>, <span class="fl">50L</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    source<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://foo"</span>, <span class="st">"https://bar"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">set.info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    name<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"FOO_%i"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"BAR_%i"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">set.info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        name<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"FOO_%i"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        description<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"this is FOO %i"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span>,</span></span>
-<span class="r-in"><span>    description<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"this is FOO %i"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"this is BAR %i"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="op">)</span>,</span></span>
-<span class="r-in"><span>    collection<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20L</span>, <span class="fl">50L</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>        name<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"BAR_%i"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>        description<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"this is BAR %i"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Mocking up the gene sets.</span></span></span>
 <span class="r-in"><span><span class="va">num.genes</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span></span>
-<span class="r-in"><span><span class="va">set.membership</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">num.genes</span>, <span class="fl">5000</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">set.info</span><span class="op">)</span>, <span class="fl">5000</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">set.info</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">set.membership</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">set.info</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">num.genes</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">num.genes</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">}</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">set.info</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>        <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">num.genes</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">num.genes</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">set.membership</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">set.membership</span>, <span class="va">unique</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">set.info</span><span class="op">$</span><span class="va">size</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="va">set.membership</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Now making the database files.</span></span></span>
 <span class="r-in"><span><span class="va">output</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span></span>
@@ -157,12 +161,12 @@ These can be made available for download with <code><a href="downloadDatabaseFil
 <span class="r-in"><span><span class="va">config</span> <span class="op">&lt;-</span> <span class="fu"><a href="newConfig.html">newConfig</a></span><span class="op">(</span>fetch.file<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">output</span>, <span class="va">x</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fetchAllSets.html">fetchAllSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="va">config</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    name   description size collection number</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 FOO_1 this is FOO 1   71          1      1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 FOO_2 this is FOO 2   77          1      2</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 FOO_3 this is FOO 3   62          1      3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 FOO_4 this is FOO 4   76          1      4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 FOO_5 this is FOO 5   64          1      5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 FOO_6 this is FOO 6   79          1      6</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 FOO_1 this is FOO 1 5293          1      1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 FOO_2 this is FOO 2 2444          1      2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 FOO_3 this is FOO 3 6877          1      3</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 FOO_4 this is FOO 4  431          1      4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 FOO_5 this is FOO 5 1498          1      5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 FOO_6 this is FOO 6 3809          1      6</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
