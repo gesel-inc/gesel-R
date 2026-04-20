@@ -26,8 +26,9 @@ Each data frame should have the \code{name} and \code{description} columns as de
 
 \item{set.membership}{List of list of integer vectors.
 Each inner list corresponds to a collection and each vector corresponds to a gene set in that collection.
-Each vector contains the identities of its constituent genes, as indices into the data frame returned by \code{\link{fetchAllGenes}}.
-All gene indices should be positive and no greater than \code{num.genes}.}
+Each vector contains the identities of its constituent genes, as row indices into the data frame returned by \code{\link{fetchAllGenes}}.
+All gene indices should be positive and no greater than \code{num.genes}.
+(Unsorted and duplicate entries are allowed.)}
 
 \item{num.genes}{Integer specifying the total number of genes available for this species.}
 
@@ -66,10 +67,10 @@ set.info <- list(
 num.genes <- 10000
 set.membership <- list(
     lapply(seq_len(nrow(set.info[[1]])), function(i) {
-        sample(num.genes, sample(num.genes, 1))
+        sample(num.genes, sample(500, 1))
     }),
     lapply(seq_len(nrow(set.info[[2]])), function(i) {
-        sample(num.genes, sample(num.genes, 1))
+        sample(num.genes, sample(200, 1))
     })
 )
 
