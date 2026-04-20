@@ -29,7 +29,7 @@ All ranges supplied in a single call to this function should be non-overlapping.
 
 \item{multipart}{Boolean indicating whether the server at \code{url} supports multi-part range requests.}
 
-\item{concurrency}{Integer specifying the maximum number of concurrent range requests per minute.
+\item{concurrency}{Integer specifying the maximum number of concurrent range requests per second.
 Ignored if \code{multipart=TRUE}.}
 }
 \value{

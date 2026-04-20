@@ -7,7 +7,7 @@
 rangeConcurrency(concurrency = NULL)
 }
 \arguments{
-\item{concurrency}{Integer containing the maximum number of concurrent requests per minute.}
+\item{concurrency}{Integer containing the maximum number of concurrent requests per second.}
 }
 \value{
 If \code{concurrency=NULL}, the maximum number of concurrent requests is returned.
@@ -15,7 +15,7 @@ If \code{concurrency=NULL}, the maximum number of concurrent requests is returne
 If \code{concurrency} is provided, it is set to the maximum number of concurrent requests, and the previous maximum is returned.
 }
 \description{
-Get or set the maximum number of concurrent HTTP range requests that can be performed per minute in \code{\link{downloadDatabaseRanges}}.
+Get or set the maximum number of concurrent HTTP range requests that can be performed per second in \code{\link{downloadDatabaseRanges}}.
 Setting this to a smaller number avoids excessive load on the server.
 }
 \examples{
@@ -27,7 +27,7 @@ rangeConcurrency()
 
 }
 \seealso{
-\code{\link[httr2]{req_throttle}}, for the logic behind the requests-per-minute limit.
+\code{\link[httr2]{req_throttle}}, for the logic behind the requests-per-second limit.
 }
 \author{
 Aaron Lun

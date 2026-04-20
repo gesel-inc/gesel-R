@@ -1,12 +1,12 @@
 concurrency.env <- new.env()
-concurrency.env$workers <- 100L
+concurrency.env$workers <- 10L
 
 #' Concurrency of range requests
 #'
-#' Get or set the maximum number of concurrent HTTP range requests that can be performed per minute in \code{\link{downloadDatabaseRanges}}.
+#' Get or set the maximum number of concurrent HTTP range requests that can be performed per second in \code{\link{downloadDatabaseRanges}}.
 #' Setting this to a smaller number avoids excessive load on the server.
 #'
-#' @param concurrency Integer containing the maximum number of concurrent requests per minute. 
+#' @param concurrency Integer containing the maximum number of concurrent requests per second. 
 #'
 #' @return If \code{concurrency=NULL}, the maximum number of concurrent requests is returned.
 #'
@@ -21,7 +21,7 @@ concurrency.env$workers <- 100L
 #' rangeConcurrency()
 #'
 #' @seealso
-#' \code{\link[httr2]{req_throttle}}, for the logic behind the requests-per-minute limit.
+#' \code{\link[httr2]{req_throttle}}, for the logic behind the requests-per-second limit.
 #'
 #' @export
 rangeConcurrency <- function(concurrency = NULL) {
@@ -45,7 +45,7 @@ rangeConcurrency <- function(concurrency = NULL) {
 #' This should have the same length as \code{start} such that the \code{i}-th range is defined as \code{[start[i], end[i])}.
 #' All ranges supplied in a single call to this function should be non-overlapping.
 #' @param multipart Boolean indicating whether the server at \code{url} supports multi-part range requests.
-#' @param concurrency Integer specifying the maximum number of concurrent range requests per minute.
+#' @param concurrency Integer specifying the maximum number of concurrent range requests per second.
 #' Ignored if \code{multipart=TRUE}.
 #'
 #' @return Character vector of length equal to \code{length(start)}, containing the contents of the requested byte ranges.
@@ -76,7 +76,7 @@ downloadDatabaseRanges <- function(name, start, end, url = databaseUrl(), multip
     for (i in seq_along(start)) {
         req <- request(url)
         req <- req_headers(req, Range=paste0("bytes=", start[i], "-", end[i] - 1L)) # byte ranges are closed intervals, not half-open.
-        req <- req_throttle(req, capacity = concurrency)
+        req <- req_throttle(req, capacity = concurrency, fill_time_s = 1)
         reqs[[i]] <- req
     }
 
