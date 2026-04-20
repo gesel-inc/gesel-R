@@ -88,13 +88,13 @@ It also has:</p><ul><li><p>The <code>count</code> column, if <code>counts.only=T
 This specifies the number of overlaps between the genes in the set and those in <code>genes</code>.</p></li>
 <li><p>The <code>genes</code> column, if <code>counts.only=FALSE</code>.
 This is a list that contains the entries of <code>genes</code> that overlap with those in the set.</p></li>
-</ul><p>Rows are sorted by the number of overlapping genes, in decreasing order.</p></li>
+</ul><p>The row order is arbitrary.</p></li>
 <li><p><code>present</code>, an integer indicating the number of genes in <code>genes</code> that are present in at least one set in the Gesel database for <code>species</code>.</p></li>
 </ul></div>
     <div id="details">
     <h2>Details</h2>
-    <p><code>present</code> number be used as the number of draws when performing a hypergeomtric test for gene set enrichment (see <code><a href="https://rdrr.io/r/stats/Hypergeometric.html" class="external-link">phyper</a></code>), instead of <code>length(genes)</code>.
-Thisensures that genes outside of the Gesel universe are ignored, e.g., due to user error, different genome versions.
+    <p><code>present</code> should be used as the number of draws when performing a hypergeomtric test for gene set enrichment (see <code><a href="https://rdrr.io/r/stats/Hypergeometric.html" class="external-link">phyper</a></code>), instead of <code>length(genes)</code>.
+This ensures that genes outside of the Gesel universe are ignored, e.g., due to user error or different genome versions.
 Otherwise, unknown genes would inappropriately increase the number of draws and inflate the enrichment p-value.</p>
     </div>
     <div id="author">
@@ -106,38 +106,52 @@ Otherwise, unknown genes would inappropriately increase the number of draws and 
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">overlaps</span> <span class="op">&lt;-</span> <span class="fu">findOverlappingSets</span><span class="op">(</span><span class="st">"9606"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     set count</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1  2311     6</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2  2483     5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 13273     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 22837     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 24037     4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 28862     4</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   set count</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1  25     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 395     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 413     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 605     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 701     1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 790     1</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># More details on the overlapping sets.</span></span></span>
 <span class="r-in"><span><span class="va">all.sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="fetchAllSets.html">fetchAllSets</a></span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">all.sets</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">set</span><span class="op">)</span>,<span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                         name</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2311                                              GO:0005515</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2483                                              GO:0005829</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13273                                             GO:0070062</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22837                                    REACTOME_HEMOSTASIS</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24037 REACTOME_PLATELET_ACTIVATION_SIGNALING_AND_AGGREGATION</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28862                                             MODULE_212</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                       description</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2311                                                                                              protein binding</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2483                                                                                                      cytosol</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13273                                                                                       extracellular exosome</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22837                                    http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_HEMOSTASIS</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24037 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_PLATELET_ACTIVATION_SIGNALING_AND_AGGREGATION</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28862                                             http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_212</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>        size collection number</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2311  12505          1   2311</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2483   5359          1   2483</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 13273  2193          1  13273</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 22837   678          5      3</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 24037   261          5   1203</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 28862   329         10    332</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           name                                                  description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25  GO:0000049                                                 tRNA binding</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 395 GO:0001525                                                 angiogenesis</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 413 GO:0001553                                                luteinization</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 605 GO:0001869 negative regulation of complement activation, lectin pathway</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 701 GO:0002020                                             protease binding</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 790 GO:0002161                              aminoacyl-tRNA editing activity</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     size collection number</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 25    73          1     25</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 395  236          1    395</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 413    8          1    413</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 605    2          1    605</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 701  107          1    701</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 790   10          1    790</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Computing an enrichment p-value. We take the upper tail after</span></span></span>
+<span class="r-in"><span><span class="co"># subtracting 1 to ensure that the probability mass of the observed</span></span></span>
+<span class="r-in"><span><span class="co"># number of overlapping genes is included in the p-value.</span></span></span>
+<span class="r-in"><span><span class="va">set.size</span> <span class="op">&lt;-</span> <span class="va">all.sets</span><span class="op">$</span><span class="va">size</span><span class="op">[</span><span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">set</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="va">universe</span> <span class="op">&lt;-</span> <span class="fu"><a href="effectiveNumberOfGenes.html">effectiveNumberOfGenes</a></span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Hypergeometric.html" class="external-link">phyper</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    q <span class="op">=</span> <span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">count</span> <span class="op">-</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>    m <span class="op">=</span> <span class="va">set.size</span>,</span></span>
+<span class="r-in"><span>    n <span class="op">=</span> <span class="va">universe</span> <span class="op">-</span> <span class="va">set.size</span>,</span></span>
+<span class="r-in"><span>    k <span class="op">=</span> <span class="va">overlaps</span><span class="op">$</span><span class="va">present</span>,</span></span>
+<span class="r-in"><span>    lower.tail<span class="op">=</span><span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># For multiple testing correction, it is necessary to consider all sets</span></span></span>
+<span class="r-in"><span><span class="co"># in the database, as these were implicitly considered during the search</span></span></span>
+<span class="r-in"><span><span class="co"># though only a subset of them are reported by findOverlappingSets.</span></span></span>
+<span class="r-in"><span><span class="va">fdr</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/p.adjust.html" class="external-link">p.adjust</a></span><span class="op">(</span><span class="va">p</span>, method<span class="op">=</span><span class="st">"BH"</span>, n<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">all.sets</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fdr</span> <span class="op">&lt;=</span> <span class="fl">0.05</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>    Mode   FALSE    TRUE </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> logical    1309      17 </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -140,56 +140,56 @@ overlaps with the user-suppleid set.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">overlaps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/findOverlappingSets.html">findOverlappingSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="va">gene.idx</span>, counts.only<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">)</span> <span class="co"># set index and the identities of overlapping genes.</span></span></code></pre></div>
-<pre><code><span><span class="co">##     set        genes</span></span>
-<span><span class="co">## 1  2421 4640, 17....</span></span>
-<span><span class="co">## 2  2522 4640, 17....</span></span>
-<span><span class="co">## 3 21749 4640, 12....</span></span>
-<span><span class="co">## 4 39867 4640, 17....</span></span>
-<span><span class="co">## 5  2311 4640, 17....</span></span>
-<span><span class="co">## 6  3332 4640, 17....</span></span></code></pre>
+<pre><code><span><span class="co">##   set genes</span></span>
+<span><span class="co">## 1  64  1760</span></span>
+<span><span class="co">## 2 255 12768</span></span>
+<span><span class="co">## 3 294  3913</span></span>
+<span><span class="co">## 4 323 12768</span></span>
+<span><span class="co">## 5 325 12768</span></span>
+<span><span class="co">## 6 373 12768</span></span></code></pre>
 <p>The set index can be converted back to information about each set,
 along with the collection from which it came:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">set.info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetchSomeSets.html">fetchSomeSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="co"># getting details of the top sets</span></span>
 <span><span class="va">set.info</span></span></code></pre></div>
-<pre><code><span><span class="co">##                              name</span></span>
-<span><span class="co">## 1                      GO:0005737</span></span>
-<span><span class="co">## 2                      GO:0005886</span></span>
-<span><span class="co">## 3   BLALOCK_ALZHEIMERS_DISEASE_DN</span></span>
-<span><span class="co">## 4 MANNO_MIDBRAIN_NEUROTYPES_HGABA</span></span>
-<span><span class="co">## 5                      GO:0005515</span></span>
-<span><span class="co">## 6                      GO:0007268</span></span>
-<span><span class="co">##                                                                            description</span></span>
-<span><span class="co">## 1                                                                            cytoplasm</span></span>
-<span><span class="co">## 2                                                                      plasma membrane</span></span>
-<span><span class="co">## 3   http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/BLALOCK_ALZHEIMERS_DISEASE_DN</span></span>
-<span><span class="co">## 4 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MANNO_MIDBRAIN_NEUROTYPES_HGABA</span></span>
-<span><span class="co">## 5                                                                      protein binding</span></span>
-<span><span class="co">## 6                                                       chemical synaptic transmission</span></span>
-<span><span class="co">##    size collection number</span></span>
-<span><span class="co">## 1  5010          1   2421</span></span>
-<span><span class="co">## 2  4778          1   2522</span></span>
-<span><span class="co">## 3  1248          3   2516</span></span>
-<span><span class="co">## 4  1106         15     93</span></span>
-<span><span class="co">## 5 12505          1   2311</span></span>
-<span><span class="co">## 6   248          1   3332</span></span></code></pre>
+<pre><code><span><span class="co">##         name</span></span>
+<span><span class="co">## 1 GO:0000139</span></span>
+<span><span class="co">## 2 GO:0000785</span></span>
+<span><span class="co">## 3 GO:0000904</span></span>
+<span><span class="co">## 4 GO:0000978</span></span>
+<span><span class="co">## 5 GO:0000981</span></span>
+<span><span class="co">## 6 GO:0001228</span></span>
+<span><span class="co">##                                                                description size</span></span>
+<span><span class="co">## 1                                                           Golgi membrane  629</span></span>
+<span><span class="co">## 2                                                                chromatin 1034</span></span>
+<span><span class="co">## 3                           cell morphogenesis involved in differentiation    4</span></span>
+<span><span class="co">## 4    RNA polymerase II cis-regulatory region sequence-specific DNA binding 1193</span></span>
+<span><span class="co">## 5    DNA-binding transcription factor activity, RNA polymerase II-specific 1249</span></span>
+<span><span class="co">## 6 DNA-binding transcription activator activity, RNA polymerase II-specific  466</span></span>
+<span><span class="co">##   collection number</span></span>
+<span><span class="co">## 1          1     64</span></span>
+<span><span class="co">## 2          1    255</span></span>
+<span><span class="co">## 3          1    294</span></span>
+<span><span class="co">## 4          1    323</span></span>
+<span><span class="co">## 5          1    325</span></span>
+<span><span class="co">## 6          1    373</span></span></code></pre>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">col.info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetchSomeCollections.html">fetchSomeCollections</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="va">set.info</span><span class="op">$</span><span class="va">collection</span><span class="op">)</span> <span class="co"># getting details of the collections</span></span>
 <span><span class="va">col.info</span></span></code></pre></div>
-<pre><code><span><span class="co">##                                                title</span></span>
-<span><span class="co">## 1                                      Gene ontology</span></span>
-<span><span class="co">## 2                                      Gene ontology</span></span>
-<span><span class="co">## 3 MSigDB chemical and genetic perturbations (C2 CGP)</span></span>
-<span><span class="co">## 4          MSigDB cell type signature gene sets (C8)</span></span>
-<span><span class="co">## 5                                      Gene ontology</span></span>
-<span><span class="co">## 6                                      Gene ontology</span></span>
-<span><span class="co">##                                                                                                                                                                                                                                                                                              description</span></span>
-<span><span class="co">## 1                                                                                                                                                                              Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
-<span><span class="co">## 2                                                                                                                                                                              Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
-<span><span class="co">## 3                                                                                                                                                                                                                  Gene sets that represent expression signatures of genetic and chemical perturbations.</span></span>
-<span><span class="co">## 4 Gene sets that contain cluster marker genes for cell types identified in single-cell sequencing studies of human tissue. These gene sets have been curated from the literature and represent signature genes and cell type identifications as represented in their respective originating publications</span></span>
-<span><span class="co">## 5                                                                                                                                                                              Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
-<span><span class="co">## 6                                                                                                                                                                              Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
+<pre><code><span><span class="co">##           title</span></span>
+<span><span class="co">## 1 Gene ontology</span></span>
+<span><span class="co">## 2 Gene ontology</span></span>
+<span><span class="co">## 3 Gene ontology</span></span>
+<span><span class="co">## 4 Gene ontology</span></span>
+<span><span class="co">## 5 Gene ontology</span></span>
+<span><span class="co">## 6 Gene ontology</span></span>
+<span><span class="co">##                                                                                                                 description</span></span>
+<span><span class="co">## 1 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
+<span><span class="co">## 2 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
+<span><span class="co">## 3 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
+<span><span class="co">## 4 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
+<span><span class="co">## 5 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
+<span><span class="co">## 6 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
 <span><span class="co">##   maintainer</span></span>
 <span><span class="co">## 1  Aaron Lun</span></span>
 <span><span class="co">## 2  Aaron Lun</span></span>
@@ -200,15 +200,15 @@ along with the collection from which it came:</p>
 <span><span class="co">##                                                                         source</span></span>
 <span><span class="co">## 1 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span></span>
 <span><span class="co">## 2 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span></span>
-<span><span class="co">## 3           https://github.com/LTLA/gesel-feedstock/blob/master/msigdb/build.R</span></span>
-<span><span class="co">## 4           https://github.com/LTLA/gesel-feedstock/blob/master/msigdb/build.R</span></span>
+<span><span class="co">## 3 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span></span>
+<span><span class="co">## 4 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span></span>
 <span><span class="co">## 5 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span></span>
 <span><span class="co">## 6 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span></span>
 <span><span class="co">##   start  size</span></span>
 <span><span class="co">## 1     1 18933</span></span>
 <span><span class="co">## 2     1 18933</span></span>
-<span><span class="co">## 3 19234  3405</span></span>
-<span><span class="co">## 4 39775   830</span></span>
+<span><span class="co">## 3     1 18933</span></span>
+<span><span class="co">## 4     1 18933</span></span>
 <span><span class="co">## 5     1 18933</span></span>
 <span><span class="co">## 6     1 18933</span></span></code></pre>
 <p>The various statistics produced by <em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em> can be also
@@ -236,8 +236,8 @@ the hypergeometric p-value considers the size of the gene sets.</p>
 <span>    lower.tail<span class="op">=</span><span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 9.166142e-04 7.619258e-04 3.795345e-06 2.346103e-06 1.602832e-01</span></span>
-<span><span class="co">## [6] 2.019335e-06</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.0727100533 0.1172426948 0.0004763606 0.1342507900 0.1401782368</span></span>
+<span><span class="co">## [6] 0.0542877999</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="searching-on-text">Searching on text<a class="anchor" aria-label="anchor" href="#searching-on-text"></a>
@@ -457,7 +457,7 @@ sets.</p>
 </h2>
 <div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## R Under development (unstable) (2026-04-16 r89906)</span></span>
+<pre><code><span><span class="co">## R Under development (unstable) (2026-04-19 r89916)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
 <span><span class="co">## Running under: Ubuntu 24.04.4 LTS</span></span>
 <span><span class="co">## </span></span>
