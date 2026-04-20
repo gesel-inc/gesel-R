@@ -30,7 +30,7 @@ This specifies the number of overlaps between the genes in the set and those in 
 \item The \code{genes} column, if \code{counts.only=FALSE}.
 This is a list that contains the entries of \code{genes} that overlap with those in the set.
 }
-Rows are sorted by the number of overlapping genes, in decreasing order.
+The row order is arbitrary.
 \item \code{present}, an integer indicating the number of genes in \code{genes} that are present in at least one set in the Gesel database for \code{species}.
 }
 }
@@ -38,8 +38,8 @@ Rows are sorted by the number of overlapping genes, in decreasing order.
 Find all sets overlapping any gene in a user-supplied list, and return the number of overlaps per set.
 }
 \details{
-\code{present} number be used as the number of draws when performing a hypergeomtric test for gene set enrichment (see \code{\link{phyper}}), instead of \code{length(genes)}.
-Thisensures that genes outside of the Gesel universe are ignored, e.g., due to user error, different genome versions.
+\code{present} should be used as the number of draws when performing a hypergeomtric test for gene set enrichment (see \code{\link{phyper}}), instead of \code{length(genes)}.
+This ensures that genes outside of the Gesel universe are ignored, e.g., due to user error or different genome versions.
 Otherwise, unknown genes would inappropriately increase the number of draws and inflate the enrichment p-value.
 }
 \examples{
@@ -49,6 +49,25 @@ head(overlaps$overlap)
 # More details on the overlapping sets.
 all.sets <- fetchAllSets("9606")
 all.sets[head(overlaps$overlap$set),]
+
+# Computing an enrichment p-value. We take the upper tail after
+# subtracting 1 to ensure that the probability mass of the observed
+# number of overlapping genes is included in the p-value.
+set.size <- all.sets$size[overlaps$overlap$set]
+universe <- effectiveNumberOfGenes("9606")
+p <- phyper(
+    q = overlaps$overlap$count - 1,
+    m = set.size,
+    n = universe - set.size,
+    k = overlaps$present,
+    lower.tail=FALSE
+)
+
+# For multiple testing correction, it is necessary to consider all sets
+# in the database, as these were implicitly considered during the search
+# though only a subset of them are reported by findOverlappingSets.
+fdr <- p.adjust(p, method="BH", n=nrow(all.sets))
+summary(fdr <= 0.05)
 
 }
 \author{
