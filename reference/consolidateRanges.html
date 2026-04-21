@@ -56,7 +56,7 @@ This reduces the number of individual requests at the cost of having larger requ
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">consolidateRanges</span><span class="op">(</span><span class="va">boundaries</span>, <span class="va">needed</span>, max.unused <span class="op">=</span> <span class="fu"><a href="consolidateMaxUnused.html">consolidateMaxUnused</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">consolidateRanges</span><span class="op">(</span><span class="va">boundaries</span>, <span class="va">needed</span>, max.gap <span class="op">=</span> <span class="fu"><a href="consolidateMaxGap.html">consolidateMaxGap</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -73,8 +73,8 @@ This should have length equal to the number of ranges plus 1, where the <code>i<
 Each entry should be an index into <code>boundaries</code>.</p></dd>
 
 
-<dt id="arg-max-unused">max.unused<a class="anchor" aria-label="anchor" href="#arg-max-unused"></a></dt>
-<dd><p>Number between 0 and 1 inclusive, specifying the maximum percentage of unused bytes.
+<dt id="arg-max-gap">max.gap<a class="anchor" aria-label="anchor" href="#arg-max-gap"></a></dt>
+<dd><p>Number between 0 and 1 inclusive, specifying the maximum gap between the ranges of interest.
 Larger values will produce a smaller number of larger ranges.</p></dd>
 
 </dl></div>
@@ -83,7 +83,7 @@ Larger values will produce a smaller number of larger ranges.</p></dd>
     <p>List containing:</p><ul><li><p><code>start</code>, an integer vector containing the starts of the consolidated ranges.</p></li>
 <li><p><code>end</code>, an integer vector of length equal to <code>start</code>.
 This contains the ends of the consolidated ranges.</p></li>
-<li><p><code>requested</code>, an integer vector of the individual ranges that will requested after consolidation.
+<li><p><code>requested</code>, an integer vector of the individual ranges that will be requested after consolidation.
 This will be a superset of <code>needed</code>, where a range is listed here if and only if it is enclosed within one of the consolidated ranges.</p></li>
 </ul></div>
     <div id="author">
@@ -116,16 +116,6 @@ This will be a superset of <code>needed</code>, where a range is listed here if 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">consolidateRanges</span><span class="op">(</span><span class="va">boundaries</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $start</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1]   0 200</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $end</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  10 210</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $requested</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span><span class="fu">consolidateRanges</span><span class="op">(</span><span class="va">boundaries</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, max.unused<span class="op">=</span><span class="fl">0.99</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $start</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $end</span>
@@ -133,6 +123,16 @@ This will be a superset of <code>needed</code>, where a range is listed here if 
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $requested</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1 2 3 4 5</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-in"><span><span class="fu">consolidateRanges</span><span class="op">(</span><span class="va">boundaries</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">5</span><span class="op">)</span>, max.gap<span class="op">=</span><span class="fl">100</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $start</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1]   0 200</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $end</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1]  10 210</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $requested</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1 5</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
