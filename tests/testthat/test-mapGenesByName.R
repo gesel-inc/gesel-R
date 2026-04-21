@@ -1,8 +1,9 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-mapGenesByName.R")
 
-flushMemoryCache()
 
 test_that("mapGenesByName works for the local ref", {
+    flushMemoryCache(test.config)
+
     mapping <- mapGenesByName(species, type="foo", config=test.config) 
 
     set.seed(9)
@@ -27,6 +28,8 @@ test_that("mapGenesByName works for the local ref", {
 })
 
 test_that("mapGenesByName works for the remote ref", {
+    flushMemoryCache()
+
     genes <- fetchAllGenes("9606")
 
     mapping <- mapGenesByName("9606", type="symbol") 

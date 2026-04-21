@@ -2,7 +2,7 @@
 
 test_that("fetchSomeSets matches our local ref", {
     everything <- fetchAllSets("1111", config=test.config)
-    flushMemoryCache()
+    flushMemoryCache(test.config)
 
     payload <- fetchSomeSets("1111", 10:20, config=test.config)
     expected <- everything[10:20,]

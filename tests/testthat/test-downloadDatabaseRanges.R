@@ -202,19 +202,19 @@ test_that("refining the ranges works as expected", {
         )
     )
 
-    # Handles empty ranges gracefully. 
+    # Handles empty or length-1 ranges gracefully. 
     expect_identical(
         gesel:::refine_ranges(
             parts,
             parts.start,
             parts.end,
             c(105, 107, 215, 102, 360),
-            c(110, 106, 228, 101, 377) + 1L
+            c(110, 106, 215, 101, 377) + 1L
         ),
         list(
             parts[[1]][5:10],
             raw(),
-            parts[[2]][5:18],
+            parts[[2]][5],
             raw(),
             parts[[3]][30:47]
         )

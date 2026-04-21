@@ -2,7 +2,7 @@
 
 test_that("fetchSetsForSomeGenes matches our local ref", {
     everything <- fetchSetsForAllGenes("1111", config=test.config)
-    flushMemoryCache()
+    flushMemoryCache(test.config)
 
     sub <- seq(from=2, to=length(everything), by=3)
     payload <- fetchSetsForSomeGenes("1111", sub, config=test.config)
@@ -30,7 +30,7 @@ test_that("fetchSetsForSomeGenes matches our local ref", {
 
 test_that("effectiveNumberOfGenes works a local ref", {
     everything <- fetchSetsForAllGenes("1111", config=test.config)
-    flushMemoryCache()
+    flushMemoryCache(test.config)
 
     num <- effectiveNumberOfGenes("1111", config=test.config)
     expect_identical(num, sum(lengths(everything) > 0L))

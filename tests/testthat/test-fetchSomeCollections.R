@@ -2,7 +2,7 @@
 
 test_that("fetchSomeCollections matches our local ref", {
     everything <- fetchAllCollections("1111", config=test.config)
-    flushMemoryCache()
+    flushMemoryCache(test.config)
 
     payload <- fetchSomeCollections("1111", 1, config=test.config)
     expect_identical(everything[1,], payload)

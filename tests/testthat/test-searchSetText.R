@@ -1,10 +1,9 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-searchSetText.R")
 
-flushMemoryCache()
-
-full.set.info <- fetchAllSets(species, config=test.config)
-
 test_that("basic search works for the local ref", {
+    full.set.info <- fetchAllSets(species, config=test.config)
+    flushMemoryCache(test.config)
+
     out <- searchSetText(species, "foo 1", config=test.config)
     expect_identical(out, grep("foo 1$", full.set.info$description, ignore.case=TRUE))
 
@@ -25,6 +24,7 @@ test_that("basic search works for the local ref", {
 
 test_that("basic search works for the remote ref", {
     sets <- fetchAllSets("9606")
+    flushMemoryCache()
 
     cout <- searchSetText("9606", "cancer")
     expect_true(all(grepl("cancer", sets$name[cout], ignore.case=TRUE) | grepl("cancer", sets$description[cout], ignore.case=TRUE)))

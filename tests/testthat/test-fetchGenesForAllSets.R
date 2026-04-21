@@ -1,8 +1,8 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-fetchGenesForAllSets.R")
 
-flushMemoryCache()
-
 test_that("fetchGenesForAllSets matches our local ref", {
+    flushMemoryCache(test.config)
+
     full.set.membership <- unlist(ref.set.membership, recursive=FALSE)
     full.set.membership <- lapply(full.set.membership, function(y) sort(unique(y)))
 
@@ -14,6 +14,8 @@ test_that("fetchGenesForAllSets matches our local ref", {
 })
 
 test_that("fetchGenesForAllSets yields a sensible remote ref", {
+    flushMemoryCache()
+
     test <- fetchGenesForAllSets("9606")
     expect_true(any(lengths(test) > 0L))
 

@@ -180,9 +180,9 @@ refine_ranges <- function(parts, part.start, part.end, start, end) {
     }
 
     offset <- part.start[chosen]
-    s <- start - offset + 1L
-    e <- end - offset
-    nonempty <- which(s < e)
+    s <- start - offset + 1L # get to a 1-based closed start.
+    e <- end - offset # get to a 1-based closed start; this doesn't require +1 as it used to be open.
+    nonempty <- which(s <= e)
 
     collected <- rep(list(raw()), length(start))
     for (i in nonempty) {

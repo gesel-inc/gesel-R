@@ -2,7 +2,7 @@
 
 test_that("fetchGenesForSomeSets matches our local ref", {
     everything <- fetchGenesForAllSets("1111", config=test.config)
-    flushMemoryCache()
+    flushMemoryCache(test.config)
 
     sub <- seq(from=2, to=length(everything), by=3)
     payload <- fetchGenesForSomeSets("1111", sub, config=test.config) 

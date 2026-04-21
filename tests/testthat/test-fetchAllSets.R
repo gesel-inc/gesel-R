@@ -1,8 +1,8 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-fetchAllSets.R")
 
-flushMemoryCache()
-
 test_that("fetchAllSets matches our local ref", {
+    flushMemoryCache(test.config)
+
     full.set.info <- do.call(rbind, ref.set.info)
     full.set.info$size <- unlist(lapply(ref.set.membership, lengths))
     full.set.info$collection <- rep(seq_along(ref.set.info), vapply(ref.set.info, nrow, 0L)) 
@@ -16,6 +16,8 @@ test_that("fetchAllSets matches our local ref", {
 })
 
 test_that("fetchAllSets yields a sensible remote ref", {
+    flushMemoryCache()
+
     test <- fetchAllSets("9606")
     expect_false(anyNA(test$name))
     expect_false(anyNA(test$description))
