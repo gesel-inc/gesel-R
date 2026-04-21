@@ -92,7 +92,7 @@ fetch_sets_by_token <- function(config, species, tokens, type) {
 
     # Making a parallelized set of to.request for anything that we're missing.
     if (length(to.request)) {
-        consolidated <- consolidateRanges(tfound$ranges, to.request, max.unused = consolidate_max_unused(config))
+        consolidated <- consolidateRanges(tfound$ranges, to.request, max.gap = consolidate_max_gap(config))
         consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
         newly.obtained <- consolidated$requested[!(tnames[consolidated$requested] %in% names(prior))]
 

@@ -15,8 +15,8 @@
 #' It should return a list of raw vectors with the contents of the specified byte ranges.
 #' If \code{NULL}, it defaults to \code{\link{downloadDatabaseRanges}}.
 #' @param fetch.ranges.args Named list of arguments to pass to \code{fetch.ranges}.
-#' @param consolidate.max.unused Number specifying the maximum proportion of unused bytes in consolidated requests.
-#' If \code{NULL}, it defaults to \code{\link{consolidateMaxUnused}}.
+#' @param consolidate.max.gap Number specifying the maximum gap between ranges of interest in consolidated requests.
+#' If \code{NULL}, it defaults to \code{\link{consolidateMaxGap}}.
 #'
 #' @return A list containing Gesel configuration settings.
 #'
@@ -43,7 +43,7 @@ newConfig <- function(
     fetch.file.args = list(),
     fetch.ranges = NULL,
     fetch.ranges.args = list(),
-    consolidate.max.unused = NULL
+    consolidate.max.gap = NULL
 ) {
     list(
         cache = new.env(),
@@ -53,7 +53,7 @@ newConfig <- function(
         fetch.file.args = fetch.file.args,
         fetch.ranges = fetch.ranges,
         fetch.ranges.args = fetch.ranges.args,
-        consolidate.max.unused = consolidate.max.unused
+        consolidate.max.gap = consolidate.max.gap
     )
 }
 
@@ -95,12 +95,12 @@ fetch_ranges <- function(config, ...) {
     do.call(fetch.ranges, c(list(...), config$fetch.ranges.args))
 }
 
-consolidate_max_unused <- function(config) {
-    consolidate.max.unused <- config$consolidate.max.unused
-    if (is.null(consolidate.max.unused)) {
-        consolidate.max.unused <- consolidateMaxUnused()
+consolidate_max_gap <- function(config) {
+    consolidate.max.gap <- config$consolidate.max.gap
+    if (is.null(consolidate.max.gap)) {
+        consolidate.max.gap <- consolidateMaxGap()
     }
-    consolidate.max.unused
+    consolidate.max.gap
 }
 
 #' Flush the in-memory cache

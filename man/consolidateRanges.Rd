@@ -4,7 +4,7 @@
 \alias{consolidateRanges}
 \title{Consolidate near-adjacent ranges}
 \usage{
-consolidateRanges(boundaries, needed, max.unused = consolidateMaxUnused())
+consolidateRanges(boundaries, needed, max.gap = consolidateMaxGap())
 }
 \arguments{
 \item{boundaries}{Integer vector containing the zero-indexed boundaries of the byte ranges.
@@ -13,7 +13,7 @@ This should have length equal to the number of ranges plus 1, where the \code{i}
 \item{needed}{Integer vector specifying the ranges of interest.
 Each entry should be an index into \code{boundaries}.}
 
-\item{max.unused}{Number between 0 and 1 inclusive, specifying the maximum percentage of unused bytes.
+\item{max.gap}{Number between 0 and 1 inclusive, specifying the maximum gap between the ranges of interest.
 Larger values will produce a smaller number of larger ranges.}
 }
 \value{
@@ -22,7 +22,7 @@ List containing:
 \item \code{start}, an integer vector containing the starts of the consolidated ranges.
 \item \code{end}, an integer vector of length equal to \code{start}.
 This contains the ends of the consolidated ranges.
-\item \code{requested}, an integer vector of the individual ranges that will requested after consolidation.
+\item \code{requested}, an integer vector of the individual ranges that will be requested after consolidation.
 This will be a superset of \code{needed}, where a range is listed here if and only if it is enclosed within one of the consolidated ranges.
 }
 }
@@ -35,7 +35,7 @@ boundaries <- c(0, 10, 30, 100, 200, 210) # five ranges
 consolidateRanges(boundaries, c(2, 3, 4))
 consolidateRanges(boundaries, c(1, 3, 5))
 consolidateRanges(boundaries, c(1, 5))
-consolidateRanges(boundaries, c(1, 5), max.unused=0.99)
+consolidateRanges(boundaries, c(1, 5), max.gap=100)
 
 }
 \author{

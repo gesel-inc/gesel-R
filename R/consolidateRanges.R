@@ -1,32 +1,32 @@
 consolidate.env <- new.env()
-consolidate.env$max.unused <- 0.9
+consolidate.env$max.gap <- 10000L
 
-#' Maximum proportion of unused bytes for consolidation
+#' Maximum gap for consolidation
 #'
-#' Get or set the maximum proportion of unused bytes during consolidation.
+#' Get or set the maximum gap between ranges of interest.
 #' This determines how aggressively \code{\link{consolidateRanges}} will merge near-adjacent ranges together.
 #'
-#' @param max.unused Number between 0 and 1 inclusive, specifying the maximum percentage of unused bytes.
+#' @param max.gap Integer specifying the maximum size of the gap, in bytes.
 #'
 #' @return
-#' If \code{max.unused=NULL}, the current maximum proportion is returned.
+#' If \code{max.gap=NULL}, the current maximum gap is returned.
 #'
-#' If \code{max.unused} is provided, it is used to set the maximum proportion, and the previous maximum is returned invisibly. 
+#' If \code{max.gap} is provided, it is used to set the maximum gap, and the previous maximum is returned invisibly. 
 #'
 #' @author Aaron Lun
 #' @examples
-#' consolidateMaxUnused()
-#' old <- consolidateMaxUnused(0.5)
-#' consolidateMaxUnused()
-#' consolidateMaxUnused(old)
+#' consolidateMaxGap()
+#' old <- consolidateMaxGap(500)
+#' consolidateMaxGap()
+#' consolidateMaxGap(old)
 #'
 #' @export
-consolidateMaxUnused <- function(max.unused = NULL) {
-    previous <- consolidate.env$max.unused
-    if (is.null(max.unused)) {
+consolidateMaxGap <- function(max.gap = NULL) {
+    previous <- consolidate.env$max.gap
+    if (is.null(max.gap)) {
         previous
     } else {
-        consolidate.env$max.unused <- max.unused
+        consolidate.env$max.gap <- max.gap
         invisible(previous)
     }
 }
@@ -40,7 +40,7 @@ consolidateMaxUnused <- function(max.unused = NULL) {
 #' This should have length equal to the number of ranges plus 1, where the \code{i}-th range is defined as \code{[boundaries[i], boundaries[i+1])}.
 #' @param needed Integer vector specifying the ranges of interest.
 #' Each entry should be an index into \code{boundaries}. 
-#' @param max.unused Number between 0 and 1 inclusive, specifying the maximum percentage of unused bytes.
+#' @param max.gap Number between 0 and 1 inclusive, specifying the maximum gap between the ranges of interest.
 #' Larger values will produce a smaller number of larger ranges.
 #'
 #' @return List containing:
@@ -48,7 +48,7 @@ consolidateMaxUnused <- function(max.unused = NULL) {
 #' \item \code{start}, an integer vector containing the starts of the consolidated ranges.
 #' \item \code{end}, an integer vector of length equal to \code{start}.
 #' This contains the ends of the consolidated ranges.
-#' \item \code{requested}, an integer vector of the individual ranges that will requested after consolidation.
+#' \item \code{requested}, an integer vector of the individual ranges that will be requested after consolidation.
 #' This will be a superset of \code{needed}, where a range is listed here if and only if it is enclosed within one of the consolidated ranges.
 #' }
 #'
@@ -58,25 +58,20 @@ consolidateMaxUnused <- function(max.unused = NULL) {
 #' consolidateRanges(boundaries, c(2, 3, 4))
 #' consolidateRanges(boundaries, c(1, 3, 5))
 #' consolidateRanges(boundaries, c(1, 5))
-#' consolidateRanges(boundaries, c(1, 5), max.unused=0.99)
+#' consolidateRanges(boundaries, c(1, 5), max.gap=100)
 #'
 #' @export
 #' @importFrom utils head tail
-consolidateRanges <- function(boundaries, needed, max.unused = consolidateMaxUnused()) {
+consolidateRanges <- function(boundaries, needed, max.gap = consolidateMaxGap()) {
     needed <- sort(needed)
     starts <- boundaries[needed]
     ends <- boundaries[needed + 1]
-    required <- sum(ends - starts)
 
-    # Here, the idea is to find the smallest number of largest gaps that keeps
-    # our proportion of useful bytes above `1 - max.unused`.
     gaps <- tail(starts, -1) - head(ends, -1)
-    o <- order(gaps)
-    ratio <- required / (required + cumsum(gaps[o]))
-    gaps.to.keep <- o[which(ratio < 1 - max.unused)]
-
+    gaps.to.keep <- which(gaps > max.gap)
     gap.left <- needed[gaps.to.keep]
     gap.right <- needed[gaps.to.keep + 1]
+
     o2 <- order(gap.left)
     run.start <- c(head(needed, 1), gap.right[o2]) # RHS of the gap is the start of the run.
     run.end <- c(gap.left[o2], tail(needed, 1))

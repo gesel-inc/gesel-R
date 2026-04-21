@@ -41,7 +41,7 @@ fetchSomeSets <- function(species, sets, config = NULL) {
 
     needed <- setdiff(sets, prior.sets)
     if (length(needed)) {
-        consolidated <- consolidateRanges(cached$intervals, needed, max.unused = consolidate_max_unused(config))
+        consolidated <- consolidateRanges(cached$intervals, needed, max.gap = consolidate_max_gap(config))
         consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
         newly.obtained <- setdiff(consolidated$requested, prior.sets)
 
