@@ -18,7 +18,7 @@ This can be used by applications to point to a different Gesel database from the
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.10</span>
       </span>
     </div>
 
@@ -61,8 +61,9 @@ This can be used by applications to point to a different Gesel database from the
 <span>  fetch.gene.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  fetch.file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  fetch.file.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  fetch.range <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  fetch.range.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span>  fetch.ranges <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  fetch.ranges.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  consolidate.max.unused <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -88,16 +89,21 @@ If <code>NULL</code>, it defaults to <code><a href="downloadDatabaseFile.html">d
 <dd><p>Named list of arguments to pass to <code>fetch.file</code>.</p></dd>
 
 
-<dt id="arg-fetch-range">fetch.range<a class="anchor" aria-label="anchor" href="#arg-fetch-range"></a></dt>
+<dt id="arg-fetch-ranges">fetch.ranges<a class="anchor" aria-label="anchor" href="#arg-fetch-ranges"></a></dt>
 <dd><p>Function that accepts three arguments -
 the name of the file in the Gesel database, an integer vector containing the starts of the byte ranges, and another vector containing the ends of the byte ranges
 (see <code><a href="downloadDatabaseRanges.html">downloadDatabaseRanges</a></code> for details).
-It should return a character vector containing the contents of the specified byte ranges.
+It should return a list of raw vectors with the contents of the specified byte ranges.
 If <code>NULL</code>, it defaults to <code><a href="downloadDatabaseRanges.html">downloadDatabaseRanges</a></code>.</p></dd>
 
 
-<dt id="arg-fetch-range-args">fetch.range.args<a class="anchor" aria-label="anchor" href="#arg-fetch-range-args"></a></dt>
-<dd><p>Named list of arguments to pass to <code>fetch.range</code>.</p></dd>
+<dt id="arg-fetch-ranges-args">fetch.ranges.args<a class="anchor" aria-label="anchor" href="#arg-fetch-ranges-args"></a></dt>
+<dd><p>Named list of arguments to pass to <code>fetch.ranges</code>.</p></dd>
+
+
+<dt id="arg-consolidate-max-unused">consolidate.max.unused<a class="anchor" aria-label="anchor" href="#arg-consolidate-max-unused"></a></dt>
+<dd><p>Number specifying the maximum proportion of unused bytes in consolidated requests.
+If <code>NULL</code>, it defaults to <code><a href="consolidateMaxUnused.html">consolidateMaxUnused</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">

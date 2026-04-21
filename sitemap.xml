@@ -6,6 +6,8 @@
 <url><loc>/authors.html</loc></url>
 <url><loc>/index.html</loc></url>
 <url><loc>/reference/cacheDirectory.html</loc></url>
+<url><loc>/reference/consolidateMaxUnused.html</loc></url>
+<url><loc>/reference/consolidateRanges.html</loc></url>
 <url><loc>/reference/downloadDatabaseFile.html</loc></url>
 <url><loc>/reference/downloadDatabaseRanges.html</loc></url>
 <url><loc>/reference/downloadGeneFile.html</loc></url>

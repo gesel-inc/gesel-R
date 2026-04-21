@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.9</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.10</span>
       </span>
     </div>
 
@@ -99,7 +99,8 @@ Ignored if <code>multipart=TRUE</code>.</p></dd>
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Character vector of length equal to <code>length(start)</code>, containing the contents of the requested byte ranges.</p>
+    <p>List of length equal to <code>length(start)</code>.
+Each entry is a raw vector representing the contents of the corresponding byte range.</p>
     </div>
     <div id="author">
     <h2>Author</h2>
@@ -109,11 +110,26 @@ Ignored if <code>multipart=TRUE</code>.</p></dd>
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">downloadDatabaseRanges</span><span class="op">(</span><span class="st">"9606_set2gene.tsv"</span>, <span class="fl">0L</span>, <span class="fl">100L</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "204\t1152\t1590\t103\t347\t2997\t535\t4463\t2327\t770\t817\n1912\t1\t3846\t13385\n11661\t1535\n8598\t3597\n859\t633\t1288"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 32 30 34 09 31 31 35 32 09 31 35 39 30 09 31 30 33 09 33 34 37 09 32 39 39</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [26] 37 09 35 33 35 09 34 34 36 33 09 32 33 32 37 09 37 37 30 09 38 31 37 0a 31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [51] 39 31 32 09 31 09 33 38 34 36 09 31 33 33 38 35 0a 31 31 36 36 31 09 31 35</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [76] 33 35 0a 38 35 39 38 09 33 35 39 37 0a 38 35 39 09 36 33 33 09 31 32 38 38</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span><span class="fu">downloadDatabaseRanges</span><span class="op">(</span><span class="st">"9606_set2gene.tsv"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">10</span>, <span class="fl">100</span>, <span class="fl">1000</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">150</span>, <span class="fl">1100</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "590\t103\t34"                                                                                                                    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [2] "\t2286\t242\t3160\t2635\t664\t6054\t6864\n1444\t41\t5\t1562\t1"                                                                  </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [3] "53\t10\t663\t5\t78\t230\t29\t23\t707\t385\t275\t230\t445\t298\t126\t4\t28\t78\t66\t78\t340\t194\t276\t623\t472\t736\t282\t1366\t"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[1]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 35 39 30 09 31 30 33 09 33 34</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [1] 09 32 32 38 36 09 32 34 32 09 33 31 36 30 09 32 36 33 35 09 36 36 34 09 36</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [26] 30 35 34 09 36 38 36 34 0a 31 34 34 34 09 34 31 09 35 09 31 35 36 32 09 31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [[3]]</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   [1] 35 33 09 31 30 09 36 36 33 09 35 09 37 38 09 32 33 30 09 32 39 09 32 33 09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [26] 37 30 37 09 33 38 35 09 32 37 35 09 32 33 30 09 34 34 35 09 32 39 38 09 31</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [51] 32 36 09 34 09 32 38 09 37 38 09 36 36 09 37 38 09 33 34 30 09 31 39 34 09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  [76] 32 37 36 09 36 32 33 09 34 37 32 09 37 33 36 09 32 38 32 09 31 33 36 36 09</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
