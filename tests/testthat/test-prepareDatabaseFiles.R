@@ -24,7 +24,7 @@ test_that("prepareDatabaseFiles handles non-unique and unsorted values correctly
     copy.config <- gesel::newConfig(
         fetch.gene = function(name) file.path(gene.dir, name),
         fetch.file = function(name) file.path(copy.dir, name),
-        fetch.range = function(name, starts, ends) getDatabaseRanges(copy.dir, name, starts, ends)
+        fetch.ranges = function(name, starts, ends) getDatabaseRanges(copy.dir, name, starts, ends)
     )
 
     expect_identical(fetchAllCollections("9606", config=copy.config), fetchAllCollections(species, config=test.config))

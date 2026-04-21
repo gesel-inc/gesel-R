@@ -92,13 +92,20 @@ fetch_sets_by_token <- function(config, species, tokens, type) {
 
     # Making a parallelized set of to.request for anything that we're missing.
     if (length(to.request)) {
-        ranges <- tfound$ranges
-        starts <- ranges[to.request]
-        ends <- ranges[to.request + 1L]
-        deets <- fetch_range(config, fname, starts, ends)
-        requested.indices <- decode_indices(deets)
+        consolidated <- consolidateRanges(tfound$ranges, to.request, max.unused = consolidate_max_unused(config))
+        consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
+        newly.obtained <- consolidated$requested[!(tnames[consolidated$requested] %in% names(prior))]
 
-        names(requested.indices) <- tnames[to.request] 
+        refined.parts <- refine_ranges(
+            consolidated.parts,
+            consolidated$start,
+            consolidated$end,
+            tfound$ranges[newly.obtained],
+            tfound$ranges[newly.obtained + 1L] - 1L # omit the trailing newline.
+        )
+
+        requested.indices <- decode_indices_from_raw(refined.parts)
+        names(requested.indices) <- tnames[newly.obtained] 
         prior <- c(prior, requested.indices)
         modified <- TRUE
     }

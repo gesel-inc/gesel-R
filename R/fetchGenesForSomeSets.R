@@ -31,6 +31,7 @@
 #'
 #' # Identities of the requested sets.
 #' set.info <- fetchAllSets("9606")[1:5,]
+#' set.info
 #' 
 #' @export
 fetchGenesForSomeSets <- function(species, sets, config = NULL) {
@@ -53,12 +54,22 @@ fetchGenesForSomeSets <- function(species, sets, config = NULL) {
     prior.set <- cached$prior$set
     prior.genes <- cached$prior$genes
 
-    needed <- sort(setdiff(sets, prior.set))
+    needed <- setdiff(sets, prior.set)
     if (length(needed)) {
-        intervals <- cached$intervals
-        deets <- fetch_range(config, fname, intervals[needed], intervals[needed + 1L])
-        prior.set <- c(prior.set, needed)
-        prior.genes <- c(prior.genes, decode_indices(deets))
+        consolidated <- consolidateRanges(cached$intervals, needed, max.unused = consolidate_max_unused(config))
+        consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
+        newly.obtained <- setdiff(consolidated$requested, prior.set)
+
+        refined.parts <- refine_ranges(
+            consolidated.parts,
+            consolidated$start,
+            consolidated$end,
+            cached$intervals[newly.obtained],
+            cached$intervals[newly.obtained + 1L] - 1L # omit the trailing newline.
+        )
+
+        prior.set <- c(prior.set, newly.obtained)
+        prior.genes <- c(prior.genes, decode_indices_from_raw(refined.parts))
         modified <- TRUE
     }
 

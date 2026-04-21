@@ -33,7 +33,8 @@ All ranges supplied in a single call to this function should be non-overlapping.
 Ignored if \code{multipart=TRUE}.}
 }
 \value{
-Character vector of length equal to \code{length(start)}, containing the contents of the requested byte ranges.
+List of length equal to \code{length(start)}.
+Each entry is a raw vector representing the contents of the corresponding byte range.
 }
 \description{
 Download any number of byte ranges from a Gesel database file.

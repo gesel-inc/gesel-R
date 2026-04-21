@@ -67,8 +67,13 @@ retrieve_ranges_with_names <- function(config, name) {
     list(names=names, ranges=compute_ranges(bytes))
 }
 
+decode_indices_from_raw <- function(contents) {
+    lines <- vapply(contents, rawToChar, FUN.VALUE="")
+    decode_indices(lines)
+}
+
 decode_indices <- function(lines) {
-    ignore <- lines == "\n"
+    ignore <- nchar(lines) == 0L
     parsed <- strsplit(lines[!ignore], "\t", fixed=TRUE)
     output <- vector("list", length(lines))
     output[ignore] <- list(integer())

@@ -41,6 +41,7 @@ head(gene.symbols[first.set[[1]]])
 
 # Identities of the requested sets.
 set.info <- fetchAllSets("9606")[1:5,]
+set.info
 
 }
 \author{

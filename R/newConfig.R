@@ -9,12 +9,14 @@
 #' @param fetch.file Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.
 #' If \code{NULL}, it defaults to \code{\link{downloadDatabaseFile}}.
 #' @param fetch.file.args Named list of arguments to pass to \code{fetch.file}.
-#' @param fetch.range Function that accepts three arguments - 
+#' @param fetch.ranges Function that accepts three arguments - 
 #' the name of the file in the Gesel database, an integer vector containing the starts of the byte ranges, and another vector containing the ends of the byte ranges
 #' (see \code{\link{downloadDatabaseRanges}} for details).
-#' It should return a character vector containing the contents of the specified byte ranges.
+#' It should return a list of raw vectors with the contents of the specified byte ranges.
 #' If \code{NULL}, it defaults to \code{\link{downloadDatabaseRanges}}.
-#' @param fetch.range.args Named list of arguments to pass to \code{fetch.range}.
+#' @param fetch.ranges.args Named list of arguments to pass to \code{fetch.ranges}.
+#' @param consolidate.max.unused Number specifying the maximum proportion of unused bytes in consolidated requests.
+#' If \code{NULL}, it defaults to \code{\link{consolidateMaxUnused}}.
 #'
 #' @return A list containing Gesel configuration settings.
 #'
@@ -39,17 +41,19 @@ newConfig <- function(
     fetch.gene.args = list(),
     fetch.file = NULL,
     fetch.file.args = list(),
-    fetch.range = NULL,
-    fetch.range.args = list()) 
-{
+    fetch.ranges = NULL,
+    fetch.ranges.args = list(),
+    consolidate.max.unused = NULL
+) {
     list(
         cache = new.env(),
         fetch.gene = fetch.gene,
         fetch.gene.args = fetch.gene.args,
         fetch.file = fetch.file,
         fetch.file.args = fetch.file.args,
-        fetch.range = fetch.range,
-        fetch.range.args = fetch.range.args
+        fetch.ranges = fetch.ranges,
+        fetch.ranges.args = fetch.ranges.args,
+        consolidate.max.unused = consolidate.max.unused
     )
 }
 
@@ -83,12 +87,20 @@ fetch_file <- function(config, ...) {
     do.call(fetch.file, c(list(...), config$fetch.file.args))
 }
 
-fetch_range <- function(config, ...) {
-    fetch.range <- config$fetch.range
-    if (is.null(fetch.range)) {
-        fetch.range <- downloadDatabaseRanges
+fetch_ranges <- function(config, ...) {
+    fetch.ranges <- config$fetch.ranges
+    if (is.null(fetch.ranges)) {
+        fetch.ranges <- downloadDatabaseRanges
     }
-    do.call(fetch.range, c(list(...), config$fetch.range.args))
+    do.call(fetch.ranges, c(list(...), config$fetch.ranges.args))
+}
+
+consolidate_max_unused <- function(config) {
+    consolidate.max.unused <- config$consolidate.max.unused
+    if (is.null(consolidate.max.unused)) {
+        consolidate.max.unused <- consolidateMaxUnused()
+    }
+    consolidate.max.unused
 }
 
 #' Flush the in-memory cache

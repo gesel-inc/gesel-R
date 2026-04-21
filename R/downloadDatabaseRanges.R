@@ -48,7 +48,8 @@ rangeConcurrency <- function(concurrency = NULL) {
 #' @param concurrency Integer specifying the maximum number of concurrent range requests per second.
 #' Ignored if \code{multipart=TRUE}.
 #'
-#' @return Character vector of length equal to \code{length(start)}, containing the contents of the requested byte ranges.
+#' @return List of length equal to \code{length(start)}.
+#' Each entry is a raw vector representing the contents of the corresponding byte range.
 #'
 #' @author Aaron Lun
 #' @examples
@@ -64,7 +65,7 @@ downloadDatabaseRanges <- function(name, start, end, url = databaseUrl(), multip
         return(downloadMultipartRanges(url, start, end))
     }
 
-    output <- character(length(start))
+    output <- rep(list(raw()), length(start))
     keep <- which(start < end)
     start <- start[keep]
     end <- end[keep]
@@ -84,7 +85,7 @@ downloadDatabaseRanges <- function(name, start, end, url = databaseUrl(), multip
     for (i in seq_along(resps)) {
         # Process raw bytes to avoid issues with multi-byte characters.
         payload <- resp_body_raw(resps[[i]])
-        output[keep[i]] <- rawToChar(head(payload, end[i] - start[i]))
+        output[[keep[i]]] <- head(payload, end[i] - start[i])
     }
 
     output
@@ -93,7 +94,7 @@ downloadDatabaseRanges <- function(name, start, end, url = databaseUrl(), multip
 #' @export
 #' @import httr2
 downloadMultipartRanges <- function(url, start, end) {
-    output <- character(length(start))
+    output <- rep(list(raw()), length(start))
     keep <- which(start < end)
     if (length(keep) == 0L) {
         return(output)
@@ -116,7 +117,7 @@ downloadMultipartRanges <- function(url, start, end) {
     if (length(start) == 1L) {
         # Process raw bytes to avoid issues with multi-byte characters.
         content <- resp_body_raw(resp)
-        output[keep] <- rawToChar(head(content, end - start))
+        output[[keep]] <- head(content, end - start)
         return(output)
     }
 
@@ -134,7 +135,7 @@ downloadMultipartRanges <- function(url, start, end) {
 extract_multipart_strings <- function(body, boundary, start, end) {
     parsed <- parse_multipart_ranges(body, boundary)
 
-    part.starts <- part.ends <- integer(length(parsed))
+    part.start <- part.end <- integer(length(parsed))
     for (i in seq_along(parsed)) {
         current <- parsed[[i]]
         attrs <- attributes(current)
@@ -153,27 +154,39 @@ extract_multipart_strings <- function(body, boundary, start, end) {
         if (is.na(current.start)) {
             stop("failed to extract start of the content range");
         }
-        part.starts[i] <- current.start
+        part.start[i] <- current.start
 
         current.end <- as.integer(sub("/.*", "", sub(".*-", "", content.range)))
         if (is.na(current.end)) {
             stop("failed to extract end of the content range");
         }
-        part.ends[i] <- current.end
+        part.end[i] <- current.end
     }
 
-    chosen <- findInterval(start, part.starts)
-    if (any(chosen == 0) || any(end > part.ends[chosen] + 1)) { # remember, content-range has a closed end, while our 'end' is open.
+    if (is.unsorted(part.start)) {
+        o <- order(part.start)
+        parsed <- parsed[o]
+        part.start <- part.start[o]
+        part.end <- part.end[o]
+    }
+
+    refine_ranges(parsed, part.start, part.end, start, end)
+}
+
+refine_ranges <- function(parts, part.start, part.end, start, end) {
+    chosen <- findInterval(start, part.start)
+    if (any(chosen == 0) || any(end > part.end[chosen] + 1)) { # remember, content-range has a closed end, while our 'end' is open.
         stop("multipart response does not contain the requested byte ranges")
     }
 
-    offset <- part.starts[chosen]
+    offset <- part.start[chosen]
     s <- start - offset + 1L
     e <- end - offset
+    nonempty <- which(s < e)
 
-    collected <- character(length(start))
-    for (i in seq_along(collected)) {
-        collected[i] <- rawToChar(parsed[[chosen[i]]][s[i]:e[i]])
+    collected <- rep(list(raw()), length(start))
+    for (i in nonempty) {
+        collected[[i]] <- parts[[chosen[i]]][seq(s[i], e[i])]
     }
 
     collected

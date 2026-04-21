@@ -42,19 +42,28 @@ fetchSomeCollections <- function(species, collections, config = NULL) {
 
     needed <- setdiff(collections, prior.collections)
     if (length(needed)) {
-        intervals <- cached$intervals
-        starts <- intervals[needed]
-        ends <- intervals[needed + 1L] - 1L # remove the newline.
-        deets <- fetch_range(config, fname, starts, ends)
+        consolidated <- consolidateRanges(cached$intervals, needed, max.unused = consolidate_max_unused(config))
+        consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
+        newly.obtained <- setdiff(consolidated$requested, prior.collections)
 
-        prior.collections <- c(prior.collections, needed)
-        split <- strsplit(deets, "\t")
+        refined.parts <- refine_ranges(
+            consolidated.parts,
+            consolidated$start,
+            consolidated$end,
+            cached$intervals[newly.obtained],
+            cached$intervals[newly.obtained + 1L] - 1L # omit the trailing newline.
+        )
+
+        lines <- vapply(refined.parts, rawToChar, FUN.VALUE="")
+        split <- strsplit(lines, "\t")
         extra.df <- data.frame(
             title = vapply(split, function(x) x[1], ""),
             description = vapply(split, function(x) x[2], ""),
             maintainer = vapply(split, function(x) x[4], ""),
             `source` = vapply(split, function(x) x[5], "")
         )
+
+        prior.collections <- c(prior.collections, newly.obtained)
         prior.details <- rbind(prior.details, extra.df)
         modified <- TRUE
     }

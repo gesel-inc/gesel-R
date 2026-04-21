@@ -41,17 +41,26 @@ fetchSomeSets <- function(species, sets, config = NULL) {
 
     needed <- setdiff(sets, prior.sets)
     if (length(needed)) {
-        intervals <- cached$intervals
-        starts <- intervals[needed]
-        ends <- intervals[needed + 1L] - 1L # remove the newline.
-        deets <- fetch_range(config, fname, starts, ends)
+        consolidated <- consolidateRanges(cached$intervals, needed, max.unused = consolidate_max_unused(config))
+        consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
+        newly.obtained <- setdiff(consolidated$requested, prior.sets)
 
-        prior.sets <- c(prior.sets, needed)
-        split <- strsplit(deets, "\t")
+        refined.parts <- refine_ranges(
+            consolidated.parts,
+            consolidated$start,
+            consolidated$end,
+            cached$intervals[newly.obtained],
+            cached$intervals[newly.obtained + 1L] - 1L # omit the newline.
+        )
+
+        lines <- vapply(refined.parts, rawToChar, FUN.VALUE="")
+        split <- strsplit(lines, "\t")
         extra.df <- data.frame(
             name = vapply(split, function(x) x[1], ""),
             description = vapply(split, function(x) x[2], "")
         )
+
+        prior.sets <- c(prior.sets, newly.obtained)
         prior.details <- rbind(prior.details, extra.df)
         modified <- TRUE
     }

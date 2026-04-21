@@ -9,8 +9,9 @@ newConfig(
   fetch.gene.args = list(),
   fetch.file = NULL,
   fetch.file.args = list(),
-  fetch.range = NULL,
-  fetch.range.args = list()
+  fetch.ranges = NULL,
+  fetch.ranges.args = list(),
+  consolidate.max.unused = NULL
 )
 }
 \arguments{
@@ -24,13 +25,16 @@ If \code{NULL}, it defaults to \code{\link{downloadDatabaseFile}}.}
 
 \item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
 
-\item{fetch.range}{Function that accepts three arguments - 
+\item{fetch.ranges}{Function that accepts three arguments - 
 the name of the file in the Gesel database, an integer vector containing the starts of the byte ranges, and another vector containing the ends of the byte ranges
 (see \code{\link{downloadDatabaseRanges}} for details).
-It should return a character vector containing the contents of the specified byte ranges.
+It should return a list of raw vectors with the contents of the specified byte ranges.
 If \code{NULL}, it defaults to \code{\link{downloadDatabaseRanges}}.}
 
-\item{fetch.range.args}{Named list of arguments to pass to \code{fetch.range}.}
+\item{fetch.ranges.args}{Named list of arguments to pass to \code{fetch.ranges}.}
+
+\item{consolidate.max.unused}{Number specifying the maximum proportion of unused bytes in consolidated requests.
+If \code{NULL}, it defaults to \code{\link{consolidateMaxUnused}}.}
 }
 \value{
 A list containing Gesel configuration settings.
