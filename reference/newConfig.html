@@ -18,7 +18,7 @@ This can be used by applications to point to a different Gesel database from the
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.10</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.11</span>
       </span>
     </div>
 
@@ -63,7 +63,7 @@ This can be used by applications to point to a different Gesel database from the
 <span>  fetch.file.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  fetch.ranges <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  fetch.ranges.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  consolidate.max.gap <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  consolidate.block.size <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -101,9 +101,9 @@ If <code>NULL</code>, it defaults to <code><a href="downloadDatabaseRanges.html"
 <dd><p>Named list of arguments to pass to <code>fetch.ranges</code>.</p></dd>
 
 
-<dt id="arg-consolidate-max-gap">consolidate.max.gap<a class="anchor" aria-label="anchor" href="#arg-consolidate-max-gap"></a></dt>
-<dd><p>Number specifying the maximum gap between ranges of interest in consolidated requests.
-If <code>NULL</code>, it defaults to <code><a href="consolidateMaxGap.html">consolidateMaxGap</a></code>.</p></dd>
+<dt id="arg-consolidate-block-size">consolidate.block.size<a class="anchor" aria-label="anchor" href="#arg-consolidate-block-size"></a></dt>
+<dd><p>Integer specifying the block size for consolidated requests.
+If <code>NULL</code>, it defaults to <code><a href="consolidateBlockSize.html">consolidateBlockSize</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">
