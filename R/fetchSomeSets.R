@@ -43,14 +43,13 @@ fetchSomeSets <- function(species, sets, config = NULL) {
     if (length(needed)) {
         consolidated <- consolidate_ranges(cached$intervals, cached$blocked, needed)
         consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
-        newly.obtained <- setdiff(consolidated$requested, prior.sets)
 
         refined.parts <- refine_ranges(
             consolidated.parts,
             consolidated$start,
             consolidated$end,
-            cached$intervals[newly.obtained],
-            cached$intervals[newly.obtained + 1L] - 1L # omit the newline.
+            cached$intervals[consolidated$requested],
+            cached$intervals[consolidated$requested + 1L] - 1L # omit the newline.
         )
 
         lines <- vapply(refined.parts, rawToChar, FUN.VALUE="")
@@ -60,7 +59,7 @@ fetchSomeSets <- function(species, sets, config = NULL) {
             description = vapply(split, function(x) x[2], "")
         )
 
-        prior.sets <- c(prior.sets, newly.obtained)
+        prior.sets <- c(prior.sets, consolidated$requested)
         prior.details <- rbind(prior.details, extra.df)
         modified <- TRUE
     }

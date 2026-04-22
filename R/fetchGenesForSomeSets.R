@@ -62,17 +62,16 @@ fetchGenesForSomeSets <- function(species, sets, config = NULL) {
     if (length(needed)) {
         consolidated <- consolidate_ranges(cached$intervals, cached$blocked, needed)
         consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
-        newly.obtained <- setdiff(consolidated$requested, prior.set)
 
         refined.parts <- refine_ranges(
             consolidated.parts,
             consolidated$start,
             consolidated$end,
-            cached$intervals[newly.obtained],
-            cached$intervals[newly.obtained + 1L] - 1L # omit the trailing newline.
+            cached$intervals[consolidated$requested],
+            cached$intervals[consolidated$requested + 1L] - 1L # omit the trailing newline.
         )
 
-        prior.set <- c(prior.set, newly.obtained)
+        prior.set <- c(prior.set, consolidated$requested)
         prior.genes <- c(prior.genes, decode_indices_from_raw(refined.parts))
         modified <- TRUE
     }

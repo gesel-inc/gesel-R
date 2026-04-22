@@ -44,14 +44,13 @@ fetchSomeCollections <- function(species, collections, config = NULL) {
     if (length(needed)) {
         consolidated <- consolidate_ranges(cached$intervals, cached$blocked, needed)
         consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
-        newly.obtained <- setdiff(consolidated$requested, prior.collections)
 
         refined.parts <- refine_ranges(
             consolidated.parts,
             consolidated$start,
             consolidated$end,
-            cached$intervals[newly.obtained],
-            cached$intervals[newly.obtained + 1L] - 1L # omit the trailing newline.
+            cached$intervals[consolidated$requested],
+            cached$intervals[consolidated$requested + 1L] - 1L # omit the trailing newline.
         )
 
         lines <- vapply(refined.parts, rawToChar, FUN.VALUE="")
@@ -63,7 +62,7 @@ fetchSomeCollections <- function(species, collections, config = NULL) {
             `source` = vapply(split, function(x) x[5], "")
         )
 
-        prior.collections <- c(prior.collections, newly.obtained)
+        prior.collections <- c(prior.collections, consolidated$requested)
         prior.details <- rbind(prior.details, extra.df)
         modified <- TRUE
     }

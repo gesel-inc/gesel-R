@@ -95,18 +95,17 @@ fetch_sets_by_token <- function(config, species, tokens, type) {
     if (length(to.request)) {
         consolidated <- consolidate_ranges(tfound$ranges, tfound$blocked, to.request)
         consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
-        newly.obtained <- consolidated$requested[!(tnames[consolidated$requested] %in% names(prior))]
 
         refined.parts <- refine_ranges(
             consolidated.parts,
             consolidated$start,
             consolidated$end,
-            tfound$ranges[newly.obtained],
-            tfound$ranges[newly.obtained + 1L] - 1L # omit the trailing newline.
+            tfound$ranges[consolidated$requested],
+            tfound$ranges[consolidated$requested + 1L] - 1L # omit the trailing newline.
         )
 
         requested.indices <- decode_indices_from_raw(refined.parts)
-        names(requested.indices) <- tnames[newly.obtained] 
+        names(requested.indices) <- tnames[consolidated$requested] 
         prior <- c(prior, requested.indices)
         modified <- TRUE
     }
