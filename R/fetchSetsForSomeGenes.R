@@ -48,7 +48,7 @@ fetchSetsForSomeGenes <- function(species, genes, config = NULL) {
 
     needed <- setdiff(genes, prior.gene)
     if (length(needed)) {
-        consolidated <- consolidateRanges(cached$intervals, needed, max.gap = consolidate_max_gap(config))
+        consolidated <- consolidate_ranges(cached$intervals, cached$blocked, needed)
         consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
         newly.obtained <- setdiff(consolidated$requested, prior.gene)
 
@@ -82,7 +82,11 @@ get_sets_for_some_genes_ranges <- function(config, species, fname) {
     }
 
     intervals <- retrieve_ranges(config, fname)
-    cached <- list(intervals = intervals, prior = list(gene = integer(0), sets = list()))
+    cached <- list(
+        intervals = intervals,
+        blocked = ranges_to_blocks(intervals, block.size = consolidate_block_size(config)),
+        prior = list(gene = integer(0), sets = list())
+    )
     return(list(cached=cached, modified=TRUE))
 }
 

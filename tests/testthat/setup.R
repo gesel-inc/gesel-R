@@ -88,5 +88,5 @@ test.config <- gesel::newConfig(
     fetch.gene = function(name) file.path(gene.dir, name),
     fetch.file = function(name) file.path(ref.dir, name),
     fetch.ranges = function(name, starts, ends) getDatabaseRanges(ref.dir, name, starts, ends),
-    consolidate.max.gap = -1 # force multiple range requests. 
+    consolidate.block.size = 1 # force multiple range requests. 
 )

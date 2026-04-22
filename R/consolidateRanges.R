@@ -1,96 +1,82 @@
 consolidate.env <- new.env()
-consolidate.env$max.gap <- 10000L
+consolidate.env$block.size <- 10000L
 
-#' Maximum gap for consolidation
+#' Block size for consolidation
 #'
-#' Get or set the maximum gap between ranges of interest.
-#' This determines how aggressively \code{\link{consolidateRanges}} will merge near-adjacent ranges together.
+#' Get or set the block size for consolidating HTTP range requests.
 #'
-#' @param max.gap Integer specifying the maximum size of the gap, in bytes.
+#' @param block.size Integer specifying the block size in bytes.
+#' Larger sizes reduce the number of requests at teh cost of increasing the size of each request.
 #'
 #' @return
-#' If \code{max.gap=NULL}, the current maximum gap is returned.
+#' If \code{block.size=NULL}, the current block size is returned.
 #'
-#' If \code{max.gap} is provided, it is used to set the maximum gap, and the previous maximum is returned invisibly. 
+#' If \code{block.size} is provided, it is used to set the block size, and the previous value is returned invisibly. 
+#'
+#' @details
+#' Each file is split up into blocks of size approximately equal to \code{consolidateBlockSize()}.
+#' When performing a range request, all ranges in the same block will be retrieved. 
+#' This consolidates near-adjacent ranges into a single request, reducing the number of requests at the cost of increasing the size of each request.
+#'
+#' All ranges associated with a block will be cached in memory, even those that were not directly requested.
+#' Subsequent function calls can then quickly retrieve ranges from this cache instead of making a new HTTP request. 
+#' Downloading and caching the entire block also ensures that the same bytes will never be requested from the server twice in the same session.
 #'
 #' @author Aaron Lun
 #' @examples
-#' consolidateMaxGap()
-#' old <- consolidateMaxGap(500)
-#' consolidateMaxGap()
-#' consolidateMaxGap(old)
+#' consolidateBlockSize()
+#' old <- consolidateBlockSize(500)
+#' consolidateBlockSize()
+#' consolidateBlockSize(old)
 #'
 #' @export
-consolidateMaxGap <- function(max.gap = NULL) {
-    previous <- consolidate.env$max.gap
-    if (is.null(max.gap)) {
+consolidateBlockSize <- function(block.size = NULL) {
+    previous <- consolidate.env$block.size
+    if (is.null(block.size)) {
         previous
     } else {
-        consolidate.env$max.gap <- max.gap
+        consolidate.env$block.size <- block.size
         invisible(previous)
     }
 }
 
-#' Consolidate near-adjacent ranges
-#'
-#' Consolidate near-adjacent byte ranges in HTTP range requests.
-#' This reduces the number of individual requests at the cost of having larger requests.
-#'
-#' @param boundaries Integer vector containing the zero-indexed boundaries of the byte ranges.
-#' This should have length equal to the number of ranges plus 1, where the \code{i}-th range is defined as \code{[boundaries[i], boundaries[i+1])}.
-#' @param needed Integer vector specifying the ranges of interest.
-#' Each entry should be an index into \code{boundaries}. 
-#' @param max.gap Number between 0 and 1 inclusive, specifying the maximum gap between the ranges of interest.
-#' Larger values will produce a smaller number of larger ranges.
-#'
-#' @return List containing:
-#' \itemize{
-#' \item \code{start}, an integer vector containing the starts of the consolidated ranges.
-#' \item \code{end}, an integer vector of length equal to \code{start}.
-#' This contains the ends of the consolidated ranges.
-#' \item \code{requested}, an integer vector of the individual ranges that will be requested after consolidation.
-#' This will be a superset of \code{needed}, where a range is listed here if and only if it is enclosed within one of the consolidated ranges.
-#' }
-#'
-#' @author Aaron Lun
-#' @examples
-#' boundaries <- c(0, 10, 30, 100, 200, 210) # five ranges
-#' consolidateRanges(boundaries, c(2, 3, 4))
-#' consolidateRanges(boundaries, c(1, 3, 5))
-#' consolidateRanges(boundaries, c(1, 5))
-#' consolidateRanges(boundaries, c(1, 5), max.gap=100)
-#'
-#' @export
 #' @importFrom utils head tail
-consolidateRanges <- function(boundaries, needed, max.gap = consolidateMaxGap()) {
-    needed <- sort(needed)
-    starts <- boundaries[needed]
-    ends <- boundaries[needed + 1]
+ranges_to_blocks <- function(boundaries, block.size) {
+    range.starts <- head(boundaries, -1)
+    mid <- range.starts + (tail(boundaries, -1) - range.starts) * 0.5 # use midpoints to place blocks.
+    ids <- floor(mid / block.size)
+    ids <- as.integer(factor(ids))
 
-    gaps <- tail(starts, -1) - head(ends, -1)
-    gaps.to.keep <- which(gaps > max.gap)
-    gap.left <- needed[gaps.to.keep]
-    gap.right <- needed[gaps.to.keep + 1]
-
-    o2 <- order(gap.left)
-    run.start <- c(head(needed, 1), gap.right[o2]) # RHS of the gap is the start of the run.
-    run.end <- c(gap.left[o2], tail(needed, 1))
-    
-    output.needed <- integer(0)
-    output.starts <- integer(0)
-    output.ends <- integer(0)
-
-    for (i in seq_along(run.start)) {
-        rstart <- run.start[i]
-        rend <- run.end[i]
-        output.starts <- c(output.starts, boundaries[rstart])
-        output.ends <- c(output.ends, boundaries[rend + 1])
-        output.needed <- c(output.needed, seq(rstart, rend)) # rstart <= rend is guaranteed due to the nature of the gap.
-    }
+    by.id <- split(seq_along(ids), ids)
+    by.id <- unname(by.id)
+    first.in.block <- vapply(by.id, head, n=1, FUN.VALUE=as(0, typeof(boundaries)))
+    block.boundaries <- c(boundaries[first.in.block], tail(boundaries, 1))
 
     list(
-        start = output.starts,
-        end = output.ends,
-        requested = output.needed
+        bounds = block.boundaries,
+        to.block = ids,
+        to.range = by.id
+    )
+}
+
+consolidate_ranges <- function(boundaries, block.info, needed) {
+    requested.blocks <- block.info$to.block[needed]
+    requested.blocks <- sort(unique(requested.blocks))
+    if (length(requested.blocks) == 0L) {
+        return(list(
+            start = integer(0),
+            end = integer(0),
+            requested = integer(0)
+        ))
+    }
+
+    is.run.start <- diff(requested.blocks) > 1
+    run.start <- requested.blocks[c(TRUE, is.run.start)]
+    run.end <- requested.blocks[c(is.run.start, TRUE)]
+
+    list(
+        start = block.info$bounds[run.start],
+        end = block.info$bounds[run.end + 1L],
+        requested = unlist(block.info$to.range[requested.blocks])
     )
 }

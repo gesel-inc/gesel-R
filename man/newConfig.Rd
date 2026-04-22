@@ -11,7 +11,7 @@ newConfig(
   fetch.file.args = list(),
   fetch.ranges = NULL,
   fetch.ranges.args = list(),
-  consolidate.max.gap = NULL
+  consolidate.block.size = NULL
 )
 }
 \arguments{
@@ -33,8 +33,8 @@ If \code{NULL}, it defaults to \code{\link{downloadDatabaseRanges}}.}
 
 \item{fetch.ranges.args}{Named list of arguments to pass to \code{fetch.ranges}.}
 
-\item{consolidate.max.gap}{Number specifying the maximum gap between ranges of interest in consolidated requests.
-If \code{NULL}, it defaults to \code{\link{consolidateMaxGap}}.}
+\item{consolidate.block.size}{Integer specifying the block size for consolidated requests.
+If \code{NULL}, it defaults to \code{\link{consolidateBlockSize}}.}
 }
 \value{
 A list containing Gesel configuration settings.

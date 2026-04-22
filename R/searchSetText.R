@@ -53,6 +53,7 @@ fetch_sets_by_token <- function(config, species, tokens, type) {
         sraw <- retrieve_ranges_with_names(config, fname)
         tfound$ranges <- sraw$ranges
         tfound$names <- sraw$names
+        tfound$blocked <- ranges_to_blocks(sraw$ranges, block.size = consolidate_block_size(config))
         tfound$prior <- list()
         modified <- TRUE
     }
@@ -92,7 +93,7 @@ fetch_sets_by_token <- function(config, species, tokens, type) {
 
     # Making a parallelized set of to.request for anything that we're missing.
     if (length(to.request)) {
-        consolidated <- consolidateRanges(tfound$ranges, to.request, max.gap = consolidate_max_gap(config))
+        consolidated <- consolidate_ranges(tfound$ranges, tfound$blocked, to.request)
         consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
         newly.obtained <- consolidated$requested[!(tnames[consolidated$requested] %in% names(prior))]
 

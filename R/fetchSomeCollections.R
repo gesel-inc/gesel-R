@@ -42,7 +42,7 @@ fetchSomeCollections <- function(species, collections, config = NULL) {
 
     needed <- setdiff(collections, prior.collections)
     if (length(needed)) {
-        consolidated <- consolidateRanges(cached$intervals, needed, max.gap = consolidate_max_gap(config))
+        consolidated <- consolidate_ranges(cached$intervals, cached$blocked, needed)
         consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
         newly.obtained <- setdiff(consolidated$requested, prior.collections)
 
@@ -92,6 +92,7 @@ get_single_collection_ranges <- function(config, species, fname) {
 
     cached <- list(
         intervals = range.info$ranges,
+        blocked = ranges_to_blocks(range.info$ranges, block.size = consolidate_block_size(config)),
         starts = c(0L, cumsum(head(range.info$sizes, -1L))) + 1L,
         sizes = range.info$sizes,
         prior = list(
