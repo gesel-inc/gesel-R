@@ -160,7 +160,7 @@ extract_multipart_strings <- function(body, boundary, start, end) {
         if (is.na(current.end)) {
             stop("failed to extract end of the content range");
         }
-        part.end[i] <- current.end
+        part.end[i] <- current.end + 1L # convert to an open end for consistency. 
     }
 
     if (is.unsorted(part.start)) {
@@ -175,7 +175,7 @@ extract_multipart_strings <- function(body, boundary, start, end) {
 
 refine_ranges <- function(parts, part.start, part.end, start, end) {
     chosen <- findInterval(start, part.start)
-    if (any(chosen == 0) || any(end > part.end[chosen] + 1)) { # remember, content-range has a closed end, while our 'end' is open.
+    if (any(chosen == 0) || any(end > part.end[chosen])) {
         stop("multipart response does not contain the requested byte ranges")
     }
 

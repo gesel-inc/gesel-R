@@ -45,12 +45,12 @@ test_that("consolidateRanges works in harder cases", {
             expect_true(all(needed %in% out$requested))
 
             # Check consistency between requested and boundaries.
-            observed <- expected <- logical(tail(boundaries, 1) - 1L)
+            observed <- expected <- logical(tail(boundaries, 1))
             for (i in out$requested) {
-                observed[boundaries[i]:(boundaries[i+1] - 1L)] <- TRUE
+                observed[(boundaries[i] + 1L):boundaries[i+1]] <- TRUE
             }
             for (i in seq_along(out$start)) {
-                expected[out$start[i]:(out$end[i] - 1L)] <- TRUE
+                expected[(out$start[i] + 1L):out$end[i]] <- TRUE
             }
             expect_identical(observed, expected)
 

@@ -220,33 +220,7 @@ test_that("refining the ranges works as expected", {
         )
     )
 
-    expect_error(
-        gesel:::refine_ranges(
-            parts,
-            parts.start,
-            parts.end,
-            90, 
-            100
-        ), "does not contain"
-    )
-
-    expect_error(
-        gesel:::refine_ranges(
-            parts,
-            parts.start,
-            parts.end,
-            101, 
-            120
-        ), "does not contain"
-    )
-
-    expect_error(
-        gesel:::refine_ranges(
-            parts,
-            parts.start,
-            parts.end,
-            701, 
-            800 
-        ), "does not contain"
-    )
+    expect_error(gesel:::refine_ranges(parts, parts.start, parts.end, 90, 100), "does not contain") # start is before the requested part's start.
+    expect_error(gesel:::refine_ranges(parts, parts.start, parts.end, 101, 112), "does not contain") # end is after the requested part's end.
+    expect_error(gesel:::refine_ranges(parts, parts.start, parts.end, 701, 800), "does not contain") # start is after the requested part's end.
 })
