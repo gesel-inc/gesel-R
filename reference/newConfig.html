@@ -72,7 +72,7 @@ This can be used by applications to point to a different Gesel database from the
 
 
 <dl><dt id="arg-fetch-gene">fetch.gene<a class="anchor" aria-label="anchor" href="#arg-fetch-gene"></a></dt>
-<dd><p>Function that accepts the name of the file in the Gesel gene descriptions and returns an absolute path to the file.
+<dd><p>Function that accepts the name of a Gesel gene description file and returns an absolute path to the file.
 If <code>NULL</code>, it defaults to <code><a href="downloadGeneFile.html">downloadGeneFile</a></code>.</p></dd>
 
 
@@ -81,7 +81,7 @@ If <code>NULL</code>, it defaults to <code><a href="downloadGeneFile.html">downl
 
 
 <dt id="arg-fetch-file">fetch.file<a class="anchor" aria-label="anchor" href="#arg-fetch-file"></a></dt>
-<dd><p>Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.
+<dd><p>Function that accepts the name of a Gesel database file and returns an absolute path to the file.
 If <code>NULL</code>, it defaults to <code><a href="downloadDatabaseFile.html">downloadDatabaseFile</a></code>.</p></dd>
 
 
@@ -91,7 +91,7 @@ If <code>NULL</code>, it defaults to <code><a href="downloadDatabaseFile.html">d
 
 <dt id="arg-fetch-ranges">fetch.ranges<a class="anchor" aria-label="anchor" href="#arg-fetch-ranges"></a></dt>
 <dd><p>Function that accepts three arguments -
-the name of the file in the Gesel database, an integer vector containing the starts of the byte ranges, and another vector containing the ends of the byte ranges
+the name of a Gesel database file, an integer vector containing the starts of the byte ranges, and another vector containing the ends of the byte ranges
 (see <code><a href="downloadDatabaseRanges.html">downloadDatabaseRanges</a></code> for details).
 It should return a list of raw vectors with the contents of the specified byte ranges.
 If <code>NULL</code>, it defaults to <code><a href="downloadDatabaseRanges.html">downloadDatabaseRanges</a></code>.</p></dd>
