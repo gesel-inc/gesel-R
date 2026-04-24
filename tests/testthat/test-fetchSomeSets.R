@@ -55,14 +55,16 @@ test_that("fetchSomeSets yields a sensible remote ref", {
 
     expect_identical(fetchSetSizes("9606"), everything$size)
 
-    # Works with partial caching.
+    # Works with full caching.
     preloaded <- fetchSomeSets("9606", chosen)
     expect_identical(test, preloaded)
 
-    extras <- head(setdiff(seq_len(nrow(everything)), chosen), 10)
+    # Works with partial caching.
+    extras <- sample(setdiff(seq_len(nrow(everything)), chosen), 10) # using a random sample to hopefully hit some different blocks.
     reloaded.plus <- fetchSomeSets("9606", c(chosen, extras))
-    plus <- fetchSomeSets("9606", extras) 
-    expect_identical(reloaded.plus, rbind(test, plus))
+    expected <- everything[c(chosen, extras),]
+    rownames(expected) <- NULL
+    expect_identical(reloaded.plus, expected)
 
     # Works with pre-loading.
     invisible(fetchAllSets("9606"))

@@ -44,10 +44,9 @@ test_that("fetchGenesForSomeSets yields a sensible remote ref", {
     expect_identical(test, preloaded)
 
     # Works with partial caching.
-    extras <- head(setdiff(seq_along(everything), chosen), 10)
+    extras <- sample(setdiff(seq_along(everything), chosen), 10) # using a random sample to hit some different blocks.
     reloaded.plus <- fetchGenesForSomeSets("9606", c(chosen, extras))
-    plus <- fetchGenesForSomeSets("9606", extras)
-    expect_identical(reloaded.plus, c(test, plus))
+    expect_identical(reloaded.plus, everything[c(chosen, extras)])
 
     # Works with pre-loading.
     invisible(fetchGenesForAllSets("9606"))
