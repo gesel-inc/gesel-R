@@ -15,8 +15,8 @@ downloadDatabaseRanges(
 )
 }
 \arguments{
-\item{name}{String containing the name of the file.
-This usually has the species identifier as a prefix.}
+\item{name}{String containing the name of a Gesel database file.
+This usually has the species identifier as a prefix, e.g., \code{"9606_set2gene.tsv.gz"}.}
 
 \item{start}{Integer vector containing the zero-indexed closed start of each byte range to extract from the file.
 This may be of zero length.}

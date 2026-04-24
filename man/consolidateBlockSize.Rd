@@ -8,7 +8,7 @@ consolidateBlockSize(block.size = NULL)
 }
 \arguments{
 \item{block.size}{Integer specifying the block size in bytes.
-Larger sizes reduce the number of requests at teh cost of increasing the size of each request.}
+Larger sizes reduce the number of requests at the cost of increasing the size of each request.}
 }
 \value{
 If \code{block.size=NULL}, the current block size is returned.
@@ -26,6 +26,8 @@ This consolidates near-adjacent ranges into a single request, reducing the numbe
 All ranges associated with a block will be cached in memory, even those that were not directly requested.
 Subsequent function calls can then quickly retrieve ranges from this cache instead of making a new HTTP request. 
 Downloading and caching the entire block also ensures that the same bytes will never be requested from the server twice in the same session.
+
+Setting the block size to a value of 1 indicates that no consolidation is to be performed, i.e., each range is requested as-is.
 }
 \examples{
 consolidateBlockSize()

@@ -15,8 +15,8 @@ downloadDatabaseFile(
 databaseUrl(url = NULL)
 }
 \arguments{
-\item{name}{String containing the name of the file.
-This usually has the species identifier as a prefix.}
+\item{name}{String containing the name of a Gesel database file.
+This usually has the species identifier as a prefix, e.g., \code{"9606_set2gene.tsv.gz"}.}
 
 \item{url}{String containing the base URL to the Gesel database files.}
 

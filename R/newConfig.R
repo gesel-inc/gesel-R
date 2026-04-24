@@ -10,7 +10,7 @@
 #' If \code{NULL}, it defaults to \code{\link{downloadDatabaseFile}}.
 #' @param fetch.file.args Named list of arguments to pass to \code{fetch.file}.
 #' @param fetch.ranges Function that accepts three arguments - 
-#' the name of the file in the Gesel database, an integer vector containing the starts of the byte ranges, and another vector containing the ends of the byte ranges
+#' the name of a Gesel database file, an integer vector containing the starts of the byte ranges, and another vector containing the ends of the byte ranges
 #' (see \code{\link{downloadDatabaseRanges}} for details).
 #' It should return a list of raw vectors with the contents of the specified byte ranges.
 #' If \code{NULL}, it defaults to \code{\link{downloadDatabaseRanges}}.

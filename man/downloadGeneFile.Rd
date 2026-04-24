@@ -15,7 +15,7 @@ downloadGeneFile(
 geneUrl(url = NULL)
 }
 \arguments{
-\item{name}{String containing the name of the file, typically of the form \code{<species>_<type>.tsv.gz}, e.g., \code{"9606_symbol.tsv.gz"}.}
+\item{name}{String containing the name of a Gesel gene file, typically of the form \code{<species>_<type>.tsv.gz}, e.g., \code{"9606_symbol.tsv.gz"}.}
 
 \item{url}{String containing the base URL to the Gesel gene descriptions.}
 

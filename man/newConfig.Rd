@@ -15,18 +15,18 @@ newConfig(
 )
 }
 \arguments{
-\item{fetch.gene}{Function that accepts the name of the file in the Gesel gene descriptions and returns an absolute path to the file.
+\item{fetch.gene}{Function that accepts the name of a Gesel gene description file and returns an absolute path to the file.
 If \code{NULL}, it defaults to \code{\link{downloadGeneFile}}.}
 
 \item{fetch.gene.args}{Named list of arguments to pass to \code{fetch.gene}.}
 
-\item{fetch.file}{Function that accepts the name of the file in the Gesel database and returns an absolute path to the file.
+\item{fetch.file}{Function that accepts the name of a Gesel database file and returns an absolute path to the file.
 If \code{NULL}, it defaults to \code{\link{downloadDatabaseFile}}.}
 
 \item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
 
 \item{fetch.ranges}{Function that accepts three arguments - 
-the name of the file in the Gesel database, an integer vector containing the starts of the byte ranges, and another vector containing the ends of the byte ranges
+the name of a Gesel database file, an integer vector containing the starts of the byte ranges, and another vector containing the ends of the byte ranges
 (see \code{\link{downloadDatabaseRanges}} for details).
 It should return a list of raw vectors with the contents of the specified byte ranges.
 If \code{NULL}, it defaults to \code{\link{downloadDatabaseRanges}}.}

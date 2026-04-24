@@ -2,7 +2,7 @@
 #'
 #' Default function to download Gesel gene description files. 
 #'
-#' @param name String containing the name of the file, typically of the form \code{<species>_<type>.tsv.gz}, e.g., \code{"9606_symbol.tsv.gz"}.
+#' @param name String containing the name of a Gesel gene file, typically of the form \code{<species>_<type>.tsv.gz}, e.g., \code{"9606_symbol.tsv.gz"}.
 #' @param url String containing the base URL to the Gesel gene descriptions. 
 #' @param cache String specifying the path to a cache directory.
 #' @param overwrite Boolean indicating whether any cached file should be overwritten.
