@@ -83,6 +83,11 @@ downloadDatabaseRanges <- function(name, start, end, url = databaseUrl(), multip
 
     resps <- req_perform_parallel(reqs, progress=FALSE)
     for (i in seq_along(resps)) {
+        # Avoid downloading the entire file if the server doesn't understand range requests and returns a 200.
+        if (resp_status(resps[[i]]) != 206) {
+            stop("expected a partial content response from a range request");
+        }
+
         # Process raw bytes to avoid issues with multi-byte characters.
         payload <- resp_body_raw(resps[[i]])
         output[[keep[i]]] <- head(payload, end[i] - start[i])
@@ -113,6 +118,11 @@ downloadMultipartRanges <- function(url, start, end) {
     ranges <- paste(sprintf("%s-%s", start, end - 1L), collapse=", ") # byte ranges are closed intervals, not half-open.
     req <- req_headers(req, Range=paste0("bytes=", ranges))
     resp <- req_perform(req)
+
+    # Avoid downloading the entire file if the server doesn't understand range requests and returns a 200.
+    if (resp_status(resp) != 206) {
+        stop("expected a partial content response from a range request");
+    }
 
     if (length(start) == 1L) {
         # Process raw bytes to avoid issues with multi-byte characters.

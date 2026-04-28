@@ -73,10 +73,20 @@ decode_indices_from_raw <- function(contents) {
 }
 
 decode_indices <- function(lines) {
-    ignore <- nchar(lines) == 0L
-    parsed <- strsplit(lines[!ignore], "\t", fixed=TRUE)
-    output <- vector("list", length(lines))
-    output[ignore] <- list(integer())
-    output[!ignore] <- lapply(parsed, function(x) cumsum(as.integer(x)) + 1L)
+    output <- rep(list(integer()), length(lines))
+
+    keep <- which(nchar(lines) != 0L)
+    parsed <- strsplit(lines[keep], "\t", fixed=TRUE)
+    output[keep] <- lapply(parsed, function(x) {
+        out <- as.integer(x)
+        if (anyNA(out)) {
+            # This is just a last-ditch defence against incorrect range requests.
+            # We'll assume that the number of genes/sets is less than .Machine$integer.max,
+            # so we won't bother to consider NAs generated from integer overflow.
+            stop("invalid cast to number when decoding indices")
+        }
+        cumsum(out) + 1L
+    })
+
     output
 }
