@@ -64,18 +64,17 @@ gene.dir <- tempfile()
 dir.create(gene.dir)
 
 ref.genes <- list()
-num.genes <- 500
 ref.gene.types <- c("foo", "bar", "WHEE")
 
 for (i in 1:3) {
     type <- ref.gene.types[i]
-    gene.ids <- sprintf("%s_%4d", type, seq_len(9999))
+    gene.ids <- sprintf("%s_%d", type, seq_len(19999))
 
-    genes.plus <- num.genes * (1 + i/5) # generating a 1:many mapping of genes to names.
+    genes.plus <- ref.num.genes * (1 + i/5) # generating a 1:many mapping of genes to names.
     chosen <- sample(gene.ids, genes.plus, replace=TRUE)
-    ids <- sample(num.genes, genes.plus, replace=TRUE)
+    ids <- sample(ref.num.genes, genes.plus, replace=TRUE)
 
-    current <- unname(split(chosen, factor(ids, seq_len(num.genes))))
+    current <- unname(split(chosen, factor(ids, seq_len(ref.num.genes))))
     ref.genes[[type]] <- current
 
     gpath <- file.path(gene.dir, paste0(species, "_", type, ".tsv.gz"))
