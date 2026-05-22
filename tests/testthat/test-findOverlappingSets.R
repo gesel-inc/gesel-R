@@ -15,7 +15,7 @@ test_that("findOverlappingSets works for the local ref", {
 })
 
 test_that("findOverlappingSets works for the remote", {
-    chosen <- 1:10 * 10
+    chosen <- 1:10 * 10L
     everything <- fetchGenesForAllSets("9606")
     ref <- lapply(everything, intersect, y=chosen)
     keep <- which(lengths(ref) > 0)
