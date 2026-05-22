@@ -19,7 +19,9 @@ Suggests:
     BiocStyle,
     knitr,
     testthat,
-    rmarkdown
+    rmarkdown,
+    S4Vectors,
+    IRanges
 LinkingTo:
     assorthead,
     Rcpp
