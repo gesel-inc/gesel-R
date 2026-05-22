@@ -47,12 +47,17 @@ ranges_to_blocks <- function(boundaries, block.size) {
     range.starts <- head(boundaries, -1)
     mid <- range.starts + (tail(boundaries, -1) - range.starts) * 0.5 # use midpoints to place blocks.
     ids <- floor(mid / block.size)
-    ids <- as.integer(factor(ids))
+    ids <- as.integer(factor(ids)) # strip out unused IDs so that they're all sorted and consecutive.
+
+    if (length(ids)) {
+        first.in.block <- c(1L, which(diff(ids) != 0L) + 1L)
+        block.boundaries <- boundaries[c(first.in.block, length(boundaries))]
+    } else {
+        block.boundaries <- integer(0)
+    }
 
     by.id <- split(seq_along(ids), ids)
     by.id <- unname(by.id)
-    first.in.block <- vapply(by.id, head, n=1, FUN.VALUE=as(0, typeof(boundaries)))
-    block.boundaries <- c(boundaries[first.in.block], tail(boundaries, 1))
 
     list(
         bounds = block.boundaries,
