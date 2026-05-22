@@ -37,12 +37,15 @@ List of length equal to \code{length(start)}.
 Each entry is a raw vector representing the contents of the corresponding byte range.
 }
 \description{
-Download any number of byte ranges from a Gesel database file.
+Download any number of byte ranges from a Gesel database file using (possibly multi-part) HTTP range requests.
 }
 \examples{
 downloadDatabaseRanges("9606_set2gene.tsv", 0L, 100L)
 downloadDatabaseRanges("9606_set2gene.tsv", c(10, 100, 1000), c(20, 150, 1100))
 
+}
+\seealso{
+\code{\link{readDatabaseRanges}}, for a local counterpart to this function that reads byte ranges from the filesystem.
 }
 \author{
 Aaron Lun

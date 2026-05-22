@@ -36,7 +36,7 @@ rangeConcurrency <- function(concurrency = NULL) {
 
 #' Fetch byte ranges from a Gesel database file
 #'
-#' Download any number of byte ranges from a Gesel database file.
+#' Download any number of byte ranges from a Gesel database file using (possibly multi-part) HTTP range requests. 
 #'
 #' @inheritParams downloadDatabaseFile
 #' @param start Integer vector containing the zero-indexed closed start of each byte range to extract from the file.
@@ -55,6 +55,9 @@ rangeConcurrency <- function(concurrency = NULL) {
 #' @examples
 #' downloadDatabaseRanges("9606_set2gene.tsv", 0L, 100L)
 #' downloadDatabaseRanges("9606_set2gene.tsv", c(10, 100, 1000), c(20, 150, 1100))
+#'
+#' @seealso
+#' \code{\link{readDatabaseRanges}}, for a local counterpart to this function that reads byte ranges from the filesystem.
 #'
 #' @export
 #' @import httr2

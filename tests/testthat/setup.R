@@ -46,20 +46,6 @@ gesel::prepareDatabaseFiles(
     ref.dir 
 )
 
-getDatabaseRanges <- function(dir, name, starts, ends) {
-    handle <- file(file.path(dir, name), open="rb")
-    on.exit(close(handle))
-
-    o <- order(starts)
-    output <- rep(list(raw()), length(starts))
-    for (i in o) {
-        seek(handle, where=starts[i]) # where= seems to be zero-based in terms of its position.
-        output[[i]] <- readBin(handle, what=raw(), n=ends[i] - starts[i])
-    }
-
-    output
-}
-
 gene.dir <- tempfile()
 dir.create(gene.dir)
 
@@ -86,6 +72,6 @@ for (i in 1:3) {
 test.config <- gesel::newConfig(
     fetch.gene = function(name) file.path(gene.dir, name),
     fetch.file = function(name) file.path(ref.dir, name),
-    fetch.ranges = function(name, starts, ends) getDatabaseRanges(ref.dir, name, starts, ends),
+    fetch.ranges = function(name, starts, ends) readDatabaseRanges(ref.dir, name, starts, ends),
     consolidate.block.size = 1 # force multiple range requests. 
 )
