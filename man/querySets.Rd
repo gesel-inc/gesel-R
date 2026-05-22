@@ -15,7 +15,7 @@ querySets(
 \arguments{
 \item{species}{String specifying the taxonomy ID of the species of interest.}
 
-\item{genes}{Character vector of gene names/identifiers of any supported type.
+\item{genes}{Character vector of gene identifiers of any supported type.
 These are typically Ensembl/Entrez identifiers or gene symbols.
 If not \code{NULL}, this function will search for gene sets that overlap any of the supplied genes.}
 

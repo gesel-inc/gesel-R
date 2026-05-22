@@ -1,29 +1,33 @@
-#' Map gene names to indices
+#' Create mapping of gene identifiers
 #'
-#' Create a mapping of gene names/identifiers (Ensembl, symbol, etc.) to their Gesel gene indices.
+#' Create a mapping of gene identifiers (Ensembl, symbol, etc.) to their Gesel gene indices.
 #' 
 #' @inheritParams fetchAllGenes
-#' @param type String specifying the type of name.
+#' @param type String specifying the type of gene identifier.
 #' This is typically one of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
 #' @param ignore.case Boolean indicating whether case should be ignored.
 #' @param config Configuration list, typically created by \code{\link{newConfig}}.
 #' If \code{NULL}, the default configuration is used.
 #' 
 #' @return Named list of integer vectors.
-#' Each name corresponds to an name of the specified \code{type},
-#' and each vector contains the identities of genes associated with that name (after ignoring case, if \code{ignore.case=TRUE}).
-#' Each gene is identified as a row index into the data frame returned by \code{\link{fetchAllGenes}}.
+#' Each name is an identifier of the specified \code{type},
+#' and each vector contains the identities of genes associated with that identifier (after ignoring case, if \code{ignore.case=TRUE}).
+#' Specifically, each gene's identity is represented as a row index into the data frame returned by \code{\link{fetchAllGenes}}.
 #'
 #' @author Aaron Lun
 #' @examples
-#' mapping <- mapGenesByName("9606", type="symbol")
+#' mapping <- createGeneIdentifierMap("9606", type="symbol")
 #'
 #' # Taking it for a spin:
 #' found <- mapping[["SNAP25"]]
 #' fetchAllGenes("9606")$symbol[found]
+#'
+#' @seealso
+#' \code{\link{searchGenes}}, which uses the mapping when searching for genes. 
 #' 
+#' @aliases mapGenesByName
 #' @export
-mapGenesByName <- function(species, type, ignore.case = FALSE, config = NULL) {
+createGeneIdentifierMap <- function(species, type, ignore.case = FALSE, config = NULL) {
     if (ignore.case) {
         store.name <- "lower"
     } else {
@@ -62,4 +66,10 @@ mapGenesByName <- function(species, type, ignore.case = FALSE, config = NULL) {
     }
 
     tfound
+}
+
+# For back-compatibility.
+#' @export
+mapGenesByName <- function(...) {
+    createGeneIdentifierMap(...)
 }

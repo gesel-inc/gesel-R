@@ -1,16 +1,16 @@
 #' Fetch all genes
 #'
-#' Fetch names/identifiers for all genes.
+#' Fetch identifiers for all genes.
 #'
 #' @param species String specifying the taxonomy ID of the species of interest.
-#' @param types Character vector specifying the types of gene names/identifiers to return.
+#' @param types Character vector specifying the types of gene identifiers to return.
 #' This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"}.
 #' @param config Configuration list, typically created by \code{\link{newConfig}}.
 #' If \code{NULL}, the default configuration is used.
 #'
 #' @return Data frame where each row represents a gene.
 #' Each column corresponds to one of the \code{types} and is a list of character vectors.
-#' Each vector contains names/identifiers of the specified type for each gene.
+#' Each vector contains identifiers of the specified type for each gene.
 #'
 #' @author Aaron Lun
 #' @examples

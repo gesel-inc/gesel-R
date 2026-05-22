@@ -9,9 +9,9 @@ searchGenes(species, genes, types = NULL, ignore.case = TRUE, config = NULL)
 \arguments{
 \item{species}{String specifying the taxonomy ID of the species of interest.}
 
-\item{genes}{Character vector of gene names/identifiers  of any type specified in \code{types}.}
+\item{genes}{Character vector of gene identifiers  of any type specified in \code{types}.}
 
-\item{types}{Character vector specifying the types of gene names/identifiers to return.
+\item{types}{Character vector specifying the types of gene identifiers to return.
 This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"}.}
 
 \item{ignore.case}{Boolean indicating whether case should be ignored.}
@@ -22,10 +22,10 @@ If \code{NULL}, the default configuration is used.}
 \value{
 List of length equal to \code{genes}.
 Each entry is an integer vector of gene indices that refer to rows of the data frame returned by \code{\link{fetchAllGenes}};
-these rows represent the genes with names/identifiers that match to the corresponding entry of \code{genes}.
+these rows represent the genes with identifiers that match to the corresponding entry of \code{genes}.
 }
 \description{
-Search for genes by converting gene names/identifiers to gene indices.
+Search for genes by converting gene identifiers to gene indices.
 }
 \examples{
 mapping <- searchGenes("9606", c("SNAP25", "NEUROD6", "ENSG00000139618"))
@@ -37,6 +37,9 @@ ref[mapping[[1]],]
 ref[mapping[[2]],]
 ref[mapping[[3]],]
 
+}
+\seealso{
+\code{\link{createGeneIdentifierMap}}, which creates the mapping used here to search for genes.
 }
 \author{
 Aaron Lun

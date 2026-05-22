@@ -16,7 +16,7 @@ validateGeneFiles(path, species, types = NULL)
 
 \item{num.genes}{Integer specifying the total number of genes available for this species.}
 
-\item{types}{Character vector specifying the types of gene names/identifiers to validate, e.g.,\code{"symbol"}, \code{"entrez"}, or \code{"ensembl"},
+\item{types}{Character vector specifying the types of gene identifiers to validate, e.g.,\code{"symbol"}, \code{"entrez"}, or \code{"ensembl"},
 If \code{NULL}, all detected files for \code{species} in \code{path} are checked.}
 }
 \value{

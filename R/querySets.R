@@ -3,7 +3,7 @@
 #' Query gene sets based on overlaps with genes of interest or matches to keyboards in their names/descriptions.
 #'
 #' @inheritParams fetchAllGenes
-#' @param genes Character vector of gene names/identifiers of any supported type.
+#' @param genes Character vector of gene identifiers of any supported type.
 #' These are typically Ensembl/Entrez identifiers or gene symbols.
 #' If not \code{NULL}, this function will search for gene sets that overlap any of the supplied genes.
 #' @param text String containing one or more keywords to search on, see the \code{query=} argument in \code{\link{searchSetText}}.
@@ -70,7 +70,8 @@ querySets <- function(species, genes = NULL, text = NULL, counts.only = TRUE, co
         output <- output[order(output$pvalue),]
 
         if (!counts.only) {
-            # Converting it back to the names that were provided.
+            # Converting it back to the user-provided identifiers.
+            # This is more intuitive than using some arbitrarily chosen identifier from the gene files.
             revmap <- rep(genes, lengths(mapped))
             all.mapped <- unlist(mapped)
             output$genes <- relist(revmap[match(unlist(output$genes), all.mapped)], output$genes)

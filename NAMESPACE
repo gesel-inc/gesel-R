@@ -2,6 +2,7 @@
 
 export(cacheDirectory)
 export(consolidateBlockSize)
+export(createGeneIdentifierMap)
 export(databaseUrl)
 export(downloadDatabaseFile)
 export(downloadDatabaseRanges)
