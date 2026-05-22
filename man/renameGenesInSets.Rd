@@ -25,11 +25,16 @@ Each entry is now a character vector containing the specified identifiers for th
 \description{
 Convert genes in sets from row indices to their identifiers.
 }
+\details{
+If a gene has no identifiers of the specified \code{type}, it is omitted from the affected character vectors in the output list.
+If a gene has multiple identifiers of the specified \code{type}, all identifiers are reported in the affected character vectors in the output list.
+As a result, the apparent size of the gene sets from the output list (e.g., with \code{\link{lengths}}) may not agree with the real sizes in \code{\link{fetchSetSizes}}.
+}
 \examples{
 example.sets <- fetchGenesForSomeSets("9606", 1:50)
-str(example.sets)
+head(example.sets)
 renamed.sets <- renameGenesInSets("9606", example.sets, "symbol")
-str(renamed.sets)
+head(renamed.sets)
 
 }
 \author{

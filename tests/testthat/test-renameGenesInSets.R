@@ -6,10 +6,11 @@ test_that("renameGenesInSets works locally", {
 
     expected <- all.sets
     for (i in seq_along(expected)) {
-        expected[[i]] <- as.character(unlist(ref.genes$foo[expected[[i]]]))
+        expected[[i]] <- unique(as.character(unlist(ref.genes$foo[expected[[i]]])))
     }
 
     expect_identical(renamed, expected)
+    expect_true(all(vapply(renamed, anyDuplicated, 0L) == 0L))
 })
 
 test_that("renameGenesInSets works remotely", {
@@ -21,8 +22,9 @@ test_that("renameGenesInSets works remotely", {
 
     expected <- made.up
     for (i in seq_along(expected)) {
-        expected[[i]] <- as.character(unlist(all.genes$symbol[expected[[i]]]))
+        expected[[i]] <- unique(as.character(unlist(all.genes$symbol[expected[[i]]])))
     }
 
     expect_identical(renamed, expected)
+    expect_true(all(vapply(renamed, anyDuplicated, 0L) == 0L))
 })

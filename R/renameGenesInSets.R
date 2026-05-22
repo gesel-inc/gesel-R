@@ -13,12 +13,17 @@
 #' @return A list of the same length as \code{sets}.
 #' Each entry is now a character vector containing the specified identifiers for the genes in the corresponding set.
 #'
+#' @details
+#' If a gene has no identifiers of the specified \code{type}, it is omitted from the affected character vectors in the output list.
+#' If a gene has multiple identifiers of the specified \code{type}, all identifiers are reported in the affected character vectors in the output list.
+#' As a result, the apparent size of the gene sets from the output list (e.g., with \code{\link{lengths}}) may not agree with the real sizes in \code{\link{fetchSetSizes}}.
+#'
 #' @author Aaron Lun
 #' @examples
 #' example.sets <- fetchGenesForSomeSets("9606", 1:50)
-#' str(example.sets)
+#' head(example.sets)
 #' renamed.sets <- renameGenesInSets("9606", example.sets, "symbol")
-#' str(renamed.sets)
+#' head(renamed.sets)
 #'
 #' @export
 renameGenesInSets <- function(species, sets, type, config = NULL) {
@@ -26,11 +31,16 @@ renameGenesInSets <- function(species, sets, type, config = NULL) {
     raw.genes <- all.genes[unlist(sets)]
     set.idx <- rep(seq_along(sets), lengths(sets))
     set.idx <- rep(set.idx, lengths(raw.genes))
+
+    # Strip out duplicates quickly.
+    collected <- data.frame(X = as.character(unlist(raw.genes)), Y = set.idx)
+    collected <- unique(collected)
+
     unname(
         split(
-            as.character(unlist(raw.genes)),
-            factor(set.idx, seq_along(sets)),
-            drop=FALSE
+            collected$X,
+            factor(collected$Y, seq_along(sets)),
+            drop = FALSE
         )
     )
 }
