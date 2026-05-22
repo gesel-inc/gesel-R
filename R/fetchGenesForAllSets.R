@@ -23,6 +23,9 @@
 #'
 #' # Details about the first set:
 #' fetchAllSets("9606")[1,]
+#'
+#' @seealso
+#' \code{\link{renameGenesInSets}}, to easily convert the gene indices to the usual identifiers (symbols, Ensembl, etc.).
 #' 
 #' @export
 fetchGenesForAllSets <- function(species, config = NULL) {

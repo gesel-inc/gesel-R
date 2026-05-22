@@ -44,6 +44,9 @@ set.info <- fetchAllSets("9606")[1:5,]
 set.info
 
 }
+\seealso{
+\code{\link{renameGenesInSets}}, to easily convert the gene indices to the usual identifiers (symbols, Ensembl, etc.).
+}
 \author{
 Aaron Lun
 }

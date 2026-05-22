@@ -36,6 +36,9 @@ fetchAllGenes("9606")$symbol[all.sets[[1]]]
 fetchAllSets("9606")[1,]
 
 }
+\seealso{
+\code{\link{renameGenesInSets}}, to easily convert the gene indices to the usual identifiers (symbols, Ensembl, etc.).
+}
 \author{
 Aaron Lun
 }

@@ -32,6 +32,9 @@
 #' # Identities of the requested sets.
 #' set.info <- fetchAllSets("9606")[1:5,]
 #' set.info
+#'
+#' @seealso
+#' \code{\link{renameGenesInSets}}, to easily convert the gene indices to the usual identifiers (symbols, Ensembl, etc.).
 #' 
 #' @export
 fetchGenesForSomeSets <- function(species, sets, config = NULL) {
