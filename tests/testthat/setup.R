@@ -62,12 +62,13 @@ for (i in 1:3) {
 
     current <- unname(split(chosen, factor(ids, seq_len(ref.num.genes))))
     ref.genes[[type]] <- current
-
-    gpath <- file.path(gene.dir, paste0(species, "_", type, ".tsv.gz"))
-    handle <- gzfile(gpath, open="wb")
-    writeLines(vapply(current, paste, collapse="\t", FUN.VALUE=""), con=handle)
-    close(handle)
 }
+
+gesel::prepareGeneFiles(
+    species,
+    ref.genes,
+    path = gene.dir
+)
 
 test.config <- gesel::newConfig(
     fetch.gene = function(name) file.path(gene.dir, name),

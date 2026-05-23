@@ -28,7 +28,7 @@ Each data frame should have the \code{name} and \code{description} columns as de
 Each inner list corresponds to a collection and each vector corresponds to a gene set in that collection.
 Each vector contains the identities of its constituent genes, as row indices into the data frame returned by \code{\link{fetchAllGenes}}.
 All gene indices should be positive and no greater than \code{num.genes}.
-(Unsorted and duplicate entries are allowed.)}
+Vectors may be unsorted and contain duplicate entries - sorting and deduplication will be performed internally.}
 
 \item{num.genes}{Integer specifying the total number of genes available for this species.}
 
@@ -38,7 +38,7 @@ All gene indices should be positive and no greater than \code{num.genes}.
 }
 \value{
 Several files are produced at \code{path} with the \code{<species>_} prefix.
-These can be made available for download with \code{\link{downloadDatabaseFile}}.
+\code{NULL} is invisibly returned.
 }
 \description{
 Prepare Gesel database files from various pieces of gene set information.
@@ -90,6 +90,9 @@ prepareDatabaseFiles(
 config <- newConfig(fetch.file=function(x) file.path(output, x))
 head(fetchAllSets("9606", config))
 
+}
+\seealso{
+\code{\link{prepareGeneFiles}}, to create Gesel gene files containing the gene identifierse.
 }
 \author{
 Aaron Lun

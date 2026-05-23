@@ -197,17 +197,46 @@ mock.set.membership <- list(
 Now we create the Gesel database files:
 
 ```{r}
-mock.output <- tempfile()
-dir.create(mock.output)
+mock.db.dir <- tempfile()
+dir.create(mock.db.dir)
 prepareDatabaseFiles(
     "12345", # mock NCBI taxonomy ID
     mock.collection.info, 
     mock.set.info, 
     mock.set.membership,
     mock.num.genes,
-    mock.output
+    path = mock.db.dir
 )
-list.files(mock.output)
+list.files(mock.db.dir)
+```
+
+We also create gene identifier files to map Gesel's internal gene indices to more recognizable names.
+Most downstream users will expect files for Ensembl, Entrez and gene symbols.
+
+```{r}
+mock.ref.genes <- list()
+for (type in c("ensembl", "entrez", "symbol")) {
+    gene.ids <- sprintf("%s_%05d", type, seq_len(19999))
+
+    # Generating a 1:many mapping of genes to names to make things interesting.
+    genes.plus <- mock.num.genes * 1.1 
+    chosen <- sample(gene.ids, genes.plus, replace=TRUE)
+    ids <- sample(mock.num.genes, genes.plus, replace=TRUE)
+    mock.ids <- split(chosen, factor(ids, seq_len(mock.num.genes)))
+
+    # Cleaning things up before saving to file.
+    mock.ids <- lapply(mock.ids, unique)
+    mock.ref.genes[[type]] <- unname(mock.ids)
+}
+
+mock.gene.dir <- tempfile()
+dir.create(mock.gene.dir)
+prepareGeneFiles(
+    "12345",
+    mock.ref.genes,
+    path = mock.gene.dir
+)
+list.files(mock.gene.dir)
 ```
 
 ## Reading custom files
@@ -218,9 +247,9 @@ For our custom files, we can simply direct `r self` to look inside our new direc
 
 ```{r}
 custom.config <- newConfig(
-    fetch.file=function(x) file.path(mock.output, x),
-    fetch.gene=function(x) file.path(mock.output, x),
-    fetch.ranges=function(n, s, e) readDatabaseRanges(mock.output, n, s, e) 
+    fetch.file=function(x) file.path(mock.db.dir, x),
+    fetch.gene=function(x) file.path(mock.gene.dir, x),
+    fetch.ranges=function(n, s, e) readDatabaseRanges(mock.db.dir, n, s, e) 
 )
 ```
 

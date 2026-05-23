@@ -13,12 +13,15 @@
 #' Each inner list corresponds to a collection and each vector corresponds to a gene set in that collection.
 #' Each vector contains the identities of its constituent genes, as row indices into the data frame returned by \code{\link{fetchAllGenes}}.
 #' All gene indices should be positive and no greater than \code{num.genes}.
-#' (Unsorted and duplicate entries are allowed.)
+#' Vectors may be unsorted and contain duplicate entries - sorting and deduplication will be performed internally.
 #' @param num.genes Integer specifying the total number of genes available for this species.
 #' @param validate Boolean indicating whether to run \code{\link{validateDatabaseFiles}} on the newly created files.
 #'
 #' @return Several files are produced at \code{path} with the \code{<species>_} prefix.
-#' These can be made available for download with \code{\link{downloadDatabaseFile}}.
+#' \code{NULL} is invisibly returned.
+#'
+#' @seealso
+#' \code{\link{prepareGeneFiles}}, to create Gesel gene files containing the gene identifierse.
 #'
 #' @author Aaron Lun
 #' @examples
