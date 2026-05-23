@@ -5,6 +5,7 @@
 #' @inheritParams fetchAllSets
 #' @param genes Integer vector containing gene indices.
 #' Each gene index refers to a row of the data frame returned by \code{\link{fetchAllGenes}}.
+#' Duplicate entries are ignored.
 #' @param counts.only Boolean indicating whether to only report the number of overlapping genes for each set.
 #' @param test.enrichment Boolean indicating whether to compute a hypergeometric p-value for enrichment of \code{genes} in each set.
 #' @param config Configuration list, typically created by \code{\link{newConfig}}.
@@ -67,6 +68,7 @@
 #' @export
 #' @importFrom stats phyper
 searchOverlappingSets <- function(species, genes, counts.only = TRUE, test.enrichment = TRUE, config = NULL) {
+    genes <- unique(genes)
     info <- fetchSetsForSomeGenes(species = species, genes = genes, config = config)
 
     if (counts.only) {

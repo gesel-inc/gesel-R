@@ -17,7 +17,8 @@ searchOverlappingSets(
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
 
 \item{genes}{Integer vector containing gene indices.
-Each gene index refers to a row of the data frame returned by \code{\link{fetchAllGenes}}.}
+Each gene index refers to a row of the data frame returned by \code{\link{fetchAllGenes}}.
+Duplicate entries are ignored.}
 
 \item{counts.only}{Boolean indicating whether to only report the number of overlapping genes for each set.}
 

@@ -12,6 +12,12 @@ test_that("findOverlappingSets works for the local ref", {
 
     counts <- findOverlappingSets(species, genes, config=test.config)
     expect_identical(counts$overlap, data.frame(set=overlaps$overlap$set, count=lengths(overlaps$overlap$genes)))
+
+    # Automatically removes duplicates from the genes.
+    duplicated.c <- findOverlappingSets(species, c(genes, genes), config=test.config)
+    expect_identical(counts, duplicated.c)
+    duplicated.o <- findOverlappingSets(species, c(genes, genes), counts.only = FALSE, config=test.config)
+    expect_identical(overlaps, duplicated.o)
 })
 
 test_that("findOverlappingSets works for the remote", {
