@@ -27,6 +27,9 @@ Clients like the `r self` package then use HTTP range requests to perform a vari
 No custom server logic is required, greatly reducing effort and cost required to keep Gesel up and running.
 Most database files do not need to be downloaded to the client, allowing us to easily scale with increasing numbers of gene sets in the database.
 
+More details can be found at https://github.com/gesel-inc.
+A web interface is also available at https://gesel-inc.github.io/web-app. 
+
 # Quick start
 
 The raison d'etre of the Gesel database is to find overlaps between known gene sets and a user-supplied list of genes.
@@ -256,7 +259,16 @@ custom.config <- newConfig(
 Passing `config = custom.config` to any `r self` function will instruct it to use our custom database files:
 
 ```{r}
+# Trying a low-level function:
 head(fetchAllSets("12345", config = custom.config))
+
+# Trying one of the more user-friendly functions:
+head(querySets(
+    "12345",
+    genes = sprintf("ensembl_%05d", 1:100),
+    text = "FOO",
+    config = custom.config
+))
 ```
 
 It is possible to do some fairly sophisticated things with `newConfig()`, depending on the environment.
@@ -265,8 +277,8 @@ but then fall back to a HTTP request if the R session is running on the cloud.
 
 ## Contributing custom sets
 
-If public visibility is not a concern, users might consider contributing their own gene sets to the [default Gesel database](https://github.com/gesel-inc/feedstock).
-Contributed gene sets will subsequently be searchable with the default `r self` functions, which may be more convenient than creating a custom database.
+Alternatively, you might consider contributing your custom gene sets to the default Gesel database at https://github.com/gesel-inc/feedstock.
+Contributed gene sets will be searchable with the default `r self` functions, which may be more convenient than creating a custom database.
 
 # Session information {-}
 

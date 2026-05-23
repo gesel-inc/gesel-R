@@ -1,6 +1,6 @@
 Package: gesel
-Version: 0.1.12
-Date: 2026-04-23
+Version: 0.99.0
+Date: 2026-05-23
 Title: Search for Interesting Gene Sets
 License: MIT + file LICENSE
 Description:
@@ -8,7 +8,7 @@ Description:
     Users can test for enrichment in their own list of genes and/or search by text in the set names or descriptions.
     The indices can be hosted remotely or on a local filesystem.
 Authors@R:
-    person("Aaron", "Lun", role=c("aut", "cre"), email="infinite.monkeys.with.keyboards@gmail.com")
+    person("Aaron", "Lun", role=c("aut", "cre"), email="infinite.monkeys.with.keyboards@gmail.com", comment=c(ORCID="0000-0002-3564-4813"))
 Imports:
     utils,
     methods,
@@ -25,6 +25,12 @@ Suggests:
 LinkingTo:
     assorthead,
     Rcpp
+biocViews:
+    GeneSetEnrichment,
+    DataImport,
+    Pathways
+URL: https://github.com/gesel-inc/gesel-R
+BugReports: https://github.com/gesel-inc/gesel-R/issues
 VignetteBuilder: knitr
 Encoding: UTF-8
-RoxygenNote: 7.3.3
+Config/roxygen2/version: 8.0.0

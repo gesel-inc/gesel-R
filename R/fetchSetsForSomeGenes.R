@@ -104,6 +104,10 @@ get_sets_for_some_genes_ranges <- function(config, species, fname) {
 #' @return Integer specifying the number of genes in Gesel that belong to at least one set.
 #'
 #' @author Aaron Lun
+#' @examples
+#' effectiveNumberOfGenes("10090")
+#' effectiveNumberOfGenes("9606")
+#' effectiveNumberOfGenes("7227")
 #'
 #' @export
 effectiveNumberOfGenes <- function(species, config = NULL) {

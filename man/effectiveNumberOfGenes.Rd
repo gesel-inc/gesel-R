@@ -24,6 +24,12 @@ The return value should be used as the total number of balls when performing a h
 This ensures that uninteresting genes like pseudo-genes or predicted genes are ignored during the calculation.
 Otherwise, unknown genes would inappropriately increase the number of balls and understate the enrichment p-values.
 }
+\examples{
+effectiveNumberOfGenes("10090")
+effectiveNumberOfGenes("9606")
+effectiveNumberOfGenes("7227")
+
+}
 \author{
 Aaron Lun
 }
