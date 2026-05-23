@@ -27,7 +27,7 @@ Clients like the `r self` package then use HTTP range requests to perform a vari
 No custom server logic is required, greatly reducing effort and cost required to keep Gesel up and running.
 Most database files do not need to be downloaded to the client, allowing us to easily scale with increasing numbers of gene sets in the database.
 
-# Finding overlaps
+# Quick start
 
 The raison d'etre of the Gesel database is to find overlaps between known gene sets and a user-supplied list of genes.
 Let's say we have several human genes of interest:
@@ -36,7 +36,41 @@ Let's say we have several human genes of interest:
 my.genes <- c("SNAP25", "NEUROD6", "GAD1", "GAD2", "RELN")
 ```
 
-We map these to Gesel gene indices, which are Gesel's internal identifiers for each gene.
+We use `querySets()` to identify all gene sets that overlap with `my.genes`.
+This also gives the enrichment $p$-value from a hypergeometric test.
+
+```{r}
+library(gesel)
+res <- querySets("9606", genes = my.genes)
+head(res)
+```
+
+Or we can filter by keywords in the gene set names or descriptions:
+
+```{r}
+res <- querySets("9606", text = "brain")
+head(res)
+
+# Or, filtering by both genes and text. 
+res <- querySets("9606", genes = my.genes, text = "neur*")
+head(res)
+```
+
+We can also load all available gene sets for a species for use in other gene set-related packages, e.g., `r Biocpkg("fgsea")`.
+
+```{r}
+everything <- loadAllSets("9606", type = "symbol", as.compressed = TRUE)
+everything
+S4Vectors::mcols(everything)
+```
+
+# Using low-level functions
+
+## Finding overlaps
+
+The functions described above are convenient but opinionated wrappers around some of `r self`'s low-level functions.
+Developers may prefer to use these low-level functions directly for greater control of the output, e.g., to avoid unnecessary work. 
+To demonstrate, we first map our genes of interest to Gesel gene indices, which are Gesel's internal identifiers for each gene.
 
 ```{r}
 library(gesel)
@@ -47,49 +81,23 @@ fetchAllGenes("9606")[gene.idx,] # double-checking that we got it right.
 ```
 
 Now we find all sets with overlapping genes.
-The `findOverlappingSets()` identifies all sets with one or more overlaps with the user-suppleid set.
+The `searchOverlappingSets()` identifies all sets that overlap at least one gene in the user-supplied set.
 
 ```{r}
-overlaps <- findOverlappingSets("9606", gene.idx, counts.only=FALSE)
+overlaps <- searchOverlappingSets("9606", gene.idx, counts.only=FALSE)
 head(overlaps$overlap) # set index and the identities of overlapping genes.
 ```
 
 The set index can be converted back to information about each set, along with the collection from which it came:
 
 ```{r}
-set.info <- fetchSomeSets("9606", head(overlaps$overlap$set)) # getting details of the top sets
-set.info
-col.info <- fetchSomeCollections("9606", set.info$collection) # getting details of the collections
-col.info
+first.set.info <- fetchSomeSets("9606", head(overlaps$overlap$set)) # getting details of the first few sets
+first.set.info
+first.col.info <- fetchSomeCollections("9606", first.set.info$collection) # getting details of the collections
+first.col.info
 ```
 
-The various statistics produced by `r self` can be also used to perform a simple hypergeometric test for enrichment.
-This often yields a more relevant ranking than the absolute number of overlaps as the hypergeometric p-value considers the size of the gene sets.
-
-```{r}
-set.sizes <- fetchSetSizes("9606")[overlaps$overlap$set]
-p <- phyper(
-    # Subtract 1 to account for probability mass at the observed number of
-    # overlaps when computing the upper tail.
-    q=lengths(overlaps$overlap$genes) - 1L,
-
-    # Number of genes in the gene set.
-    m=set.sizes,
-
-    # Number of genes not in the gene set. We use effectiveNumberOfGenes() to
-    # ignore irrelevant pseudogenes, predicted genes, etc. in the database.
-    n=effectiveNumberOfGenes("9606") - set.sizes,
-
-    # Number of genes in the user-supplied list of genes that are present in
-    # at least one Gesel set (ignore typos and other unknown genes).
-    k=overlaps$present,
-
-    lower.tail=FALSE
-)
-head(p)
-```
-
-# Searching on text
+## Searching on text
 
 We can also search for gene sets based on the text in their names or descriptions.
 The `searchSetText()` function accepts a query string with multiple words and the usual `*` (any characters) and `?` (one character) wildcards.
@@ -109,15 +117,14 @@ Users can construct powerful queries by intersecting the sets recovered from `se
 cancer.sets <- intersect(chits, overlaps$overlap$set)
 info <- fetchSomeSets("9606", cancer.sets)
 m <- match(cancer.sets, overlaps$overlap$set)
-info$count <- lengths(overlaps$overlap$genes)[m]
-info$pvalue <- p[m]
+info$count <- overlaps$overlap$count[m]
+info$pvalue <- overlaps$overlap$pvalue[m]
 info[head(order(info$pvalue)),]
 ```
 
-# Fetching all data
+## Fetching all data
 
-Gesel is designed around partial extraction from the database files,
-but it may be more efficient to pull all of the data into the R session at once.
+Gesel is designed around partial extraction from the database files, but it may be more efficient to pull all of the data into the R session at once.
 This is most useful for the gene set details, which can be retrieved _en masse_:
 
 ```{r}
@@ -139,19 +146,98 @@ The same approach can be used to extract collection information, via `fetchAllCo
 gene set membership, via `fetchGenesForAllSets()`;
 and the sets containing each gene, via `fetchSetsForAllGenes()`.
 
-# Advanced use 
+## Flushing the cache
 
 `r self` uses a lot of in-memory caching to reduce the number of requests to the database files within a single R session.
 On rare occasions, the cache may become outdated, e.g., if the database files are updated while an R session is running.
-Users can prompt `r self` to re-acquire all data by flusing the cache:
+Users can prompt `r self` to re-acquire all data by flushing the cache:
 
 ```{r}
 flushMemoryCache()
 ```
 
-Applications can specify their own functions for obtaining files (or byte ranges thereof) by passing a custom `config=` in each `r self` function.
-For example, on a shared HPC filesystem, we could point `r self` towards a directory of Gesel database files.
-This provides a performant alternative to HTTP requests for an institutional collection of gene sets.
+# Customizing the database
+
+## Creating the custom database
+
+Users can easily create custom Gesel database for their own gene set collections.
+This is most relevant to large research organizations that have accumulated many gene sets over time and want to easily search them.
+To demonstrate, let's mock up some gene set information:
+
+```{r}
+mock.collection.info <- data.frame(
+    title=c("FOO", "BAR"),
+    description=c("I am a foo", "I am a bar"),
+    maintainer=c("Aaron", "Aaron"),
+    source=c("https://foo", "https://bar")
+)
+
+mock.set.info <- list(
+    data.frame(
+        name=sprintf("FOO_%i", seq_len(20)),
+        description=sprintf("this is FOO %i", seq_len(20))
+    ),
+    data.frame(
+        name=sprintf("BAR_%i", seq_len(50)),
+        description=sprintf("this is BAR %i", seq_len(50))
+    )
+)
+
+mock.num.genes <- 10000
+mock.set.membership <- list(
+    lapply(seq_len(nrow(mock.set.info[[1]])), function(i) {
+        sample(mock.num.genes, sample(500, 1))
+    }),
+    lapply(seq_len(nrow(mock.set.info[[2]])), function(i) {
+        sample(mock.num.genes, sample(200, 1))
+    })
+)
+```
+
+Now we create the Gesel database files:
+
+```{r}
+mock.output <- tempfile()
+dir.create(mock.output)
+prepareDatabaseFiles(
+    "12345", # mock NCBI taxonomy ID
+    mock.collection.info, 
+    mock.set.info, 
+    mock.set.membership,
+    mock.num.genes,
+    mock.output
+)
+list.files(mock.output)
+```
+
+## Reading custom files
+
+In each `r self` function, the `config=` argument determines how data is read from the database files.
+By default, `r self` makes HTTP requests to the pre-built database files in the [feedstock](https://github.com/gesel-inc/feedstock).
+For our custom files, we can simply direct `r self` to look inside our new directory:
+
+```{r}
+custom.config <- newConfig(
+    fetch.file=function(x) file.path(mock.output, x),
+    fetch.gene=function(x) file.path(mock.output, x),
+    fetch.ranges=function(n, s, e) readDatabaseRanges(mock.output, n, s, e) 
+)
+```
+
+Passing `config = custom.config` to any `r self` function will instruct it to use our custom database files:
+
+```{r}
+head(fetchAllSets("12345", config = custom.config))
+```
+
+It is possible to do some fairly sophisticated things with `newConfig()`, depending on the environment.
+For example, in hybrid environments, we can directly read files from the filesystem when running `r self` on-prem for reduced latency,
+but then fall back to a HTTP request if the R session is running on the cloud. 
+
+## Contributing custom sets
+
+If public visibility is not a concern, users might consider contributing their own gene sets to the [default Gesel database](https://github.com/gesel-inc/feedstock).
+Contributed gene sets will subsequently be searchable with the default `r self` functions, which may be more convenient than creating a custom database.
 
 # Session information {-}
 
