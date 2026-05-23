@@ -28,7 +28,11 @@
 #' @export
 renameGenesInSets <- function(species, sets, type, config = NULL) {
     all.genes <- fetchAllGenes(species, type, config = config)[,type]
-    raw.genes <- all.genes[unlist(sets)]
+    .renameGenesInSets(all.genes, sets)
+}
+
+.renameGenesInSets <- function(gene.ids, sets) {
+    raw.genes <- gene.ids[unlist(sets)]
     set.idx <- rep(seq_along(sets), lengths(sets))
     set.idx <- rep(set.idx, lengths(raw.genes))
 

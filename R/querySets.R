@@ -8,6 +8,8 @@
 #' If not \code{NULL}, this function will search for gene sets that overlap any of the supplied genes.
 #' @param text String containing one or more keywords to search on, see the \code{query=} argument in \code{\link{searchSetText}}.
 #' If not \code{NULL}, this function will search for gene sets that contain the (tokenized) keywords in their names or descriptions.
+#' @param types Character vector specifying the types of gene identifiers to consider for \code{genes}.
+#' This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"}.
 #' @param counts.only Boolean indicating whether to return a list of the overlapping genes in each set.
 #' Only used if \code{genes} is provided.
 #'
@@ -62,19 +64,20 @@
 #' \code{\link{fetchSomeCollections}}, to get the details for each collection. 
 #' 
 #' @export
-querySets <- function(species, genes = NULL, text = NULL, counts.only = TRUE, config = NULL) {
+querySets <- function(species, genes = NULL, text = NULL, types = NULL, counts.only = TRUE, config = NULL) {
     if (!is.null(genes)) {
-        mapped <- searchGenes(species, genes, config = config)
-        output <- searchOverlappingSets(species, genes = unique(unlist(mapped)), counts.only = counts.only, config = config)$overlap
+        mapped <- searchGenes(species, genes, types = types, config = config)
+        output <- searchOverlappingSets(species, genes = unlist(mapped), counts.only = counts.only, config = config)$overlap
         output$size <- NULL # this will be added by fetchSomeSets, no need for it here.
         output <- output[order(output$pvalue),]
 
         if (!counts.only) {
             # Converting it back to the user-provided identifiers.
             # This is more intuitive than using some arbitrarily chosen identifier from the gene files.
-            revmap <- rep(genes, lengths(mapped))
-            all.mapped <- unlist(mapped)
-            output$genes <- relist(revmap[match(unlist(output$genes), all.mapped)], output$genes)
+            revmap <- vector("list", max(c(0L, unlist(mapped))))
+            by.id <- split(rep(genes, lengths(mapped)), unlist(mapped))
+            revmap[as.integer(names(by.id))] <- unname(by.id)
+            output$genes <- .renameGenesInSets(revmap, output$genes)
         }
 
     } else {
