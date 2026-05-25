@@ -3,10 +3,10 @@
 #' Create a new configuration object to specify how the Gesel database should be queried.
 #' This can be used by applications to point to a different Gesel database from the default.
 #'
-#' @param fetch.gene Function that accepts the name of a Gesel gene file and returns an absolute path to the file.
+#' @param fetch.gene Function that accepts the name of a Gesel gene annotation file and returns an absolute path to the file.
 #' If \code{NULL}, it defaults to \code{\link{downloadGeneFile}}.
 #' @param fetch.gene.args Named list of arguments to pass to \code{fetch.gene}.
-#' @param gene.version String containing the version of the Gesel gene file specification used by the current Gesel gene annotation instance.
+#' @param gene.version String containing the version of the Gesel gene annotation file specification used by all gene annotation instances.
 #' If \code{NULL}, this is automatically determined by \code{\link{fetchGeneVersion}}.
 #' This can also be set explicitly to skip a query and save some time.
 #' @param fetch.file Function that accepts the name of a Gesel database file and returns an absolute path to the file.

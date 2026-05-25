@@ -213,7 +213,7 @@ prepareDatabaseFiles(
 list.files(mock.db.dir)
 ```
 
-We also create gene identifier files to map Gesel's internal gene indices to more recognizable names.
+We also create gene annotation files to map Gesel's internal gene indices to more recognizable identifiers.
 Most downstream users will expect files for Ensembl, Entrez and gene symbols.
 
 ```{r}

@@ -16,12 +16,12 @@ newConfig(
 )
 }
 \arguments{
-\item{fetch.gene}{Function that accepts the name of a Gesel gene file and returns an absolute path to the file.
+\item{fetch.gene}{Function that accepts the name of a Gesel gene annotation file and returns an absolute path to the file.
 If \code{NULL}, it defaults to \code{\link{downloadGeneFile}}.}
 
 \item{fetch.gene.args}{Named list of arguments to pass to \code{fetch.gene}.}
 
-\item{gene.version}{String containing the version of the Gesel gene file specification used by the current Gesel gene annotation instance.
+\item{gene.version}{String containing the version of the Gesel gene annotation file specification used by all gene annotation instances.
 If \code{NULL}, this is automatically determined by \code{\link{fetchGeneVersion}}.
 This can also be set explicitly to skip a query and save some time.}
 

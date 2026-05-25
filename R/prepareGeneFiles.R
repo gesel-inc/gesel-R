@@ -1,6 +1,6 @@
-#' Prepare the Gesel gene files
+#' Prepare the Gesel gene annotation files
 #'
-#' Prepare Gesel gene files containing the gene identifiers.
+#' Prepare Gesel gene annotation files containing the gene identifiers.
 #'
 #' @param genes Named list of lists.
 #' Each inner list corresponds to an identifier type (e.g., Ensembl) and is named accordingly.
@@ -11,9 +11,9 @@
 #' Alternatively, a data frame where each row corresponds to a gene and each column is a nested list of identifiers of a particular type,
 #' see the output of \code{\link{fetchAllGenes}} for details.
 #' @param species String specifying the species in the form of its NCBI taxonomy ID.
-#' @param path String containing the path to a directory in which to create the gene files.
+#' @param path String containing the path to a directory in which to create the gene annotation files.
 #' @param validate Boolean indicating whether to run \code{\link{validateGeneFiles}} on the newly created files.
-#' @param version String specifying the version of the Gesel gene file specification to use for saving \code{genes}.
+#' @param version String specifying the version of the Gesel gene annotation file specification to use for saving \code{genes}.
 #' 
 #' @return Several files are produced inside \code{path} with the \code{<species>_} prefix.
 #' \code{NULL} is invisibly returned.

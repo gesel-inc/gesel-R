@@ -3,7 +3,7 @@
 \name{downloadGeneFile}
 \alias{downloadGeneFile}
 \alias{geneUrl}
-\title{Fetch Gesel gene description files}
+\title{Fetch Gesel gene annotation files}
 \usage{
 downloadGeneFile(
   name,
@@ -15,9 +15,9 @@ downloadGeneFile(
 geneUrl(url = NULL)
 }
 \arguments{
-\item{name}{String containing the name of a Gesel gene file, typically of the form \code{<species>_<type>.tsv.gz}, e.g., \code{"9606_symbol.tsv.gz"}.}
+\item{name}{String containing the name of a Gesel gene annotation file, typically of the form \code{<species>_<type>.tsv.gz}, e.g., \code{"9606_symbol.tsv.gz"}.}
 
-\item{url}{String containing the base URL to the Gesel gene descriptions.}
+\item{url}{String containing the base URL to the Gesel gene annotation files.}
 
 \item{cache}{String specifying the path to a cache directory.}
 
@@ -30,7 +30,7 @@ For \code{geneUrl}, if \code{url=NULL}, the function returns a string containing
 If \code{url} is provided, it instead stores \code{url} as the URL to the indices, and the previous value of \code{url} is invisibly returned.
 }
 \description{
-Default function to download Gesel gene description files.
+Default function to download Gesel gene annotation files.
 }
 \details{
 The gene URL defaults to the GitHub releases at \url{https://github.com/gesel-inc/feedstock}.

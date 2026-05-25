@@ -19,7 +19,7 @@ Character vector of the available types.
 Fetch the list of available gene identifier types for this species.
 }
 \details{
-In older versions (0.1.0) of the Gesel gene file specification, an explicit listing of types was not provided,
+In older versions (0.1.0) of the Gesel gene annotation file specification, an explicit listing of types was not generated,
 so this function will just assume that \code{"ensembl"}, \code{"entrez"} and \code{"symbol"} are available.
 }
 \examples{

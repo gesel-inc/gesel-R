@@ -2,7 +2,7 @@
 % Please edit documentation in R/fetchGeneVersion.R
 \name{fetchGeneVersion}
 \alias{fetchGeneVersion}
-\title{Fetch version of the gene files}
+\title{Fetch version of the gene annotation files}
 \usage{
 fetchGeneVersion(species, config = NULL)
 }
@@ -13,10 +13,10 @@ fetchGeneVersion(species, config = NULL)
 If \code{NULL}, the default configuration is used.}
 }
 \value{
-String containing the version of the Gesel gene file specification.
+String containing the version of the Gesel gene annotation file specification.
 }
 \description{
-Get the version of the Gesel gene file specification used by the species of interest.
+Get the version of the Gesel gene annotation file specification used by the species of interest.
 }
 \examples{
 fetchGeneVersion("9606")

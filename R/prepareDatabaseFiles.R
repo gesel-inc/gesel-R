@@ -21,7 +21,7 @@
 #' \code{NULL} is invisibly returned.
 #'
 #' @seealso
-#' \code{\link{prepareGeneFiles}}, to create Gesel gene files containing the gene identifierse.
+#' \code{\link{prepareGeneFiles}}, to create Gesel gene annotation files containing the gene identifiers.
 #'
 #' @author Aaron Lun
 #' @examples

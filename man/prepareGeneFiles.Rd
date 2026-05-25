@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepareGeneFiles.R
 \name{prepareGeneFiles}
 \alias{prepareGeneFiles}
-\title{Prepare the Gesel gene files}
+\title{Prepare the Gesel gene annotation files}
 \usage{
 prepareGeneFiles(
   species,
@@ -24,18 +24,18 @@ An entry may be an empty character vector is no identifiers are available for a 
 Alternatively, a data frame where each row corresponds to a gene and each column is a nested list of identifiers of a particular type,
 see the output of \code{\link{fetchAllGenes}} for details.}
 
-\item{path}{String containing the path to a directory in which to create the gene files.}
+\item{path}{String containing the path to a directory in which to create the gene annotation files.}
 
 \item{validate}{Boolean indicating whether to run \code{\link{validateGeneFiles}} on the newly created files.}
 
-\item{version}{String specifying the version of the Gesel gene file specification to use for saving \code{genes}.}
+\item{version}{String specifying the version of the Gesel gene annotation file specification to use for saving \code{genes}.}
 }
 \value{
 Several files are produced inside \code{path} with the \code{<species>_} prefix.
 \code{NULL} is invisibly returned.
 }
 \description{
-Prepare Gesel gene files containing the gene identifiers.
+Prepare Gesel gene annotation files containing the gene identifiers.
 }
 \examples{
 genes <- list(

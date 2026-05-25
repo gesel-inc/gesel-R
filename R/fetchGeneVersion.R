@@ -1,12 +1,12 @@
-#' Fetch version of the gene files
+#' Fetch version of the gene annotation files
 #'
-#' Get the version of the Gesel gene file specification used by the species of interest.
+#' Get the version of the Gesel gene annotation file specification used by the species of interest.
 #'
 #' @param species String specifying the taxonomy ID of the species of interest.
 #' @param config Configuration list, typically created by \code{\link{newConfig}}.
 #' If \code{NULL}, the default configuration is used.
 #'
-#' @return String containing the version of the Gesel gene file specification.
+#' @return String containing the version of the Gesel gene annotation file specification.
 #'
 #' @author Aaron Lun
 #' @examples
