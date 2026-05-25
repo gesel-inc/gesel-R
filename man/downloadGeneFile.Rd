@@ -33,12 +33,13 @@ If \code{url} is provided, it instead stores \code{url} as the URL to the indice
 Default function to download Gesel gene description files.
 }
 \details{
-The gene URL defaults to the GitHub releases at \url{https://github.com/LTLA/gesel-feedstock}.
+The gene URL defaults to the GitHub releases at \url{https://github.com/gesel-inc/feedstock}.
 This can be altered by setting the \code{GESEL_GENE_URL} environment variable prior to the first call to this function.
 }
 \examples{
 # Download file.
-downloadGeneFile("9606_symbol.tsv.gz")
+path <- downloadGeneFile("9606_gene-types.tsv")
+readLines(path)
 
 # Altering the default gene URL.
 geneUrl()

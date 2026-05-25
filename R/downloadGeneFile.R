@@ -13,14 +13,15 @@
 #' If \code{url} is provided, it instead stores \code{url} as the URL to the indices, and the previous value of \code{url} is invisibly returned.
 #' 
 #' @details
-#' The gene URL defaults to the GitHub releases at \url{https://github.com/LTLA/gesel-feedstock}.
+#' The gene URL defaults to the GitHub releases at \url{https://github.com/gesel-inc/feedstock}.
 #' This can be altered by setting the \code{GESEL_GENE_URL} environment variable prior to the first call to this function.
 #'
 #' @author Aaron Lun
 #'
 #' @examples
 #' # Download file.
-#' downloadGeneFile("9606_symbol.tsv.gz")
+#' path <- downloadGeneFile("9606_gene-types.tsv")
+#' readLines(path)
 #' 
 #' # Altering the default gene URL.
 #' geneUrl()
@@ -38,7 +39,7 @@ downloadGeneFile <- function(name, url = geneUrl(), cache = cacheDirectory(), ov
 geneUrl <- function(url = NULL) {
     previous <- downloadGeneUrl.env$url
     if (is.null(previous)) {
-        previous <- Sys.getenv("GESEL_GENE_URL", "https://github.com/LTLA/gesel-feedstock/releases/download/genes-v1.0.0")
+        previous <- Sys.getenv("GESEL_GENE_URL", "https://github.com/gesel-inc/feedstock/releases/download/genes-v0.3.1")
         downloadGeneUrl.env$url <- previous
     }
     if (is.null(url)) {

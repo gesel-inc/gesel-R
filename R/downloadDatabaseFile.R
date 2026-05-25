@@ -14,7 +14,7 @@
 #' If \code{url} is provided, it instead stores \code{url} as the URL to the database, and the previous value of \code{url} is invisibly returned.
 #' 
 #' @details
-#' The database URL defaults to the GitHub releases at \url{https://github.com/LTLA/gesel-feedstock}.
+#' The database URL defaults to the GitHub releases at \url{https://github.com/gesel-inc/feedstock}.
 #' This can be altered by setting the \code{GESEL_DATABASE_URL} environment variable prior to the first call to this function.
 #' 
 #' @author Aaron Lun
@@ -39,7 +39,7 @@ downloadDatabaseFile <- function(name, url = databaseUrl(), cache = cacheDirecto
 databaseUrl <- function(url = NULL) {
     previous <- downloadDatabaseUrl.env$url
     if (is.null(previous)) {
-        previous <- Sys.getenv("GESEL_DATABASE_URL", "https://github.com/LTLA/gesel-feedstock/releases/download/indices-v0.2.1")
+        previous <- Sys.getenv("GESEL_DATABASE_URL", "https://github.com/gesel-inc/feedstock/releases/download/indices-v0.3.0")
         downloadDatabaseUrl.env$url <- previous
     }
     if (is.null(url)) {

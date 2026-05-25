@@ -34,7 +34,7 @@ If \code{url} is provided, it instead stores \code{url} as the URL to the databa
 Default function to download Gesel database files.
 }
 \details{
-The database URL defaults to the GitHub releases at \url{https://github.com/LTLA/gesel-feedstock}.
+The database URL defaults to the GitHub releases at \url{https://github.com/gesel-inc/feedstock}.
 This can be altered by setting the \code{GESEL_DATABASE_URL} environment variable prior to the first call to this function.
 }
 \examples{

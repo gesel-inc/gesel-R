@@ -11,6 +11,6 @@ test_that("fetchGeneTypes works locally", {
 
 test_that("fetchGeneTypes works remotely", {
     flushMemoryCache()
-    expect_identical(fetchGeneTypes("9606"), c("ensembl", "entrez", "symbol")) 
-    expect_identical(fetchGeneTypes("9606"), c("ensembl", "entrez", "symbol")) # works again from cache.
+    expect_identical(sort(fetchGeneTypes("9606")), c("ensembl", "entrez", "symbol")) 
+    expect_identical(sort(fetchGeneTypes("9606")), c("ensembl", "entrez", "symbol")) # works again from cache.
 })
