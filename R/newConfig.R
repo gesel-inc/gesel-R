@@ -3,9 +3,12 @@
 #' Create a new configuration object to specify how the Gesel database should be queried.
 #' This can be used by applications to point to a different Gesel database from the default.
 #'
-#' @param fetch.gene Function that accepts the name of a Gesel gene description file and returns an absolute path to the file.
+#' @param fetch.gene Function that accepts the name of a Gesel gene file and returns an absolute path to the file.
 #' If \code{NULL}, it defaults to \code{\link{downloadGeneFile}}.
 #' @param fetch.gene.args Named list of arguments to pass to \code{fetch.gene}.
+#' @param gene.version String containing the version of the Gesel gene file specification used by the current Gesel gene annotation instance.
+#' If \code{NULL}, this is automatically determined by \code{\link{fetchGeneVersion}}.
+#' This can also be set explicitly to skip a query and save some time.
 #' @param fetch.file Function that accepts the name of a Gesel database file and returns an absolute path to the file.
 #' If \code{NULL}, it defaults to \code{\link{downloadDatabaseFile}}.
 #' @param fetch.file.args Named list of arguments to pass to \code{fetch.file}.
@@ -39,6 +42,7 @@
 newConfig <- function(
     fetch.gene = NULL,
     fetch.gene.args = list(),
+    gene.version = NULL,
     fetch.file = NULL,
     fetch.file.args = list(),
     fetch.ranges = NULL,
@@ -49,6 +53,7 @@ newConfig <- function(
         cache = new.env(),
         fetch.gene = fetch.gene,
         fetch.gene.args = fetch.gene.args,
+        gene.version = gene.version,
         fetch.file = fetch.file,
         fetch.file.args = fetch.file.args,
         fetch.ranges = fetch.ranges,

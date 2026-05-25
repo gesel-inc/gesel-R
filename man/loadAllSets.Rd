@@ -9,8 +9,8 @@ loadAllSets(species, type, config = NULL, as.compressed = FALSE)
 \arguments{
 \item{species}{String containing the NCBI taxonomy ID of the species of interest.}
 
-\item{type}{String specifying the type of gene identifier to use in all sets.
-This is typically one of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},}
+\item{type}{String specifying the type of gene identifier to report.
+This can be any type listed in \code{\link{fetchGeneTypes}}.}
 
 \item{config}{Configuration list, typically created by \code{\link{newConfig}}.
 If \code{NULL}, the default configuration is used.}

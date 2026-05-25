@@ -4,7 +4,7 @@
 #' 
 #' @inheritParams fetchAllGenes
 #' @param type String specifying the type of gene identifier.
-#' This is typically one of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},
+#' This can be any type listed in \code{\link{fetchGeneTypes}}. 
 #' @param ignore.case Boolean indicating whether case should be ignored.
 #' @param config Configuration list, typically created by \code{\link{newConfig}}.
 #' If \code{NULL}, the default configuration is used.

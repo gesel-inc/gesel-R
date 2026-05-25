@@ -4,7 +4,13 @@
 \alias{prepareGeneFiles}
 \title{Prepare the Gesel gene files}
 \usage{
-prepareGeneFiles(species, genes, path = ".", validate = TRUE)
+prepareGeneFiles(
+  species,
+  genes,
+  path = ".",
+  validate = TRUE,
+  version = c("0.2.0", "0.1.0")
+)
 }
 \arguments{
 \item{species}{String specifying the species in the form of its NCBI taxonomy ID.}
@@ -21,6 +27,8 @@ see the output of \code{\link{fetchAllGenes}} for details.}
 \item{path}{String containing the path to a directory in which to create the gene files.}
 
 \item{validate}{Boolean indicating whether to run \code{\link{validateGeneFiles}} on the newly created files.}
+
+\item{version}{String specifying the version of the Gesel gene file specification to use for saving \code{genes}.}
 }
 \value{
 Several files are produced inside \code{path} with the \code{<species>_} prefix.

@@ -9,7 +9,8 @@
 #' @param text String containing one or more keywords to search on, see the \code{query=} argument in \code{\link{searchSetText}}.
 #' If not \code{NULL}, this function will search for gene sets that contain the (tokenized) keywords in their names or descriptions.
 #' @param types Character vector specifying the types of gene identifiers to consider for \code{genes}.
-#' This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"}.
+#' This can contain one or more of any type listed in \code{\link{fetchGeneTypes}}. 
+#' If \code{NULL}, it defaults to all available types in \code{\link{fetchGeneTypes}}.
 #' @param counts.only Boolean indicating whether to return a list of the overlapping genes in each set.
 #' Only used if \code{genes} is provided.
 #'

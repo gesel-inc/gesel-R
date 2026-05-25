@@ -4,6 +4,8 @@
 #' 
 #' @inheritParams fetchAllGenes
 #' @param genes Character vector of gene identifiers  of any type specified in \code{types}.
+#' @param types Character vector specifying the types of gene identifiers in \code{genes}.
+#' If \code{NULL}, the available types are determined from \code{\link{fetchGeneTypes}}.
 #' @param ignore.case Boolean indicating whether case should be ignored.
 #'
 #' @return List of length equal to \code{genes}.
@@ -27,7 +29,7 @@
 #' @export
 searchGenes <- function(species, genes, types = NULL, ignore.case = TRUE, config = NULL) {
     if (is.null(types)) {
-        types <- c("entrez", "ensembl", "symbol")
+        types <- fetchGeneTypes(species, config = config)
     }
 
     if (ignore.case) {

@@ -76,3 +76,19 @@ test.config <- gesel::newConfig(
     fetch.ranges = function(name, starts, ends) readDatabaseRanges(ref.dir, name, starts, ends),
     consolidate.block.size = 1 # force multiple range requests. 
 )
+
+# For back-compatibility's sake.
+gene.dir.v1 <- tempfile()
+dir.create(gene.dir.v1)
+gesel::prepareGeneFiles(
+    species,
+    ref.genes,
+    path = gene.dir.v1,
+    version = "0.1.0"
+)
+
+test.config.v1 <- gesel::newConfig(
+    fetch.gene = function(name) file.path(gene.dir.v1, name),
+    fetch.file = function(name) file.path(ref.dir, name),
+    fetch.ranges = function(name, starts, ends) readDatabaseRanges(ref.dir, name, starts, ends)
+)

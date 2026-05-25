@@ -13,7 +13,7 @@ renameGenesInSets(species, sets, type, config = NULL)
 Each vector represents a gene set and contains gene indices, i.e., row indices into the data frame returned by \code{\link{fetchAllGenes}}.}
 
 \item{type}{String specifying the type of gene identifier to convert to.
-This is typically one of \code{"symbol"}, \code{"ensembl"} or \code{"entrez"}.}
+This can be any type listed in \code{\link{fetchGeneTypes}}.}
 
 \item{config}{Configuration list, typically created by \code{\link{newConfig}}.
 If \code{NULL}, the default configuration is used.}

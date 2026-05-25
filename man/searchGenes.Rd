@@ -11,8 +11,8 @@ searchGenes(species, genes, types = NULL, ignore.case = TRUE, config = NULL)
 
 \item{genes}{Character vector of gene identifiers  of any type specified in \code{types}.}
 
-\item{types}{Character vector specifying the types of gene identifiers to return.
-This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"}.}
+\item{types}{Character vector specifying the types of gene identifiers in \code{genes}.
+If \code{NULL}, the available types are determined from \code{\link{fetchGeneTypes}}.}
 
 \item{ignore.case}{Boolean indicating whether case should be ignored.}
 

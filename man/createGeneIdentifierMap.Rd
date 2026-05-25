@@ -11,7 +11,7 @@ createGeneIdentifierMap(species, type, ignore.case = FALSE, config = NULL)
 \item{species}{String specifying the taxonomy ID of the species of interest.}
 
 \item{type}{String specifying the type of gene identifier.
-This is typically one of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"},}
+This can be any type listed in \code{\link{fetchGeneTypes}}.}
 
 \item{ignore.case}{Boolean indicating whether case should be ignored.}
 

@@ -4,7 +4,7 @@
 #'
 #' @param species String specifying the taxonomy ID of the species of interest.
 #' @param types Character vector specifying the types of gene identifiers to return.
-#' This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"}.
+#' If \code{NULL}, the available types are determined from \code{\link{fetchGeneTypes}}.
 #' @param config Configuration list, typically created by \code{\link{newConfig}}.
 #' If \code{NULL}, the default configuration is used.
 #'
@@ -21,7 +21,7 @@
 #' @export
 fetchAllGenes <- function(
     species,
-    types = c("symbol", "entrez", "ensembl"),
+    types = NULL,
     config = NULL
 ) {
     config <- get_config(config)
@@ -29,6 +29,15 @@ fetchAllGenes <- function(
     modified <- FALSE
     if (is.null(cached)) {
         cached <- list()
+    }
+
+    if (is.null(types)) {
+        types <- fetchGeneTypes(species, config)
+    }
+    if (fetchGeneVersion(species, config) == "0.1.0") {
+        sep <- "_"
+    } else {
+        sep <- "_gene-type-"
     }
 
     output <- list()
@@ -39,7 +48,7 @@ fetchAllGenes <- function(
             next
         }
 
-        path <- fetch_gene(config, paste0(species, "_", t, ".tsv.gz"))
+        path <- fetch_gene(config, paste0(species, sep, t, ".tsv.gz"))
         raw <- decompress_lines(path)
         processed <- strsplit(raw, "\t")
         for (i in seq_along(processed)) {

@@ -4,13 +4,13 @@
 \alias{fetchAllGenes}
 \title{Fetch all genes}
 \usage{
-fetchAllGenes(species, types = c("symbol", "entrez", "ensembl"), config = NULL)
+fetchAllGenes(species, types = NULL, config = NULL)
 }
 \arguments{
 \item{species}{String specifying the taxonomy ID of the species of interest.}
 
 \item{types}{Character vector specifying the types of gene identifiers to return.
-This is typically one or more of \code{"symbol"}, \code{"entrez"}, and \code{"ensembl"}.}
+If \code{NULL}, the available types are determined from \code{\link{fetchGeneTypes}}.}
 
 \item{config}{Configuration list, typically created by \code{\link{newConfig}}.
 If \code{NULL}, the default configuration is used.}

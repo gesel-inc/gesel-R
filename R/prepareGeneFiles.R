@@ -13,6 +13,7 @@
 #' @param species String specifying the species in the form of its NCBI taxonomy ID.
 #' @param path String containing the path to a directory in which to create the gene files.
 #' @param validate Boolean indicating whether to run \code{\link{validateGeneFiles}} on the newly created files.
+#' @param version String specifying the version of the Gesel gene file specification to use for saving \code{genes}.
 #' 
 #' @return Several files are produced inside \code{path} with the \code{<species>_} prefix.
 #' \code{NULL} is invisibly returned.
@@ -34,10 +35,21 @@
 #' list.files(tmp)
 #' 
 #' @export
-prepareGeneFiles <- function(species, genes, path = ".", validate = TRUE) {
+prepareGeneFiles <- function(species, genes, path = ".", validate = TRUE, version = c("0.2.0", "0.1.0")) {
+    version <- match.arg(version)
+    if (version == "0.1.0") {
+        sep <- "_"
+        to.validate <- names(genes) # validation can't be trusted to auto-determine types if we mix it with the database files.
+    } else {
+        writeLines(names(genes), con = file.path(path, paste0(species, "_gene-types.tsv")))
+        writeLines(version, con = file.path(path, paste0(species, "_gene-version.tsv")))
+        sep <- "_gene-type-"
+        to.validate <- NULL # validation will automatically determine types from the manifest.
+    }
+
     genes <- as.list(genes)
     for (i in names(genes)) {
-        fname <- file.path(path, paste0(species, "_", i, ".tsv.gz"))
+        fname <- file.path(path, paste0(species, sep, i, ".tsv.gz"))
         dump <- vapply(genes[[i]], paste, collapse="\t", FUN.VALUE="")
         handle <- gzfile(fname, open="wb")
         writeLines(dump, con=handle)
@@ -45,7 +57,7 @@ prepareGeneFiles <- function(species, genes, path = ".", validate = TRUE) {
     }
 
     if (validate) {
-        validateGeneFiles(path, species, types = names(genes))
+        validateGeneFiles(path, species, types = to.validate)
     }
 
     invisible(NULL)
