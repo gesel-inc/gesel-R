@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.1</span>
       </span>
     </div>
 
@@ -35,7 +35,13 @@
       <a href="../articles/userguide.html">Gene set searches with the Gesel database</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/gesel-inc/gesel-R/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -45,7 +51,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fetch all gene set collections</h1>
-
+    <small class="dont-index">Source: <a href="https://github.com/gesel-inc/gesel-R/blob/master/R/fetchAllCollections.R" class="external-link"><code>R/fetchAllCollections.R</code></a></small>
     <div class="hidden name"><code>fetchAllCollections.Rd</code></div>
     </div>
 
@@ -95,20 +101,20 @@ The cached data will also be used to speed up calls to <code><a href="fetchSomeC
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">fetchAllCollections</span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                title</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1                                      Gene ontology</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2                   MSigDB positional gene sets (C1)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 MSigDB chemical and genetic perturbations (C2 CGP)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4                 MSigDB canonical pathways (C2 PID)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5            MSigDB canonical pathways (C2 Reactome)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6        MSigDB canonical pathways (C2 WikiPathways)</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                 description</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2      Gene annotations for this collection are derived from the Chromosome and Karyotype band tracks from Ensembl BioMart.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3                                     Gene sets that represent expression signatures of genetic and chemical perturbations.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                                  Gene sets derived from the Pathway Interaction Database.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5                       Reactome gene sets are derived from Reactome and have been filtered to remove inter-set redundancy.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6                       WikiPathways gene sets are retrieved directly from the latest release of the WikiPathways database.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                       title</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                                                             Gene ontology</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                                           MSigDB C1: positional gene sets</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3     MSigDB C2: curated gene sets, CGP: chemical and genetic perturbations</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4          MSigDB C2: curated gene sets, CP: Canonical pathways, PID subset</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     MSigDB C2: curated gene sets, CP: Canonical pathways, Reactome subset</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 MSigDB C2: curated gene sets, CP: Canonical pathways, WikiPathways subset</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                                                                                                                                                                                       description</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1                                                                                                                           Gene sets defined from the Gene Ontology (version 2026-01-23), sourced from AH121953 in Bioconductor's AnnotationHub.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2                                                                                                                                                           Gene sets corresponding to human chromosome cytogenetic bands. Part of MSigDB 2026.1.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 Gene sets represent expression signatures of genetic and chemical perturbations. A number of these gene sets come in pairs: xxx_UP (and xxx_DN) gene set representing genes induced (and repressed) by the perturbation. Part of MSigDB 2026.1.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4                                                                                                                                                      Canonical Pathways gene sets derived from the PID pathway database. Part of MSigDB 2026.1.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5                                                                                                                                                 Canonical Pathways gene sets derived from the Reactome pathway database. Part of MSigDB 2026.1.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6                                                                                                                                             Canonical Pathways gene sets derived from the WikiPathways pathway database. Part of MSigDB 2026.1.</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   maintainer</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1  Aaron Lun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2  Aaron Lun</span>
@@ -116,20 +122,20 @@ The cached data will also be used to speed up calls to <code><a href="fetchSomeC
 <span class="r-out co"><span class="r-pr">#&gt;</span> 4  Aaron Lun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 5  Aaron Lun</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 6  Aaron Lun</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                         source</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2           https://github.com/LTLA/gesel-feedstock/blob/master/msigdb/build.R</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3           https://github.com/LTLA/gesel-feedstock/blob/master/msigdb/build.R</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4           https://github.com/LTLA/gesel-feedstock/blob/master/msigdb/build.R</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5           https://github.com/LTLA/gesel-feedstock/blob/master/msigdb/build.R</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6           https://github.com/LTLA/gesel-feedstock/blob/master/msigdb/build.R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                                                                     source</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         https://github.com/gesel-inc/feedstock/blob/go-v1.1.0/go/build.R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 https://github.com/gesel-inc/feedstock/blob/msigdb-v1.1.0/msigdb/build.R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 https://github.com/gesel-inc/feedstock/blob/msigdb-v1.1.0/msigdb/build.R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 https://github.com/gesel-inc/feedstock/blob/msigdb-v1.1.0/msigdb/build.R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 https://github.com/gesel-inc/feedstock/blob/msigdb-v1.1.0/msigdb/build.R</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 https://github.com/gesel-inc/feedstock/blob/msigdb-v1.1.0/msigdb/build.R</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   start  size</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1 18933</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 18934   300</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 19234  3405</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 22639   196</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 22835  1654</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 24489   733</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1     1 18864</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 18865   302</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 19167  3555</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 22722   196</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 22918  1839</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 24757   925</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

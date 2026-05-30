@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.1</span>
       </span>
     </div>
 
@@ -35,7 +35,13 @@
       <a href="../articles/userguide.html">Gene set searches with the Gesel database</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/gesel-inc/gesel-R/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -45,7 +51,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fetch sets for all genes</h1>
-
+    <small class="dont-index">Source: <a href="https://github.com/gesel-inc/gesel-R/blob/master/R/fetchSetsForAllGenes.R" class="external-link"><code>R/fetchSetsForAllGenes.R</code></a></small>
     <div class="hidden name"><code>fetchSetsForAllGenes.Rd</code></div>
     </div>
 
@@ -91,17 +97,24 @@ The cached data will also be used to speed up calls to <code><a href="fetchSetsF
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">all.genes</span> <span class="op">&lt;-</span> <span class="fu">fetchSetsForAllGenes</span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">all.genes</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 105830</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 236560</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Sets containing the first gene:</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="fetchAllSets.html">fetchAllSets</a></span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span><span class="op">[</span><span class="va">all.genes</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,<span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            name                  description size collection number</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1327 GO:0003674           molecular_function  710          1   1327</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2337 GO:0005576         extracellular region 1916          1   2337</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2366 GO:0005615          extracellular space 1865          1   2366</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3538 GO:0008150           biological_process  561          1   3538</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6639 GO:0031093 platelet alpha granule lumen   67          1   6639</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8166 GO:0034774      secretory granule lumen  115          1   8166</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            name                                  description size collection</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1055 GO:0002764 immune response-regulating signaling pathway   38          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2335 GO:0005576                         extracellular region 2553          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2364 GO:0005615                          extracellular space 1774          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2509 GO:0005886                              plasma membrane 5698          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6548 GO:0031093                 platelet alpha granule lumen   67          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8048 GO:0034774                      secretory granule lumen  121          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      number</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1055   1055</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2335   2335</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2364   2364</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2509   2509</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6548   6548</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8048   8048</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Details about the first gene:</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="fetchAllGenes.html">fetchAllGenes</a></span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span><span class="op">$</span><span class="va">symbol</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span></span></span>

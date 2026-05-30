@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.1</span>
       </span>
     </div>
 
@@ -35,7 +35,13 @@
       <a href="../articles/userguide.html">Gene set searches with the Gesel database</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/gesel-inc/gesel-R/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -45,7 +51,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Validate Gesel database files</h1>
-
+    <small class="dont-index">Source: <a href="https://github.com/gesel-inc/gesel-R/blob/master/R/validateDatabaseFiles.R" class="external-link"><code>R/validateDatabaseFiles.R</code></a></small>
     <div class="hidden name"><code>validateDatabaseFiles.Rd</code></div>
     </div>
 
@@ -76,7 +82,7 @@
 
 
 <dt id="arg-types">types<a class="anchor" aria-label="anchor" href="#arg-types"></a></dt>
-<dd><p>Character vector specifying the types of gene names/identifiers to validate, e.g.,<code>"symbol"</code>, <code>"entrez"</code>, or <code>"ensembl"</code>,
+<dd><p>Character vector specifying the types of gene identifiers to validate, e.g., <code>"symbol"</code>, <code>"entrez"</code>, or <code>"ensembl"</code>,
 If <code>NULL</code>, all detected files for <code>species</code> in <code>path</code> are checked.</p></dd>
 
 </dl></div>

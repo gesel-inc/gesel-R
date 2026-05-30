@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.1</span>
       </span>
     </div>
 
@@ -35,7 +35,13 @@
       <a href="../articles/userguide.html">Gene set searches with the Gesel database</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/gesel-inc/gesel-R/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -60,6 +66,10 @@
         </td>
         <td><p>Block size for consolidation</p></td>
       </tr><tr><td>
+          <p><code><a href="createGeneIdentifierMap.html">createGeneIdentifierMap()</a></code> </p>
+        </td>
+        <td><p>Create mapping of gene identifiers</p></td>
+      </tr><tr><td>
           <p><code><a href="downloadDatabaseFile.html">downloadDatabaseFile()</a></code> <code><a href="downloadDatabaseFile.html">databaseUrl()</a></code> </p>
         </td>
         <td><p>Download Gesel database files</p></td>
@@ -70,7 +80,7 @@
       </tr><tr><td>
           <p><code><a href="downloadGeneFile.html">downloadGeneFile()</a></code> <code><a href="downloadGeneFile.html">geneUrl()</a></code> </p>
         </td>
-        <td><p>Fetch Gesel gene description files</p></td>
+        <td><p>Fetch Gesel gene annotation files</p></td>
       </tr><tr><td>
           <p><code><a href="effectiveNumberOfGenes.html">effectiveNumberOfGenes()</a></code> </p>
         </td>
@@ -91,6 +101,14 @@
           <p><code><a href="fetchCollectionSizes.html">fetchCollectionSizes()</a></code> </p>
         </td>
         <td><p>Size of collections</p></td>
+      </tr><tr><td>
+          <p><code><a href="fetchGeneTypes.html">fetchGeneTypes()</a></code> </p>
+        </td>
+        <td><p>Fetch available gene identfier types</p></td>
+      </tr><tr><td>
+          <p><code><a href="fetchGeneVersion.html">fetchGeneVersion()</a></code> </p>
+        </td>
+        <td><p>Fetch version of the gene annotation files</p></td>
       </tr><tr><td>
           <p><code><a href="fetchGenesForAllSets.html">fetchGenesForAllSets()</a></code> </p>
         </td>
@@ -120,17 +138,13 @@
         </td>
         <td><p>Fetch some sets</p></td>
       </tr><tr><td>
-          <p><code><a href="findOverlappingSets.html">findOverlappingSets()</a></code> </p>
-        </td>
-        <td><p>Find sets overlapping a list of genes</p></td>
-      </tr><tr><td>
           <p><code><a href="flushMemoryCache.html">flushMemoryCache()</a></code> </p>
         </td>
         <td><p>Flush the in-memory cache</p></td>
       </tr><tr><td>
-          <p><code><a href="mapGenesByName.html">mapGenesByName()</a></code> </p>
+          <p><code><a href="loadAllSets.html">loadAllSets()</a></code> </p>
         </td>
-        <td><p>Map gene names to indices</p></td>
+        <td><p>Load all gene sets for a species</p></td>
       </tr><tr><td>
           <p><code><a href="newConfig.html">newConfig()</a></code> </p>
         </td>
@@ -140,13 +154,33 @@
         </td>
         <td><p>Prepare the Gesel database</p></td>
       </tr><tr><td>
+          <p><code><a href="prepareGeneFiles.html">prepareGeneFiles()</a></code> </p>
+        </td>
+        <td><p>Prepare the Gesel gene annotation files</p></td>
+      </tr><tr><td>
+          <p><code><a href="querySets.html">querySets()</a></code> </p>
+        </td>
+        <td><p>Query gene sets</p></td>
+      </tr><tr><td>
           <p><code><a href="rangeConcurrency.html">rangeConcurrency()</a></code> </p>
         </td>
         <td><p>Concurrency of range requests</p></td>
       </tr><tr><td>
+          <p><code><a href="readDatabaseRanges.html">readDatabaseRanges()</a></code> </p>
+        </td>
+        <td><p>Read byte ranges from a Gesel database file</p></td>
+      </tr><tr><td>
+          <p><code><a href="renameGenesInSets.html">renameGenesInSets()</a></code> </p>
+        </td>
+        <td><p>Rename genes in their sets</p></td>
+      </tr><tr><td>
           <p><code><a href="searchGenes.html">searchGenes()</a></code> </p>
         </td>
         <td><p>Search for genes</p></td>
+      </tr><tr><td>
+          <p><code><a href="searchOverlappingSets.html">searchOverlappingSets()</a></code> </p>
+        </td>
+        <td><p>Search for overlapping gene sets</p></td>
       </tr><tr><td>
           <p><code><a href="searchSetText.html">searchSetText()</a></code> </p>
         </td>

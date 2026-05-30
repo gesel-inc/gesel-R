@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.1</span>
       </span>
     </div>
 
@@ -35,7 +35,13 @@
       <a href="../articles/userguide.html">Gene set searches with the Gesel database</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/gesel-inc/gesel-R/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -45,7 +51,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fetch all gene sets</h1>
-
+    <small class="dont-index">Source: <a href="https://github.com/gesel-inc/gesel-R/blob/master/R/fetchAllSets.R" class="external-link"><code>R/fetchAllSets.R</code></a></small>
     <div class="hidden name"><code>fetchAllSets.Rd</code></div>
     </div>
 
@@ -96,12 +102,12 @@ The cached data will also be used to speed up calls to <code><a href="fetchSomeS
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">out</span> <span class="op">&lt;-</span> <span class="fu">fetchAllSets</span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">out</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>         name                                        description size collection</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 GO:0000002                   mitochondrial genome maintenance   11          1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2 GO:0000003                                       reproduction    4          1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3 GO:0000009             alpha-1,6-mannosyltransferase activity    2          1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4 GO:0000010          trans-hexaprenyltranstransferase activity    2          1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5 GO:0000012                         single strand break repair   10          1</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6 GO:0000014 single-stranded DNA endodeoxyribonuclease activity    9          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 GO:0000009             alpha-1,6-mannosyltransferase activity    2          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 GO:0000012                         single strand break repair   12          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3 GO:0000014 single-stranded DNA endodeoxyribonuclease activity   10          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4 GO:0000015                  phosphopyruvate hydratase complex    4          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5 GO:0000016                                   lactase activity    1          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6 GO:0000017                          alpha-glucoside transport    2          1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   number</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 1      1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 2      2</span>

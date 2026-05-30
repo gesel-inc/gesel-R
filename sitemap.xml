@@ -7,6 +7,7 @@
 <url><loc>/index.html</loc></url>
 <url><loc>/reference/cacheDirectory.html</loc></url>
 <url><loc>/reference/consolidateBlockSize.html</loc></url>
+<url><loc>/reference/createGeneIdentifierMap.html</loc></url>
 <url><loc>/reference/downloadDatabaseFile.html</loc></url>
 <url><loc>/reference/downloadDatabaseRanges.html</loc></url>
 <url><loc>/reference/downloadGeneFile.html</loc></url>
@@ -15,6 +16,8 @@
 <url><loc>/reference/fetchAllGenes.html</loc></url>
 <url><loc>/reference/fetchAllSets.html</loc></url>
 <url><loc>/reference/fetchCollectionSizes.html</loc></url>
+<url><loc>/reference/fetchGeneTypes.html</loc></url>
+<url><loc>/reference/fetchGeneVersion.html</loc></url>
 <url><loc>/reference/fetchGenesForAllSets.html</loc></url>
 <url><loc>/reference/fetchGenesForSomeSets.html</loc></url>
 <url><loc>/reference/fetchSetSizes.html</loc></url>
@@ -22,14 +25,18 @@
 <url><loc>/reference/fetchSetsForSomeGenes.html</loc></url>
 <url><loc>/reference/fetchSomeCollections.html</loc></url>
 <url><loc>/reference/fetchSomeSets.html</loc></url>
-<url><loc>/reference/findOverlappingSets.html</loc></url>
 <url><loc>/reference/flushMemoryCache.html</loc></url>
 <url><loc>/reference/index.html</loc></url>
-<url><loc>/reference/mapGenesByName.html</loc></url>
+<url><loc>/reference/loadAllSets.html</loc></url>
 <url><loc>/reference/newConfig.html</loc></url>
 <url><loc>/reference/prepareDatabaseFiles.html</loc></url>
+<url><loc>/reference/prepareGeneFiles.html</loc></url>
+<url><loc>/reference/querySets.html</loc></url>
 <url><loc>/reference/rangeConcurrency.html</loc></url>
+<url><loc>/reference/readDatabaseRanges.html</loc></url>
+<url><loc>/reference/renameGenesInSets.html</loc></url>
 <url><loc>/reference/searchGenes.html</loc></url>
+<url><loc>/reference/searchOverlappingSets.html</loc></url>
 <url><loc>/reference/searchSetText.html</loc></url>
 <url><loc>/reference/validateDatabaseFiles.html</loc></url>
 </urlset>

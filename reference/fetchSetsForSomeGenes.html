@@ -18,7 +18,7 @@ This can be more efficient than fetchSetsForAllGenes if only a few genes are of 
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.1</span>
       </span>
     </div>
 
@@ -36,7 +36,13 @@ This can be more efficient than fetchSetsForAllGenes if only a few genes are of 
       <a href="../articles/userguide.html">Gene set searches with the Gesel database</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/gesel-inc/gesel-R/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -46,7 +52,7 @@ This can be more efficient than fetchSetsForAllGenes if only a few genes are of 
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Fetch sets for some genes</h1>
-
+    <small class="dont-index">Source: <a href="https://github.com/gesel-inc/gesel-R/blob/master/R/fetchSetsForSomeGenes.R" class="external-link"><code>R/fetchSetsForSomeGenes.R</code></a></small>
     <div class="hidden name"><code>fetchSetsForSomeGenes.Rd</code></div>
     </div>
 
@@ -100,31 +106,38 @@ If <code>genes</code> is large, it may be more efficient to call <code><a href="
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">first.gene</span> <span class="op">&lt;-</span> <span class="fu">fetchSetsForSomeGenes</span><span class="op">(</span><span class="st">"9606"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">first.gene</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> List of 5</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : int [1:68] 1327 2337 2366 3538 6639 8166 13182 13273 14384 17635 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : int [1:205] 413 605 701 920 1999 2000 2127 2311 2337 2366 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : int [1:7] 18984 20717 22134 27718 28006 40230 40391</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : int [1:160] 1512 2483 3071 19193 19377 20087 20344 20669 20741 21035 ...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : int [1:64] 1512 2311 2483 3071 19193 19377 20680 20717 21388 22215 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : int [1:75] 1055 2335 2364 2509 6548 8048 12970 14052 17603 18963 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : int [1:219] 584 681 1989 1990 2121 2308 2335 2364 5688 5718 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : int [1:167] 1515 2308 2417 2472 3037 5075 5211 5215 19126 19197 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : int [1:70] 1515 2308 2417 2472 3037 5075 5211 5215 10550 19126 ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  $ : int [1:184] 1335 1990 2308 2335 2364 2365 3123 3124 5530 6227 ...</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Sets containing the first gene.</span></span></span>
 <span class="r-in"><span><span class="va">all.set.info</span> <span class="op">&lt;-</span> <span class="fu"><a href="fetchAllSets.html">fetchAllSets</a></span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">all.set.info</span><span class="op">[</span><span class="va">first.gene</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span>,<span class="op">]</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>            name                  description size collection number</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1327 GO:0003674           molecular_function  710          1   1327</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2337 GO:0005576         extracellular region 1916          1   2337</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2366 GO:0005615          extracellular space 1865          1   2366</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3538 GO:0008150           biological_process  561          1   3538</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 6639 GO:0031093 platelet alpha granule lumen   67          1   6639</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 8166 GO:0034774      secretory granule lumen  115          1   8166</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>            name                                  description size collection</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1055 GO:0002764 immune response-regulating signaling pathway   38          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2335 GO:0005576                         extracellular region 2553          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2364 GO:0005615                          extracellular space 1774          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2509 GO:0005886                              plasma membrane 5698          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6548 GO:0031093                 platelet alpha granule lumen   67          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8048 GO:0034774                      secretory granule lumen  121          1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      number</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1055   1055</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2335   2335</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2364   2364</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2509   2509</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6548   6548</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 8048   8048</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Identities of the requested genes.</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="fetchAllGenes.html">fetchAllGenes</a></span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">5</span>,<span class="op">]</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>   symbol entrez      ensembl</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1   A1BG      1 ENSG0000....</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 2    A2M      2 ENSG0000....</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 3  A2MP1      3 ENSG0000....</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 4   NAT1      9 ENSG0000....</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 5   NAT2     10 ENSG0000....</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   entrez      ensembl   symbol</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      1 ENSG0000....     A1BG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2      2 ENSG0000....      A2M</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3      9 ENSG0000....     NAT1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4     10 ENSG0000....     NAT2</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5     12 ENSG0000.... SERPINA3</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

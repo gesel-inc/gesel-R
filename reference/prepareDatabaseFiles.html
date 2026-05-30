@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.1</span>
       </span>
     </div>
 
@@ -35,7 +35,13 @@
       <a href="../articles/userguide.html">Gene set searches with the Gesel database</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/gesel-inc/gesel-R/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -45,7 +51,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Prepare the Gesel database</h1>
-
+    <small class="dont-index">Source: <a href="https://github.com/gesel-inc/gesel-R/blob/master/R/prepareDatabaseFiles.R" class="external-link"><code>R/prepareDatabaseFiles.R</code></a></small>
     <div class="hidden name"><code>prepareDatabaseFiles.Rd</code></div>
     </div>
 
@@ -89,7 +95,7 @@ Each data frame should have the <code>name</code> and <code>description</code> c
 Each inner list corresponds to a collection and each vector corresponds to a gene set in that collection.
 Each vector contains the identities of its constituent genes, as row indices into the data frame returned by <code><a href="fetchAllGenes.html">fetchAllGenes</a></code>.
 All gene indices should be positive and no greater than <code>num.genes</code>.
-(Unsorted and duplicate entries are allowed.)</p></dd>
+Vectors may be unsorted and contain duplicate entries - sorting and deduplication will be performed internally.</p></dd>
 
 
 <dt id="arg-num-genes">num.genes<a class="anchor" aria-label="anchor" href="#arg-num-genes"></a></dt>
@@ -107,7 +113,11 @@ All gene indices should be positive and no greater than <code>num.genes</code>.
     <div id="value">
     <h2>Value</h2>
     <p>Several files are produced at <code>path</code> with the <code>&lt;species&gt;_</code> prefix.
-These can be made available for download with <code><a href="downloadDatabaseFile.html">downloadDatabaseFile</a></code>.</p>
+<code>NULL</code> is invisibly returned.</p>
+    </div>
+    <div id="see-also">
+    <h2>See also</h2>
+    <div class="dont-index"><p><code><a href="prepareGeneFiles.html">prepareGeneFiles</a></code>, to create Gesel gene annotation files containing the gene identifiers.</p></div>
     </div>
     <div id="author">
     <h2>Author</h2>

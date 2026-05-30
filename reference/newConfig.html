@@ -18,7 +18,7 @@ This can be used by applications to point to a different Gesel database from the
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.1</span>
       </span>
     </div>
 
@@ -36,7 +36,13 @@ This can be used by applications to point to a different Gesel database from the
       <a href="../articles/userguide.html">Gene set searches with the Gesel database</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/gesel-inc/gesel-R/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -46,7 +52,7 @@ This can be used by applications to point to a different Gesel database from the
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Create a new configuration object</h1>
-
+    <small class="dont-index">Source: <a href="https://github.com/gesel-inc/gesel-R/blob/master/R/newConfig.R" class="external-link"><code>R/newConfig.R</code></a></small>
     <div class="hidden name"><code>newConfig.Rd</code></div>
     </div>
 
@@ -59,6 +65,7 @@ This can be used by applications to point to a different Gesel database from the
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">newConfig</span><span class="op">(</span></span>
 <span>  fetch.gene <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  fetch.gene.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  gene.version <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  fetch.file <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  fetch.file.args <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  fetch.ranges <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -72,12 +79,18 @@ This can be used by applications to point to a different Gesel database from the
 
 
 <dl><dt id="arg-fetch-gene">fetch.gene<a class="anchor" aria-label="anchor" href="#arg-fetch-gene"></a></dt>
-<dd><p>Function that accepts the name of a Gesel gene description file and returns an absolute path to the file.
+<dd><p>Function that accepts the name of a Gesel gene annotation file and returns an absolute path to the file.
 If <code>NULL</code>, it defaults to <code><a href="downloadGeneFile.html">downloadGeneFile</a></code>.</p></dd>
 
 
 <dt id="arg-fetch-gene-args">fetch.gene.args<a class="anchor" aria-label="anchor" href="#arg-fetch-gene-args"></a></dt>
 <dd><p>Named list of arguments to pass to <code>fetch.gene</code>.</p></dd>
+
+
+<dt id="arg-gene-version">gene.version<a class="anchor" aria-label="anchor" href="#arg-gene-version"></a></dt>
+<dd><p>String containing the version of the Gesel gene annotation file specification used by all gene annotation instances.
+If <code>NULL</code>, this is automatically determined by <code><a href="fetchGeneVersion.html">fetchGeneVersion</a></code>.
+This can also be set explicitly to skip a query and save some time.</p></dd>
 
 
 <dt id="arg-fetch-file">fetch.file<a class="anchor" aria-label="anchor" href="#arg-fetch-file"></a></dt>

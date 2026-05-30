@@ -17,7 +17,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.1</span>
       </span>
     </div>
 
@@ -35,7 +35,13 @@
       <a href="../articles/userguide.html">Gene set searches with the Gesel database</a>
     </li>
   </ul></li>
-      </ul><ul class="nav navbar-nav navbar-right"></ul></div><!--/.nav-collapse -->
+      </ul><ul class="nav navbar-nav navbar-right"><li>
+  <a href="https://github.com/gesel-inc/gesel-R/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul></div><!--/.nav-collapse -->
   </div><!--/.container -->
 </div><!--/.navbar -->
 
@@ -45,7 +51,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Download Gesel database files</h1>
-
+    <small class="dont-index">Source: <a href="https://github.com/gesel-inc/gesel-R/blob/master/R/downloadDatabaseFile.R" class="external-link"><code>R/downloadDatabaseFile.R</code></a></small>
     <div class="hidden name"><code>downloadDatabaseFile.Rd</code></div>
     </div>
 
@@ -93,7 +99,7 @@ If <code>url</code> is provided, it instead stores <code>url</code> as the URL t
     </div>
     <div id="details">
     <h2>Details</h2>
-    <p>The database URL defaults to the GitHub releases at <a href="https://github.com/LTLA/gesel-feedstock" class="external-link">https://github.com/LTLA/gesel-feedstock</a>.
+    <p>The database URL defaults to the GitHub releases at <a href="https://github.com/gesel-inc/feedstock" class="external-link">https://github.com/gesel-inc/feedstock</a>.
 This can be altered by setting the <code>GESEL_DATABASE_URL</code> environment variable prior to the first call to this function.</p>
     </div>
     <div id="author">
@@ -105,11 +111,11 @@ This can be altered by setting the <code>GESEL_DATABASE_URL</code> environment v
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Download file.</span></span></span>
 <span class="r-in"><span><span class="fu">downloadDatabaseFile</span><span class="op">(</span><span class="st">"9606_collections.tsv.gz"</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "~/.cache/gesel/https%3A%2F%2Fgithub.com%2FLTLA%2Fgesel-feedstock%2Freleases%2Fdownload%2Findices-v0.2.1%2F9606_collections.tsv.gz"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "~/.cache/gesel/https%3A%2F%2Fgithub.com%2Fgesel-inc%2Ffeedstock%2Freleases%2Fdownload%2Findices-v0.3.0%2F9606_collections.tsv.gz"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Altering the default database URL.</span></span></span>
 <span class="r-in"><span><span class="fu">databaseUrl</span><span class="op">(</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://github.com/LTLA/gesel-feedstock/releases/download/indices-v0.2.1"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://github.com/gesel-inc/feedstock/releases/download/indices-v0.3.0"</span>
 <span class="r-in"><span><span class="va">old</span> <span class="op">&lt;-</span> <span class="fu">databaseUrl</span><span class="op">(</span><span class="st">"https://foo"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">databaseUrl</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "https://foo"</span>

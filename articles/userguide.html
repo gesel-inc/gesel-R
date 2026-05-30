@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">gesel</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.1.12</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.99.1</span>
       </span>
     </div>
 
@@ -54,7 +54,14 @@
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="nav navbar-nav navbar-right">
+<li>
+  <a href="https://github.com/gesel-inc/gesel-R/" class="external-link">
+    <span class="fab fa-github fa-lg"></span>
+
+  </a>
+</li>
+      </ul>
 </div>
 <!--/.nav-collapse -->
   </div>
@@ -75,7 +82,7 @@
             <h4 data-toc-skip class="date">Revised: November 4,
 2024</h4>
       
-
+      <small class="dont-index">Source: <a href="https://github.com/gesel-inc/gesel-R/blob/master/vignettes/userguide.Rmd" class="external-link"><code>vignettes/userguide.Rmd</code></a></small>
       <div class="hidden name"><code>userguide.Rmd</code></div>
 
     </div>
@@ -96,86 +103,261 @@ custom server logic is required, greatly reducing effort and cost
 required to keep Gesel up and running. Most database files do not need
 to be downloaded to the client, allowing us to easily scale with
 increasing numbers of gene sets in the database.</p>
+<p>More details can be found at <a href="https://github.com/gesel-inc" class="external-link uri">https://github.com/gesel-inc</a>. A web interface is also
+available at <a href="https://gesel-inc.github.io/web-app" class="external-link uri">https://gesel-inc.github.io/web-app</a>.</p>
 </div>
 <div class="section level2">
-<h2 id="finding-overlaps">Finding overlaps<a class="anchor" aria-label="anchor" href="#finding-overlaps"></a>
+<h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
 <p>The raison d’etre of the Gesel database is to find overlaps between
 known gene sets and a user-supplied list of genes. Let’s say we have
 several human genes of interest:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">my.genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"SNAP25"</span>, <span class="st">"NEUROD6"</span>, <span class="st">"GAD1"</span>, <span class="st">"GAD2"</span>, <span class="st">"RELN"</span><span class="op">)</span></span></code></pre></div>
-<p>We map these to Gesel gene indices, which are Gesel’s internal
-identifiers for each gene.</p>
+<p>We use <code><a href="../reference/querySets.html">querySets()</a></code> to identify all gene sets that
+overlap with <code>my.genes</code>. This also gives the enrichment
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>p</mi><annotation encoding="application/x-tex">p</annotation></semantics></math>-value
+from a hypergeometric test.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gesel</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></span><span class="op">)</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/querySets.html">querySets</a></span><span class="op">(</span><span class="st">"9606"</span>, genes <span class="op">=</span> <span class="va">my.genes</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                                                       name</span></span>
+<span><span class="co">## 1                                               MODULE_563</span></span>
+<span><span class="co">## 2 REACTOME_GABA_SYNTHESIS_RELEASE_REUPTAKE_AND_DEGRADATION</span></span>
+<span><span class="co">## 3                                               GO:0004351</span></span>
+<span><span class="co">## 4                                               GO:0006540</span></span>
+<span><span class="co">## 5                  REACTOME_NEUROTRANSMITTER_RELEASE_CYCLE</span></span>
+<span><span class="co">## 6                                  CACTGTG_MIR128A_MIR128B</span></span>
+<span><span class="co">##                                                                                                      description</span></span>
+<span><span class="co">## 1                                               https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MODULE_563</span></span>
+<span><span class="co">## 2 https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_GABA_SYNTHESIS_RELEASE_REUPTAKE_AND_DEGRADATION</span></span>
+<span><span class="co">## 3                                                                               glutamate decarboxylase activity</span></span>
+<span><span class="co">## 4                                                                                      gamma-aminobutyrate shunt</span></span>
+<span><span class="co">## 5                  https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_NEUROTRANSMITTER_RELEASE_CYCLE</span></span>
+<span><span class="co">## 6                                  https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/CACTGTG_MIR128A_MIR128B</span></span>
+<span><span class="co">##   size</span></span>
+<span><span class="co">## 1   15</span></span>
+<span><span class="co">## 2   19</span></span>
+<span><span class="co">## 3    2</span></span>
+<span><span class="co">## 4    2</span></span>
+<span><span class="co">## 5   51</span></span>
+<span><span class="co">## 6  340</span></span>
+<span><span class="co">##                                                                         collection</span></span>
+<span><span class="co">## 1                           MSigDB C4: computational gene sets, CM: cancer modules</span></span>
+<span><span class="co">## 2            MSigDB C2: curated gene sets, CP: Canonical pathways, Reactome subset</span></span>
+<span><span class="co">## 3                                                                    Gene ontology</span></span>
+<span><span class="co">## 4                                                                    Gene ontology</span></span>
+<span><span class="co">## 5            MSigDB C2: curated gene sets, CP: Canonical pathways, Reactome subset</span></span>
+<span><span class="co">## 6 MSigDB C3: regulatory target gene sets, MIR: microRNA targets, MIR_LEGACY subset</span></span>
+<span><span class="co">##     set count       pvalue</span></span>
+<span><span class="co">## 1 30349     3 3.315470e-10</span></span>
+<span><span class="co">## 2 23511     3 7.059884e-10</span></span>
+<span><span class="co">## 3  1638     2 1.056967e-08</span></span>
+<span><span class="co">## 4  2860     2 1.056967e-08</span></span>
+<span><span class="co">## 5 23902     3 1.515581e-08</span></span>
+<span><span class="co">## 6 25759     4 1.822241e-08</span></span></code></pre>
+<p>Or we can filter by keywords in the gene set names or
+descriptions:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/querySets.html">querySets</a></span><span class="op">(</span><span class="st">"9606"</span>, text <span class="op">=</span> <span class="st">"brain"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                                                   name</span></span>
+<span><span class="co">## 1   BYSTRYKH_HEMATOPOIESIS_STEM_CELL_AND_BRAIN_QTL_CIS</span></span>
+<span><span class="co">## 2 BYSTRYKH_HEMATOPOIESIS_STEM_CELL_AND_BRAIN_QTL_TRANS</span></span>
+<span><span class="co">## 3                       CHESLER_BRAIN_D6MIT150_QTL_CIS</span></span>
+<span><span class="co">## 4                     CHESLER_BRAIN_D6MIT150_QTL_TRANS</span></span>
+<span><span class="co">## 5                     CHESLER_BRAIN_HIGHEST_EXPRESSION</span></span>
+<span><span class="co">## 6               CHESLER_BRAIN_HIGHEST_GENETIC_VARIANCE</span></span>
+<span><span class="co">##                                                                                                  description</span></span>
+<span><span class="co">## 1   https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/BYSTRYKH_HEMATOPOIESIS_STEM_CELL_AND_BRAIN_QTL_CIS</span></span>
+<span><span class="co">## 2 https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/BYSTRYKH_HEMATOPOIESIS_STEM_CELL_AND_BRAIN_QTL_TRANS</span></span>
+<span><span class="co">## 3                       https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/CHESLER_BRAIN_D6MIT150_QTL_CIS</span></span>
+<span><span class="co">## 4                     https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/CHESLER_BRAIN_D6MIT150_QTL_TRANS</span></span>
+<span><span class="co">## 5                     https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/CHESLER_BRAIN_HIGHEST_EXPRESSION</span></span>
+<span><span class="co">## 6               https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/CHESLER_BRAIN_HIGHEST_GENETIC_VARIANCE</span></span>
+<span><span class="co">##   size                                                            collection</span></span>
+<span><span class="co">## 1   69 MSigDB C2: curated gene sets, CGP: chemical and genetic perturbations</span></span>
+<span><span class="co">## 2  155 MSigDB C2: curated gene sets, CGP: chemical and genetic perturbations</span></span>
+<span><span class="co">## 3    6 MSigDB C2: curated gene sets, CGP: chemical and genetic perturbations</span></span>
+<span><span class="co">## 4    9 MSigDB C2: curated gene sets, CGP: chemical and genetic perturbations</span></span>
+<span><span class="co">## 5   41 MSigDB C2: curated gene sets, CGP: chemical and genetic perturbations</span></span>
+<span><span class="co">## 6   38 MSigDB C2: curated gene sets, CGP: chemical and genetic perturbations</span></span>
+<span><span class="co">##     set</span></span>
+<span><span class="co">## 1 19536</span></span>
+<span><span class="co">## 2 19537</span></span>
+<span><span class="co">## 3 19647</span></span>
+<span><span class="co">## 4 19648</span></span>
+<span><span class="co">## 5 19649</span></span>
+<span><span class="co">## 6 19650</span></span></code></pre>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Or, filtering by both genes and text. </span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/querySets.html">querySets</a></span><span class="op">(</span><span class="st">"9606"</span>, genes <span class="op">=</span> <span class="va">my.genes</span>, text <span class="op">=</span> <span class="st">"neur*"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##                                               name</span></span>
+<span><span class="co">## 1          REACTOME_NEUROTRANSMITTER_RELEASE_CYCLE</span></span>
+<span><span class="co">## 2 WP_CELL_LINEAGE_MAP_FOR_NEURONAL_DIFFERENTIATION</span></span>
+<span><span class="co">## 3                  MANNO_MIDBRAIN_NEUROTYPES_HGABA</span></span>
+<span><span class="co">## 4                   MANNO_MIDBRAIN_NEUROTYPES_HNBM</span></span>
+<span><span class="co">## 5                         REACTOME_NEURONAL_SYSTEM</span></span>
+<span><span class="co">## 6                 MANNO_MIDBRAIN_NEUROTYPES_HNBML5</span></span>
+<span><span class="co">##                                                                                              description</span></span>
+<span><span class="co">## 1          https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_NEUROTRANSMITTER_RELEASE_CYCLE</span></span>
+<span><span class="co">## 2 https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_CELL_LINEAGE_MAP_FOR_NEURONAL_DIFFERENTIATION</span></span>
+<span><span class="co">## 3                  https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MANNO_MIDBRAIN_NEUROTYPES_HGABA</span></span>
+<span><span class="co">## 4                   https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MANNO_MIDBRAIN_NEUROTYPES_HNBM</span></span>
+<span><span class="co">## 5                         https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_NEURONAL_SYSTEM</span></span>
+<span><span class="co">## 6                 https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/MANNO_MIDBRAIN_NEUROTYPES_HNBML5</span></span>
+<span><span class="co">##   size</span></span>
+<span><span class="co">## 1   51</span></span>
+<span><span class="co">## 2  132</span></span>
+<span><span class="co">## 3 1105</span></span>
+<span><span class="co">## 4  295</span></span>
+<span><span class="co">## 5  411</span></span>
+<span><span class="co">## 6  465</span></span>
+<span><span class="co">##                                                                  collection</span></span>
+<span><span class="co">## 1     MSigDB C2: curated gene sets, CP: Canonical pathways, Reactome subset</span></span>
+<span><span class="co">## 2 MSigDB C2: curated gene sets, CP: Canonical pathways, WikiPathways subset</span></span>
+<span><span class="co">## 3                                  MSigDB C8: cell type signature gene sets</span></span>
+<span><span class="co">## 4                                  MSigDB C8: cell type signature gene sets</span></span>
+<span><span class="co">## 5     MSigDB C2: curated gene sets, CP: Canonical pathways, Reactome subset</span></span>
+<span><span class="co">## 6                                  MSigDB C8: cell type signature gene sets</span></span>
+<span><span class="co">##     set count       pvalue</span></span>
+<span><span class="co">## 1 23902     3 1.515581e-08</span></span>
+<span><span class="co">## 2 24904     3 2.719047e-07</span></span>
+<span><span class="co">## 3 42292     4 2.028974e-06</span></span>
+<span><span class="co">## 4 42295     3 3.056438e-06</span></span>
+<span><span class="co">## 5 23898     3 8.256205e-06</span></span>
+<span><span class="co">## 6 42297     3 1.194453e-05</span></span></code></pre>
+<p>We can also load all available gene sets for a species for use in
+other gene set-related packages, e.g., <em><a href="https://bioconductor.org/packages/3.24/fgsea" class="external-link">fgsea</a></em>.</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">everything</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/loadAllSets.html">loadAllSets</a></span><span class="op">(</span><span class="st">"9606"</span>, type <span class="op">=</span> <span class="st">"symbol"</span>, as.compressed <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="va">everything</span></span></code></pre></div>
+<pre><code><span><span class="co">## CharacterList of length 42580</span></span>
+<span><span class="co">## [[1]] PIGV ALG12</span></span>
+<span><span class="co">## [[2]] ERCC8 ERCC6 LIG4 TNP1 UNG XRCC1 SIRT1 APTX NEIL3 TDP1 APLF XNDC1N</span></span>
+<span><span class="co">## [[3]] ENDOG ERCC1 ERCC4 MRE11 RBBP8 SETMAR EXOG RAD50 ASTE1 DCLRE1C</span></span>
+<span><span class="co">## [[4]] ENO1 ENO2 ENO3 ENO4</span></span>
+<span><span class="co">## [[5]] LCT</span></span>
+<span><span class="co">## [[6]] SLC5A1 SLC5A2</span></span>
+<span><span class="co">## [[7]] IL7R KPNA1 KPNA2 RTEL1 SMARCAD1</span></span>
+<span><span class="co">## [[8]] MRE11 RAD50</span></span>
+<span><span class="co">## [[9]] PRC1 KIF23</span></span>
+<span><span class="co">## [[10]] GAA</span></span>
+<span><span class="co">## ...</span></span>
+<span><span class="co">## &lt;42570 more elements&gt;</span></span></code></pre>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">S4Vectors</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/S4Vectors/man/Vector-class.html" class="external-link">mcols</a></span><span class="op">(</span><span class="va">everything</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## DataFrame with 42580 rows and 4 columns</span></span>
+<span><span class="co">##                         name            description      size</span></span>
+<span><span class="co">##                  &lt;character&gt;            &lt;character&gt; &lt;integer&gt;</span></span>
+<span><span class="co">## 1                 GO:0000009 alpha-1,6-mannosyltr..         2</span></span>
+<span><span class="co">## 2                 GO:0000012 single strand break ..        12</span></span>
+<span><span class="co">## 3                 GO:0000014 single-stranded DNA ..        10</span></span>
+<span><span class="co">## 4                 GO:0000015 phosphopyruvate hydr..         4</span></span>
+<span><span class="co">## 5                 GO:0000016       lactase activity         1</span></span>
+<span><span class="co">## ...                      ...                    ...       ...</span></span>
+<span><span class="co">## 42576 HALLMARK_UNFOLDED_PR.. https://www.gsea-msi..       113</span></span>
+<span><span class="co">## 42577 HALLMARK_UV_RESPONSE.. https://www.gsea-msi..       144</span></span>
+<span><span class="co">## 42578 HALLMARK_UV_RESPONSE.. https://www.gsea-msi..       158</span></span>
+<span><span class="co">## 42579 HALLMARK_WNT_BETA_CA.. https://www.gsea-msi..        42</span></span>
+<span><span class="co">## 42580 HALLMARK_XENOBIOTIC_.. https://www.gsea-msi..       200</span></span>
+<span><span class="co">##                   collection</span></span>
+<span><span class="co">##                  &lt;character&gt;</span></span>
+<span><span class="co">## 1              Gene ontology</span></span>
+<span><span class="co">## 2              Gene ontology</span></span>
+<span><span class="co">## 3              Gene ontology</span></span>
+<span><span class="co">## 4              Gene ontology</span></span>
+<span><span class="co">## 5              Gene ontology</span></span>
+<span><span class="co">## ...                      ...</span></span>
+<span><span class="co">## 42576 MSigDB H: hallmark g..</span></span>
+<span><span class="co">## 42577 MSigDB H: hallmark g..</span></span>
+<span><span class="co">## 42578 MSigDB H: hallmark g..</span></span>
+<span><span class="co">## 42579 MSigDB H: hallmark g..</span></span>
+<span><span class="co">## 42580 MSigDB H: hallmark g..</span></span></code></pre>
+</div>
+<div class="section level2">
+<h2 id="using-low-level-functions">Using low-level functions<a class="anchor" aria-label="anchor" href="#using-low-level-functions"></a>
+</h2>
+<div class="section level3">
+<h3 id="finding-overlaps">Finding overlaps<a class="anchor" aria-label="anchor" href="#finding-overlaps"></a>
+</h3>
+<p>The functions described above are convenient but opinionated wrappers
+around some of <em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em>’s low-level
+functions. Developers may prefer to use these low-level functions
+directly for greater control of the output, e.g., to avoid unnecessary
+work. To demonstrate, we first map our genes of interest to Gesel gene
+indices, which are Gesel’s internal identifiers for each gene.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></span><span class="op">)</span></span>
 <span><span class="va">gene.idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/searchGenes.html">searchGenes</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="va">my.genes</span><span class="op">)</span></span>
 <span><span class="va">gene.idx</span> <span class="co"># this is a list of integer vectors, in case of 1:many mappings.</span></span></code></pre></div>
 <pre><code><span><span class="co">## [[1]]</span></span>
-<span><span class="co">## [1] 4640</span></span>
+<span><span class="co">## [1] 4645</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[2]]</span></span>
-<span><span class="co">## [1] 12768</span></span>
+<span><span class="co">## [1] 12799</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[3]]</span></span>
-<span><span class="co">## [1] 1759</span></span>
+<span><span class="co">## [1] 1758</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[4]]</span></span>
-<span><span class="co">## [1] 1760</span></span>
+<span><span class="co">## [1] 1759</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## [[5]]</span></span>
-<span><span class="co">## [1] 3913</span></span></code></pre>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<span><span class="co">## [1] 3916</span></span></code></pre>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">gene.idx</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unlist.html" class="external-link">unlist</a></span><span class="op">(</span><span class="va">gene.idx</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/fetchAllGenes.html">fetchAllGenes</a></span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span><span class="op">[</span><span class="va">gene.idx</span>,<span class="op">]</span> <span class="co"># double-checking that we got it right.</span></span></code></pre></div>
-<pre><code><span><span class="co">##        symbol entrez      ensembl</span></span>
-<span><span class="co">## 4640   SNAP25   6616 ENSG0000....</span></span>
-<span><span class="co">## 12768 NEUROD6  63974 ENSG0000....</span></span>
-<span><span class="co">## 1759     GAD1   2571 ENSG0000....</span></span>
-<span><span class="co">## 1760     GAD2   2572 ENSG0000....</span></span>
-<span><span class="co">## 3913     RELN   5649 ENSG0000....</span></span></code></pre>
+<pre><code><span><span class="co">##       entrez      ensembl  symbol</span></span>
+<span><span class="co">## 4645    6616 ENSG0000....  SNAP25</span></span>
+<span><span class="co">## 12799  63974 ENSG0000.... NEUROD6</span></span>
+<span><span class="co">## 1758    2571 ENSG0000....    GAD1</span></span>
+<span><span class="co">## 1759    2572 ENSG0000....    GAD2</span></span>
+<span><span class="co">## 3916    5649 ENSG0000....    RELN</span></span></code></pre>
 <p>Now we find all sets with overlapping genes. The
-<code><a href="../reference/findOverlappingSets.html">findOverlappingSets()</a></code> identifies all sets with one or more
-overlaps with the user-suppleid set.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">overlaps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/findOverlappingSets.html">findOverlappingSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="va">gene.idx</span>, counts.only<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
+<code><a href="../reference/searchOverlappingSets.html">searchOverlappingSets()</a></code> identifies all sets that overlap at
+least one gene in the user-supplied set.</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">overlaps</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/searchOverlappingSets.html">searchOverlappingSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="va">gene.idx</span>, counts.only<span class="op">=</span><span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">)</span> <span class="co"># set index and the identities of overlapping genes.</span></span></code></pre></div>
-<pre><code><span><span class="co">##   set genes</span></span>
-<span><span class="co">## 1  64  1760</span></span>
-<span><span class="co">## 2 255 12768</span></span>
-<span><span class="co">## 3 294  3913</span></span>
-<span><span class="co">## 4 323 12768</span></span>
-<span><span class="co">## 5 325 12768</span></span>
-<span><span class="co">## 6 373 12768</span></span></code></pre>
+<pre><code><span><span class="co">##     set count genes size      pvalue</span></span>
+<span><span class="co">## 58   58     1  1759  700 0.077915063</span></span>
+<span><span class="co">## 62   62     1  4645   66 0.007563568</span></span>
+<span><span class="co">## 237 237     1 12799 1113 0.121555167</span></span>
+<span><span class="co">## 274 274     1  3916  117 0.013376739</span></span>
+<span><span class="co">## 299 299     1 12799 1089 0.119065304</span></span>
+<span><span class="co">## 301 301     1 12799 1223 0.132895108</span></span></code></pre>
 <p>The set index can be converted back to information about each set,
 along with the collection from which it came:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">set.info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetchSomeSets.html">fetchSomeSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="co"># getting details of the top sets</span></span>
-<span><span class="va">set.info</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">first.set.info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetchSomeSets.html">fetchSomeSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">set</span><span class="op">)</span><span class="op">)</span> <span class="co"># getting details of the first few sets</span></span>
+<span><span class="va">first.set.info</span></span></code></pre></div>
 <pre><code><span><span class="co">##         name</span></span>
 <span><span class="co">## 1 GO:0000139</span></span>
-<span><span class="co">## 2 GO:0000785</span></span>
-<span><span class="co">## 3 GO:0000904</span></span>
-<span><span class="co">## 4 GO:0000978</span></span>
-<span><span class="co">## 5 GO:0000981</span></span>
-<span><span class="co">## 6 GO:0001228</span></span>
-<span><span class="co">##                                                                description size</span></span>
-<span><span class="co">## 1                                                           Golgi membrane  629</span></span>
-<span><span class="co">## 2                                                                chromatin 1034</span></span>
-<span><span class="co">## 3                           cell morphogenesis involved in differentiation    4</span></span>
-<span><span class="co">## 4    RNA polymerase II cis-regulatory region sequence-specific DNA binding 1193</span></span>
-<span><span class="co">## 5    DNA-binding transcription factor activity, RNA polymerase II-specific 1249</span></span>
-<span><span class="co">## 6 DNA-binding transcription activator activity, RNA polymerase II-specific  466</span></span>
+<span><span class="co">## 2 GO:0000149</span></span>
+<span><span class="co">## 3 GO:0000785</span></span>
+<span><span class="co">## 4 GO:0000902</span></span>
+<span><span class="co">## 5 GO:0000978</span></span>
+<span><span class="co">## 6 GO:0000981</span></span>
+<span><span class="co">##                                                             description size</span></span>
+<span><span class="co">## 1                                                        Golgi membrane  700</span></span>
+<span><span class="co">## 2                                                         SNARE binding   66</span></span>
+<span><span class="co">## 3                                                             chromatin 1113</span></span>
+<span><span class="co">## 4                                                    cell morphogenesis  117</span></span>
+<span><span class="co">## 5 RNA polymerase II cis-regulatory region sequence-specific DNA binding 1089</span></span>
+<span><span class="co">## 6 DNA-binding transcription factor activity, RNA polymerase II-specific 1223</span></span>
 <span><span class="co">##   collection number</span></span>
-<span><span class="co">## 1          1     64</span></span>
-<span><span class="co">## 2          1    255</span></span>
-<span><span class="co">## 3          1    294</span></span>
-<span><span class="co">## 4          1    323</span></span>
-<span><span class="co">## 5          1    325</span></span>
-<span><span class="co">## 6          1    373</span></span></code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">col.info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetchSomeCollections.html">fetchSomeCollections</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="va">set.info</span><span class="op">$</span><span class="va">collection</span><span class="op">)</span> <span class="co"># getting details of the collections</span></span>
-<span><span class="va">col.info</span></span></code></pre></div>
+<span><span class="co">## 1          1     58</span></span>
+<span><span class="co">## 2          1     62</span></span>
+<span><span class="co">## 3          1    237</span></span>
+<span><span class="co">## 4          1    274</span></span>
+<span><span class="co">## 5          1    299</span></span>
+<span><span class="co">## 6          1    301</span></span></code></pre>
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">first.col.info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetchSomeCollections.html">fetchSomeCollections</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="va">first.set.info</span><span class="op">$</span><span class="va">collection</span><span class="op">)</span> <span class="co"># getting details of the collections</span></span>
+<span><span class="va">first.col.info</span></span></code></pre></div>
 <pre><code><span><span class="co">##           title</span></span>
 <span><span class="co">## 1 Gene ontology</span></span>
 <span><span class="co">## 2 Gene ontology</span></span>
@@ -183,193 +365,159 @@ along with the collection from which it came:</p>
 <span><span class="co">## 4 Gene ontology</span></span>
 <span><span class="co">## 5 Gene ontology</span></span>
 <span><span class="co">## 6 Gene ontology</span></span>
-<span><span class="co">##                                                                                                                 description</span></span>
-<span><span class="co">## 1 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
-<span><span class="co">## 2 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
-<span><span class="co">## 3 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
-<span><span class="co">## 4 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
-<span><span class="co">## 5 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
-<span><span class="co">## 6 Gene sets defined from the Gene Ontology (version 2022-07-01), sourced from the Bioconductor package org.Hs.eg.db 3.16.0.</span></span>
-<span><span class="co">##   maintainer</span></span>
-<span><span class="co">## 1  Aaron Lun</span></span>
-<span><span class="co">## 2  Aaron Lun</span></span>
-<span><span class="co">## 3  Aaron Lun</span></span>
-<span><span class="co">## 4  Aaron Lun</span></span>
-<span><span class="co">## 5  Aaron Lun</span></span>
-<span><span class="co">## 6  Aaron Lun</span></span>
-<span><span class="co">##                                                                         source</span></span>
-<span><span class="co">## 1 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span></span>
-<span><span class="co">## 2 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span></span>
-<span><span class="co">## 3 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span></span>
-<span><span class="co">## 4 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span></span>
-<span><span class="co">## 5 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span></span>
-<span><span class="co">## 6 https://github.com/LTLA/gesel-feedstock/blob/gene-ontology-v1.0.0/go/build.R</span></span>
+<span><span class="co">##                                                                                                             description</span></span>
+<span><span class="co">## 1 Gene sets defined from the Gene Ontology (version 2026-01-23), sourced from AH121953 in Bioconductor's AnnotationHub.</span></span>
+<span><span class="co">## 2 Gene sets defined from the Gene Ontology (version 2026-01-23), sourced from AH121953 in Bioconductor's AnnotationHub.</span></span>
+<span><span class="co">## 3 Gene sets defined from the Gene Ontology (version 2026-01-23), sourced from AH121953 in Bioconductor's AnnotationHub.</span></span>
+<span><span class="co">## 4 Gene sets defined from the Gene Ontology (version 2026-01-23), sourced from AH121953 in Bioconductor's AnnotationHub.</span></span>
+<span><span class="co">## 5 Gene sets defined from the Gene Ontology (version 2026-01-23), sourced from AH121953 in Bioconductor's AnnotationHub.</span></span>
+<span><span class="co">## 6 Gene sets defined from the Gene Ontology (version 2026-01-23), sourced from AH121953 in Bioconductor's AnnotationHub.</span></span>
+<span><span class="co">##   maintainer                                                           source</span></span>
+<span><span class="co">## 1  Aaron Lun https://github.com/gesel-inc/feedstock/blob/go-v1.1.0/go/build.R</span></span>
+<span><span class="co">## 2  Aaron Lun https://github.com/gesel-inc/feedstock/blob/go-v1.1.0/go/build.R</span></span>
+<span><span class="co">## 3  Aaron Lun https://github.com/gesel-inc/feedstock/blob/go-v1.1.0/go/build.R</span></span>
+<span><span class="co">## 4  Aaron Lun https://github.com/gesel-inc/feedstock/blob/go-v1.1.0/go/build.R</span></span>
+<span><span class="co">## 5  Aaron Lun https://github.com/gesel-inc/feedstock/blob/go-v1.1.0/go/build.R</span></span>
+<span><span class="co">## 6  Aaron Lun https://github.com/gesel-inc/feedstock/blob/go-v1.1.0/go/build.R</span></span>
 <span><span class="co">##   start  size</span></span>
-<span><span class="co">## 1     1 18933</span></span>
-<span><span class="co">## 2     1 18933</span></span>
-<span><span class="co">## 3     1 18933</span></span>
-<span><span class="co">## 4     1 18933</span></span>
-<span><span class="co">## 5     1 18933</span></span>
-<span><span class="co">## 6     1 18933</span></span></code></pre>
-<p>The various statistics produced by <em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em> can be also
-used to perform a simple hypergeometric test for enrichment. This often
-yields a more relevant ranking than the absolute number of overlaps as
-the hypergeometric p-value considers the size of the gene sets.</p>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">set.sizes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetchSetSizes.html">fetchSetSizes</a></span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span><span class="op">[</span><span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">set</span><span class="op">]</span></span>
-<span><span class="va">p</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Hypergeometric.html" class="external-link">phyper</a></span><span class="op">(</span></span>
-<span>    <span class="co"># Subtract 1 to account for probability mass at the observed number of</span></span>
-<span>    <span class="co"># overlaps when computing the upper tail.</span></span>
-<span>    q<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">genes</span><span class="op">)</span> <span class="op">-</span> <span class="fl">1L</span>,</span>
-<span></span>
-<span>    <span class="co"># Number of genes in the gene set.</span></span>
-<span>    m<span class="op">=</span><span class="va">set.sizes</span>,</span>
-<span></span>
-<span>    <span class="co"># Number of genes not in the gene set. We use effectiveNumberOfGenes() to</span></span>
-<span>    <span class="co"># ignore irrelevant pseudogenes, predicted genes, etc. in the database.</span></span>
-<span>    n<span class="op">=</span><span class="fu"><a href="../reference/effectiveNumberOfGenes.html">effectiveNumberOfGenes</a></span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span> <span class="op">-</span> <span class="va">set.sizes</span>,</span>
-<span></span>
-<span>    <span class="co"># Number of genes in the user-supplied list of genes that are present in</span></span>
-<span>    <span class="co"># at least one Gesel set (ignore typos and other unknown genes).</span></span>
-<span>    k<span class="op">=</span><span class="va">overlaps</span><span class="op">$</span><span class="va">present</span>,</span>
-<span></span>
-<span>    lower.tail<span class="op">=</span><span class="cn">FALSE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">p</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.0727100533 0.1172426948 0.0004763606 0.1342507900 0.1401782368</span></span>
-<span><span class="co">## [6] 0.0542877999</span></span></code></pre>
+<span><span class="co">## 1     1 18864</span></span>
+<span><span class="co">## 2     1 18864</span></span>
+<span><span class="co">## 3     1 18864</span></span>
+<span><span class="co">## 4     1 18864</span></span>
+<span><span class="co">## 5     1 18864</span></span>
+<span><span class="co">## 6     1 18864</span></span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="searching-on-text">Searching on text<a class="anchor" aria-label="anchor" href="#searching-on-text"></a>
-</h2>
+<div class="section level3">
+<h3 id="searching-on-text">Searching on text<a class="anchor" aria-label="anchor" href="#searching-on-text"></a>
+</h3>
 <p>We can also search for gene sets based on the text in their names or
 descriptions. The <code><a href="../reference/searchSetText.html">searchSetText()</a></code> function accepts a query
 string with multiple words and the usual <code>*</code> (any characters)
 and <code>?</code> (one character) wildcards.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">chits</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/searchSetText.html">searchSetText</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="st">"cancer"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/fetchSomeSets.html">fetchSomeSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">chits</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                                                name</span></span>
-<span><span class="co">## 1                     SOGA_COLORECTAL_CANCER_MYC_DN</span></span>
-<span><span class="co">## 2                     SOGA_COLORECTAL_CANCER_MYC_UP</span></span>
-<span><span class="co">## 3 WATANABE_RECTAL_CANCER_RADIOTHERAPY_RESPONSIVE_UP</span></span>
-<span><span class="co">## 4                            LIU_PROSTATE_CANCER_UP</span></span>
-<span><span class="co">## 5     BERTUCCI_MEDULLARY_VS_DUCTAL_BREAST_CANCER_UP</span></span>
-<span><span class="co">## 6               WATANABE_COLON_CANCER_MSI_VS_MSS_UP</span></span>
-<span><span class="co">##                                                                                              description</span></span>
-<span><span class="co">## 1                     http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SOGA_COLORECTAL_CANCER_MYC_DN</span></span>
-<span><span class="co">## 2                     http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SOGA_COLORECTAL_CANCER_MYC_UP</span></span>
-<span><span class="co">## 3 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WATANABE_RECTAL_CANCER_RADIOTHERAPY_RESPONSIVE_UP</span></span>
-<span><span class="co">## 4                            http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/LIU_PROSTATE_CANCER_UP</span></span>
-<span><span class="co">## 5     http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/BERTUCCI_MEDULLARY_VS_DUCTAL_BREAST_CANCER_UP</span></span>
-<span><span class="co">## 6               http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WATANABE_COLON_CANCER_MSI_VS_MSS_UP</span></span>
+<pre><code><span><span class="co">##                                    name</span></span>
+<span><span class="co">## 1      ABDULRAHMAN_KIDNEY_CANCER_VHL_DN</span></span>
+<span><span class="co">## 2               ACEVEDO_LIVER_CANCER_DN</span></span>
+<span><span class="co">## 3               ACEVEDO_LIVER_CANCER_UP</span></span>
+<span><span class="co">## 4 ACEVEDO_LIVER_CANCER_WITH_H3K27ME3_DN</span></span>
+<span><span class="co">## 5 ACEVEDO_LIVER_CANCER_WITH_H3K27ME3_UP</span></span>
+<span><span class="co">## 6  ACEVEDO_LIVER_CANCER_WITH_H3K9ME3_DN</span></span>
+<span><span class="co">##                                                                                   description</span></span>
+<span><span class="co">## 1      https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/ABDULRAHMAN_KIDNEY_CANCER_VHL_DN</span></span>
+<span><span class="co">## 2               https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/ACEVEDO_LIVER_CANCER_DN</span></span>
+<span><span class="co">## 3               https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/ACEVEDO_LIVER_CANCER_UP</span></span>
+<span><span class="co">## 4 https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/ACEVEDO_LIVER_CANCER_WITH_H3K27ME3_DN</span></span>
+<span><span class="co">## 5 https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/ACEVEDO_LIVER_CANCER_WITH_H3K27ME3_UP</span></span>
+<span><span class="co">## 6  https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/ACEVEDO_LIVER_CANCER_WITH_H3K9ME3_DN</span></span>
 <span><span class="co">##   size collection number</span></span>
-<span><span class="co">## 1   71          3      2</span></span>
-<span><span class="co">## 2   82          3      3</span></span>
-<span><span class="co">## 3  113          3     65</span></span>
-<span><span class="co">## 4   99          3     67</span></span>
-<span><span class="co">## 5  207          3     69</span></span>
-<span><span class="co">## 6   29          3     79</span></span></code></pre>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<span><span class="co">## 1   13          3      6</span></span>
+<span><span class="co">## 2  540          3     14</span></span>
+<span><span class="co">## 3  972          3     15</span></span>
+<span><span class="co">## 4  220          3     16</span></span>
+<span><span class="co">## 5  289          3     17</span></span>
+<span><span class="co">## 6  119          3     18</span></span></code></pre>
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ihits</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/searchSetText.html">searchSetText</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="st">"innate immun*"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/fetchSomeSets.html">fetchSomeSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ihits</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                                                                           name</span></span>
-<span><span class="co">## 1                                                REACTOME_INNATE_IMMUNE_SYSTEM</span></span>
-<span><span class="co">## 2              REACTOME_REGULATION_OF_INNATE_IMMUNE_RESPONSES_TO_CYTOSOLIC_DNA</span></span>
-<span><span class="co">## 3              REACTOME_SARS_COV_1_ACTIVATES_MODULATES_INNATE_IMMUNE_RESPONSES</span></span>
-<span><span class="co">## 4 REACTOME_SARS_COV_2_ACTIVATES_MODULATES_INNATE_AND_ADAPTIVE_IMMUNE_RESPONSES</span></span>
-<span><span class="co">## 5                WP_SARSCOV2_B117_VARIANT_ANTAGONISES_INNATE_IMMUNE_ACTIVATION</span></span>
-<span><span class="co">## 6                                      WP_SARS_CORONAVIRUS_AND_INNATE_IMMUNITY</span></span>
-<span><span class="co">##                                                                                                                         description</span></span>
-<span><span class="co">## 1                                                http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_INNATE_IMMUNE_SYSTEM</span></span>
-<span><span class="co">## 2              http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_REGULATION_OF_INNATE_IMMUNE_RESPONSES_TO_CYTOSOLIC_DNA</span></span>
-<span><span class="co">## 3              http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_SARS_COV_1_ACTIVATES_MODULATES_INNATE_IMMUNE_RESPONSES</span></span>
-<span><span class="co">## 4 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_SARS_COV_2_ACTIVATES_MODULATES_INNATE_AND_ADAPTIVE_IMMUNE_RESPONSES</span></span>
-<span><span class="co">## 5                http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_SARSCOV2_B117_VARIANT_ANTAGONISES_INNATE_IMMUNE_ACTIVATION</span></span>
-<span><span class="co">## 6                                      http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_SARS_CORONAVIRUS_AND_INNATE_IMMUNITY</span></span>
+<pre><code><span><span class="co">##                                                                             name</span></span>
+<span><span class="co">## 1 REACTOME_DENGUE_VIRUS_ACTIVATES_MODULATES_INNATE_AND_ADAPTIVE_IMMUNE_RESPONSES</span></span>
+<span><span class="co">## 2                                                  REACTOME_INNATE_IMMUNE_SYSTEM</span></span>
+<span><span class="co">## 3                REACTOME_REGULATION_OF_INNATE_IMMUNE_RESPONSES_TO_CYTOSOLIC_DNA</span></span>
+<span><span class="co">## 4                REACTOME_SARS_COV_1_ACTIVATES_MODULATES_INNATE_IMMUNE_RESPONSES</span></span>
+<span><span class="co">## 5   REACTOME_SARS_COV_2_ACTIVATES_MODULATES_INNATE_AND_ADAPTIVE_IMMUNE_RESPONSES</span></span>
+<span><span class="co">## 6               WP_PATHWAYS_OF_NUCLEIC_ACID_METABOLISM_AND_INNATE_IMMUNE_SENSING</span></span>
+<span><span class="co">##                                                                                                                            description</span></span>
+<span><span class="co">## 1 https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_DENGUE_VIRUS_ACTIVATES_MODULATES_INNATE_AND_ADAPTIVE_IMMUNE_RESPONSES</span></span>
+<span><span class="co">## 2                                                  https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_INNATE_IMMUNE_SYSTEM</span></span>
+<span><span class="co">## 3                https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_REGULATION_OF_INNATE_IMMUNE_RESPONSES_TO_CYTOSOLIC_DNA</span></span>
+<span><span class="co">## 4                https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_SARS_COV_1_ACTIVATES_MODULATES_INNATE_IMMUNE_RESPONSES</span></span>
+<span><span class="co">## 5   https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/REACTOME_SARS_COV_2_ACTIVATES_MODULATES_INNATE_AND_ADAPTIVE_IMMUNE_RESPONSES</span></span>
+<span><span class="co">## 6               https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WP_PATHWAYS_OF_NUCLEIC_ACID_METABOLISM_AND_INNATE_IMMUNE_SENSING</span></span>
 <span><span class="co">##   size collection number</span></span>
-<span><span class="co">## 1 1118          5    230</span></span>
-<span><span class="co">## 2   15          5    553</span></span>
-<span><span class="co">## 3   41          5   1563</span></span>
-<span><span class="co">## 4  126          5   1581</span></span>
-<span><span class="co">## 5    9          6    186</span></span>
-<span><span class="co">## 6   31          6    190</span></span></code></pre>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<span><span class="co">## 1   32          5    359</span></span>
+<span><span class="co">## 2 1113          5    725</span></span>
+<span><span class="co">## 3   15          5   1269</span></span>
+<span><span class="co">## 4   41          5   1426</span></span>
+<span><span class="co">## 5  126          5   1431</span></span>
+<span><span class="co">## 6   16          6    680</span></span></code></pre>
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">thits</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/searchSetText.html">searchSetText</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="st">"cd? t cell"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/fetchSomeSets.html">fetchSomeSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">thits</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                                                                                                                     name</span></span>
-<span><span class="co">## 1    HOFT_CD4_POSITIVE_ALPHA_BETA_MEMORY_T_CELL_BCG_VACCINE_AGE_18_45YO_56D_TOP_100_DEG_AFTER_IN_VITRO_RE_STIMULATION_DN</span></span>
-<span><span class="co">## 2                       HOFT_CD4_POSITIVE_ALPHA_BETA_MEMORY_T_CELL_BCG_VACCINE_AGE_18_45YO_ID_7DY_TOP_100_DEG_EX_VIVO_UP</span></span>
-<span><span class="co">## 3                                              HOFT_CD4_POSITIVE_ALPHA_BETA_MEMORY_T_CELL_BCG_VACCINE_AGE_18_45YO_7DY_UP</span></span>
-<span><span class="co">## 4                       HOFT_CD4_POSITIVE_ALPHA_BETA_MEMORY_T_CELL_BCG_VACCINE_AGE_18_45YO_ID_7DY_TOP_100_DEG_EX_VIVO_DN</span></span>
-<span><span class="co">## 5    HOFT_CD4_POSITIVE_ALPHA_BETA_MEMORY_T_CELL_BCG_VACCINE_AGE_18_45YO_56D_TOP_100_DEG_AFTER_IN_VITRO_RE_STIMULATION_UP</span></span>
-<span><span class="co">## 6 HOFT_CD4_POSITIVE_ALPHA_BETA_MEMORY_T_CELL_BCG_VACCINE_AGE_18_45YO_ID_56D_TOP_100_DEG_AFTER_IN_VITRO_RE_STIMULATION_UP</span></span>
-<span><span class="co">##                                                                                                                                                                   description</span></span>
-<span><span class="co">## 1    http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HOFT_CD4_POSITIVE_ALPHA_BETA_MEMORY_T_CELL_BCG_VACCINE_AGE_18_45YO_56D_TOP_100_DEG_AFTER_IN_VITRO_RE_STIMULATION_DN</span></span>
-<span><span class="co">## 2                       http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HOFT_CD4_POSITIVE_ALPHA_BETA_MEMORY_T_CELL_BCG_VACCINE_AGE_18_45YO_ID_7DY_TOP_100_DEG_EX_VIVO_UP</span></span>
-<span><span class="co">## 3                                              http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HOFT_CD4_POSITIVE_ALPHA_BETA_MEMORY_T_CELL_BCG_VACCINE_AGE_18_45YO_7DY_UP</span></span>
-<span><span class="co">## 4                       http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HOFT_CD4_POSITIVE_ALPHA_BETA_MEMORY_T_CELL_BCG_VACCINE_AGE_18_45YO_ID_7DY_TOP_100_DEG_EX_VIVO_DN</span></span>
-<span><span class="co">## 5    http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HOFT_CD4_POSITIVE_ALPHA_BETA_MEMORY_T_CELL_BCG_VACCINE_AGE_18_45YO_56D_TOP_100_DEG_AFTER_IN_VITRO_RE_STIMULATION_UP</span></span>
-<span><span class="co">## 6 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HOFT_CD4_POSITIVE_ALPHA_BETA_MEMORY_T_CELL_BCG_VACCINE_AGE_18_45YO_ID_56D_TOP_100_DEG_AFTER_IN_VITRO_RE_STIMULATION_UP</span></span>
+<pre><code><span><span class="co">##                                                    name</span></span>
+<span><span class="co">## 1 HP_DECREASED_ANTI_CD3_28_INDUCED_T_CELL_PROLIFERATION</span></span>
+<span><span class="co">## 2         GAVISH_3CA_METAPROGRAM_CD4_T_CELLS_CELL_CYCLE</span></span>
+<span><span class="co">## 3                     HP_ABNORMAL_CD4_T_CELL_PROPORTION</span></span>
+<span><span class="co">## 4              HP_ABNORMAL_CD4_T_CELL_SUBSET_PROPORTION</span></span>
+<span><span class="co">## 5               HP_ABNORMAL_NAIVE_CD4_T_CELL_PROPORTION</span></span>
+<span><span class="co">## 6              HP_DECREASED_NAIVE_CD4_T_CELL_PROPORTION</span></span>
+<span><span class="co">##                                                                                                   description</span></span>
+<span><span class="co">## 1 https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HP_DECREASED_ANTI_CD3_28_INDUCED_T_CELL_PROLIFERATION</span></span>
+<span><span class="co">## 2         https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/GAVISH_3CA_METAPROGRAM_CD4_T_CELLS_CELL_CYCLE</span></span>
+<span><span class="co">## 3                     https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HP_ABNORMAL_CD4_T_CELL_PROPORTION</span></span>
+<span><span class="co">## 4              https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HP_ABNORMAL_CD4_T_CELL_SUBSET_PROPORTION</span></span>
+<span><span class="co">## 5               https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HP_ABNORMAL_NAIVE_CD4_T_CELL_PROPORTION</span></span>
+<span><span class="co">## 6              https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/HP_DECREASED_NAIVE_CD4_T_CELL_PROPORTION</span></span>
 <span><span class="co">##   size collection number</span></span>
-<span><span class="co">## 1   47         14     50</span></span>
-<span><span class="co">## 2   28         14    132</span></span>
-<span><span class="co">## 3   40         14    205</span></span>
-<span><span class="co">## 4   16         14    253</span></span>
-<span><span class="co">## 5   24         14    297</span></span>
-<span><span class="co">## 6   42         14    317</span></span></code></pre>
+<span><span class="co">## 1   11         14   2207</span></span>
+<span><span class="co">## 2   49         11     53</span></span>
+<span><span class="co">## 3   47         14    388</span></span>
+<span><span class="co">## 4   23         14    389</span></span>
+<span><span class="co">## 5   11         14    850</span></span>
+<span><span class="co">## 6    9         14   2274</span></span></code></pre>
 <p>Users can construct powerful queries by intersecting the sets
 recovered from <code><a href="../reference/searchSetText.html">searchSetText()</a></code> with those from
-<code><a href="../reference/findOverlappingSets.html">findOverlappingSets()</a></code>.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<code><a href="../reference/searchOverlappingSets.html">findOverlappingSets()</a></code>.</p>
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cancer.sets</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="va">chits</span>, <span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">set</span><span class="op">)</span></span>
 <span><span class="va">info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetchSomeSets.html">fetchSomeSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="va">cancer.sets</span><span class="op">)</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="va">cancer.sets</span>, <span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">set</span><span class="op">)</span></span>
-<span><span class="va">info</span><span class="op">$</span><span class="va">count</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lengths.html" class="external-link">lengths</a></span><span class="op">(</span><span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">genes</span><span class="op">)</span><span class="op">[</span><span class="va">m</span><span class="op">]</span></span>
-<span><span class="va">info</span><span class="op">$</span><span class="va">pvalue</span> <span class="op">&lt;-</span> <span class="va">p</span><span class="op">[</span><span class="va">m</span><span class="op">]</span></span>
+<span><span class="va">info</span><span class="op">$</span><span class="va">count</span> <span class="op">&lt;-</span> <span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">count</span><span class="op">[</span><span class="va">m</span><span class="op">]</span></span>
+<span><span class="va">info</span><span class="op">$</span><span class="va">pvalue</span> <span class="op">&lt;-</span> <span class="va">overlaps</span><span class="op">$</span><span class="va">overlap</span><span class="op">$</span><span class="va">pvalue</span><span class="op">[</span><span class="va">m</span><span class="op">]</span></span>
 <span><span class="va">info</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="va">info</span><span class="op">$</span><span class="va">pvalue</span><span class="op">)</span><span class="op">)</span>,<span class="op">]</span></span></code></pre></div>
 <pre><code><span><span class="co">##                                                       name</span></span>
-<span><span class="co">## 4                      LOPES_METHYLATED_IN_COLON_CANCER_UP</span></span>
-<span><span class="co">## 13 SCHLESINGER_H3K27ME3_IN_NORMAL_AND_METHYLATED_IN_CANCER</span></span>
-<span><span class="co">## 1                      WATANABE_COLON_CANCER_MSI_VS_MSS_UP</span></span>
-<span><span class="co">## 2          WANG_BARRETTS_ESOPHAGUS_AND_ESOPHAGUS_CANCER_DN</span></span>
-<span><span class="co">## 5                  KONDO_PROSTATE_CANCER_HCP_WITH_H3K27ME3</span></span>
-<span><span class="co">## 3                                 WANG_HCP_PROSTATE_CANCER</span></span>
-<span><span class="co">##                                                                                                     description</span></span>
-<span><span class="co">## 4                      http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/LOPES_METHYLATED_IN_COLON_CANCER_UP</span></span>
-<span><span class="co">## 13 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SCHLESINGER_H3K27ME3_IN_NORMAL_AND_METHYLATED_IN_CANCER</span></span>
-<span><span class="co">## 1                      http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WATANABE_COLON_CANCER_MSI_VS_MSS_UP</span></span>
-<span><span class="co">## 2          http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WANG_BARRETTS_ESOPHAGUS_AND_ESOPHAGUS_CANCER_DN</span></span>
-<span><span class="co">## 5                  http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KONDO_PROSTATE_CANCER_HCP_WITH_H3K27ME3</span></span>
-<span><span class="co">## 3                                 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WANG_HCP_PROSTATE_CANCER</span></span>
+<span><span class="co">## 5                      LOPES_METHYLATED_IN_COLON_CANCER_UP</span></span>
+<span><span class="co">## 7  SCHLESINGER_H3K27ME3_IN_NORMAL_AND_METHYLATED_IN_CANCER</span></span>
+<span><span class="co">## 14                     WATANABE_COLON_CANCER_MSI_VS_MSS_UP</span></span>
+<span><span class="co">## 12         WANG_BARRETTS_ESOPHAGUS_AND_ESOPHAGUS_CANCER_DN</span></span>
+<span><span class="co">## 3                  KONDO_PROSTATE_CANCER_HCP_WITH_H3K27ME3</span></span>
+<span><span class="co">## 13                                WANG_HCP_PROSTATE_CANCER</span></span>
+<span><span class="co">##                                                                                                      description</span></span>
+<span><span class="co">## 5                      https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/LOPES_METHYLATED_IN_COLON_CANCER_UP</span></span>
+<span><span class="co">## 7  https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SCHLESINGER_H3K27ME3_IN_NORMAL_AND_METHYLATED_IN_CANCER</span></span>
+<span><span class="co">## 14                     https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WATANABE_COLON_CANCER_MSI_VS_MSS_UP</span></span>
+<span><span class="co">## 12         https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WANG_BARRETTS_ESOPHAGUS_AND_ESOPHAGUS_CANCER_DN</span></span>
+<span><span class="co">## 3                  https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KONDO_PROSTATE_CANCER_HCP_WITH_H3K27ME3</span></span>
+<span><span class="co">## 13                                https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WANG_HCP_PROSTATE_CANCER</span></span>
 <span><span class="co">##    size collection number count      pvalue</span></span>
-<span><span class="co">## 4    28          3    904     1 0.003330713</span></span>
-<span><span class="co">## 13   28          3   2865     1 0.003330713</span></span>
-<span><span class="co">## 1    29          3     79     1 0.003449503</span></span>
-<span><span class="co">## 2    37          3    281     1 0.004399413</span></span>
-<span><span class="co">## 5    97          3    923     1 0.011500672</span></span>
-<span><span class="co">## 3   106          3    444     1 0.012562357</span></span></code></pre>
+<span><span class="co">## 5    28          3   1799     1 0.003214398</span></span>
+<span><span class="co">## 7    28          3   2717     1 0.003214398</span></span>
+<span><span class="co">## 14   30          3   3242     1 0.003443681</span></span>
+<span><span class="co">## 12   37          3   3194     1 0.004245840</span></span>
+<span><span class="co">## 3    97          3   1524     1 0.011100320</span></span>
+<span><span class="co">## 13  106          3   3206     1 0.012125228</span></span></code></pre>
 </div>
-<div class="section level2">
-<h2 id="fetching-all-data">Fetching all data<a class="anchor" aria-label="anchor" href="#fetching-all-data"></a>
-</h2>
+<div class="section level3">
+<h3 id="fetching-all-data">Fetching all data<a class="anchor" aria-label="anchor" href="#fetching-all-data"></a>
+</h3>
 <p>Gesel is designed around partial extraction from the database files,
 but it may be more efficient to pull all of the data into the R session
 at once. This is most useful for the gene set details, which can be
 retrieved <em>en masse</em>:</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">set.info</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fetchAllSets.html">fetchAllSets</a></span><span class="op">(</span><span class="st">"9606"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">set.info</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 40654</span></span></code></pre>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<pre><code><span><span class="co">## [1] 42580</span></span></code></pre>
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">set.info</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##         name                                        description size collection</span></span>
-<span><span class="co">## 1 GO:0000002                   mitochondrial genome maintenance   11          1</span></span>
-<span><span class="co">## 2 GO:0000003                                       reproduction    4          1</span></span>
-<span><span class="co">## 3 GO:0000009             alpha-1,6-mannosyltransferase activity    2          1</span></span>
-<span><span class="co">## 4 GO:0000010          trans-hexaprenyltranstransferase activity    2          1</span></span>
-<span><span class="co">## 5 GO:0000012                         single strand break repair   10          1</span></span>
-<span><span class="co">## 6 GO:0000014 single-stranded DNA endodeoxyribonuclease activity    9          1</span></span>
+<span><span class="co">## 1 GO:0000009             alpha-1,6-mannosyltransferase activity    2          1</span></span>
+<span><span class="co">## 2 GO:0000012                         single strand break repair   12          1</span></span>
+<span><span class="co">## 3 GO:0000014 single-stranded DNA endodeoxyribonuclease activity   10          1</span></span>
+<span><span class="co">## 4 GO:0000015                  phosphopyruvate hydratase complex    4          1</span></span>
+<span><span class="co">## 5 GO:0000016                                   lactase activity    1          1</span></span>
+<span><span class="co">## 6 GO:0000017                          alpha-glucoside transport    2          1</span></span>
 <span><span class="co">##   number</span></span>
 <span><span class="co">## 1      1</span></span>
 <span><span class="co">## 2      2</span></span>
@@ -382,80 +530,232 @@ retrieved <em>en masse</em>:</p>
 <code><a href="../reference/fetchSomeSets.html">fetchSomeSets()</a></code> after <code><a href="../reference/fetchAllSets.html">fetchAllSets()</a></code> will
 automatically use the data frame created by the latter, instead of
 attempting another request to the database.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">set.info</span><span class="op">[</span><span class="va">cancer.sets</span>,<span class="op">]</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##                                                  name</span></span>
-<span><span class="co">## 19312             WATANABE_COLON_CANCER_MSI_VS_MSS_UP</span></span>
-<span><span class="co">## 19514 WANG_BARRETTS_ESOPHAGUS_AND_ESOPHAGUS_CANCER_DN</span></span>
-<span><span class="co">## 19677                        WANG_HCP_PROSTATE_CANCER</span></span>
-<span><span class="co">## 20137             LOPES_METHYLATED_IN_COLON_CANCER_UP</span></span>
-<span><span class="co">## 20156         KONDO_PROSTATE_CANCER_HCP_WITH_H3K27ME3</span></span>
-<span><span class="co">## 20221           SMID_BREAST_CANCER_RELAPSE_IN_BONE_DN</span></span>
-<span><span class="co">##                                                                                                description</span></span>
-<span><span class="co">## 19312             http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WATANABE_COLON_CANCER_MSI_VS_MSS_UP</span></span>
-<span><span class="co">## 19514 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WANG_BARRETTS_ESOPHAGUS_AND_ESOPHAGUS_CANCER_DN</span></span>
-<span><span class="co">## 19677                        http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WANG_HCP_PROSTATE_CANCER</span></span>
-<span><span class="co">## 20137             http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/LOPES_METHYLATED_IN_COLON_CANCER_UP</span></span>
-<span><span class="co">## 20156         http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KONDO_PROSTATE_CANCER_HCP_WITH_H3K27ME3</span></span>
-<span><span class="co">## 20221           http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SMID_BREAST_CANCER_RELAPSE_IN_BONE_DN</span></span>
+<pre><code><span><span class="co">##                                                      name</span></span>
+<span><span class="co">## 19180                             ACEVEDO_LIVER_CANCER_DN</span></span>
+<span><span class="co">## 19820                             DELYS_THYROID_CANCER_DN</span></span>
+<span><span class="co">## 20690             KONDO_PROSTATE_CANCER_HCP_WITH_H3K27ME3</span></span>
+<span><span class="co">## 20913    LIU_OVARIAN_CANCER_TUMORS_AND_XENOGRAFTS_XDGS_DN</span></span>
+<span><span class="co">## 20965                 LOPES_METHYLATED_IN_COLON_CANCER_UP</span></span>
+<span><span class="co">## 21857 SATO_SILENCED_BY_METHYLATION_IN_PANCREATIC_CANCER_1</span></span>
+<span><span class="co">##                                                                                                     description</span></span>
+<span><span class="co">## 19180                             https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/ACEVEDO_LIVER_CANCER_DN</span></span>
+<span><span class="co">## 19820                             https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/DELYS_THYROID_CANCER_DN</span></span>
+<span><span class="co">## 20690             https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KONDO_PROSTATE_CANCER_HCP_WITH_H3K27ME3</span></span>
+<span><span class="co">## 20913    https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/LIU_OVARIAN_CANCER_TUMORS_AND_XENOGRAFTS_XDGS_DN</span></span>
+<span><span class="co">## 20965                 https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/LOPES_METHYLATED_IN_COLON_CANCER_UP</span></span>
+<span><span class="co">## 21857 https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SATO_SILENCED_BY_METHYLATION_IN_PANCREATIC_CANCER_1</span></span>
 <span><span class="co">##       size collection number</span></span>
-<span><span class="co">## 19312   29          3     79</span></span>
-<span><span class="co">## 19514   37          3    281</span></span>
-<span><span class="co">## 19677  106          3    444</span></span>
-<span><span class="co">## 20137   28          3    904</span></span>
-<span><span class="co">## 20156   97          3    923</span></span>
-<span><span class="co">## 20221  324          3    988</span></span></code></pre>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<span><span class="co">## 19180  540          3     14</span></span>
+<span><span class="co">## 19820  233          3    654</span></span>
+<span><span class="co">## 20690   97          3   1524</span></span>
+<span><span class="co">## 20913 1716          3   1747</span></span>
+<span><span class="co">## 20965   28          3   1799</span></span>
+<span><span class="co">## 21857  422          3   2691</span></span></code></pre>
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fetchSomeSets.html">fetchSomeSets</a></span><span class="op">(</span><span class="st">"9606"</span>, <span class="va">cancer.sets</span><span class="op">)</span><span class="op">)</span> <span class="co"># same results</span></span></code></pre></div>
-<pre><code><span><span class="co">##                                              name</span></span>
-<span><span class="co">## 1             WATANABE_COLON_CANCER_MSI_VS_MSS_UP</span></span>
-<span><span class="co">## 2 WANG_BARRETTS_ESOPHAGUS_AND_ESOPHAGUS_CANCER_DN</span></span>
-<span><span class="co">## 3                        WANG_HCP_PROSTATE_CANCER</span></span>
-<span><span class="co">## 4             LOPES_METHYLATED_IN_COLON_CANCER_UP</span></span>
-<span><span class="co">## 5         KONDO_PROSTATE_CANCER_HCP_WITH_H3K27ME3</span></span>
-<span><span class="co">## 6           SMID_BREAST_CANCER_RELAPSE_IN_BONE_DN</span></span>
-<span><span class="co">##                                                                                            description</span></span>
-<span><span class="co">## 1             http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WATANABE_COLON_CANCER_MSI_VS_MSS_UP</span></span>
-<span><span class="co">## 2 http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WANG_BARRETTS_ESOPHAGUS_AND_ESOPHAGUS_CANCER_DN</span></span>
-<span><span class="co">## 3                        http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/WANG_HCP_PROSTATE_CANCER</span></span>
-<span><span class="co">## 4             http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/LOPES_METHYLATED_IN_COLON_CANCER_UP</span></span>
-<span><span class="co">## 5         http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KONDO_PROSTATE_CANCER_HCP_WITH_H3K27ME3</span></span>
-<span><span class="co">## 6           http://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SMID_BREAST_CANCER_RELAPSE_IN_BONE_DN</span></span>
+<pre><code><span><span class="co">##                                                  name</span></span>
+<span><span class="co">## 1                             ACEVEDO_LIVER_CANCER_DN</span></span>
+<span><span class="co">## 2                             DELYS_THYROID_CANCER_DN</span></span>
+<span><span class="co">## 3             KONDO_PROSTATE_CANCER_HCP_WITH_H3K27ME3</span></span>
+<span><span class="co">## 4    LIU_OVARIAN_CANCER_TUMORS_AND_XENOGRAFTS_XDGS_DN</span></span>
+<span><span class="co">## 5                 LOPES_METHYLATED_IN_COLON_CANCER_UP</span></span>
+<span><span class="co">## 6 SATO_SILENCED_BY_METHYLATION_IN_PANCREATIC_CANCER_1</span></span>
+<span><span class="co">##                                                                                                 description</span></span>
+<span><span class="co">## 1                             https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/ACEVEDO_LIVER_CANCER_DN</span></span>
+<span><span class="co">## 2                             https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/DELYS_THYROID_CANCER_DN</span></span>
+<span><span class="co">## 3             https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/KONDO_PROSTATE_CANCER_HCP_WITH_H3K27ME3</span></span>
+<span><span class="co">## 4    https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/LIU_OVARIAN_CANCER_TUMORS_AND_XENOGRAFTS_XDGS_DN</span></span>
+<span><span class="co">## 5                 https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/LOPES_METHYLATED_IN_COLON_CANCER_UP</span></span>
+<span><span class="co">## 6 https://www.gsea-msigdb.org/gsea/msigdb/human/geneset/SATO_SILENCED_BY_METHYLATION_IN_PANCREATIC_CANCER_1</span></span>
 <span><span class="co">##   size collection number</span></span>
-<span><span class="co">## 1   29          3     79</span></span>
-<span><span class="co">## 2   37          3    281</span></span>
-<span><span class="co">## 3  106          3    444</span></span>
-<span><span class="co">## 4   28          3    904</span></span>
-<span><span class="co">## 5   97          3    923</span></span>
-<span><span class="co">## 6  324          3    988</span></span></code></pre>
+<span><span class="co">## 1  540          3     14</span></span>
+<span><span class="co">## 2  233          3    654</span></span>
+<span><span class="co">## 3   97          3   1524</span></span>
+<span><span class="co">## 4 1716          3   1747</span></span>
+<span><span class="co">## 5   28          3   1799</span></span>
+<span><span class="co">## 6  422          3   2691</span></span></code></pre>
 <p>The same approach can be used to extract collection information, via
 <code><a href="../reference/fetchAllCollections.html">fetchAllCollections()</a></code>; gene set membership, via
 <code><a href="../reference/fetchGenesForAllSets.html">fetchGenesForAllSets()</a></code>; and the sets containing each gene,
 via <code><a href="../reference/fetchSetsForAllGenes.html">fetchSetsForAllGenes()</a></code>.</p>
 </div>
-<div class="section level2">
-<h2 id="advanced-use">Advanced use<a class="anchor" aria-label="anchor" href="#advanced-use"></a>
-</h2>
+<div class="section level3">
+<h3 id="flushing-the-cache">Flushing the cache<a class="anchor" aria-label="anchor" href="#flushing-the-cache"></a>
+</h3>
 <p><em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em>
 uses a lot of in-memory caching to reduce the number of requests to the
 database files within a single R session. On rare occasions, the cache
 may become outdated, e.g., if the database files are updated while an R
 session is running. Users can prompt <em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em> to re-acquire
-all data by flusing the cache:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+all data by flushing the cache:</p>
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/flushMemoryCache.html">flushMemoryCache</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>Applications can specify their own functions for obtaining files (or
-byte ranges thereof) by passing a custom <code>config=</code> in each
-<em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em>
-function. For example, on a shared HPC filesystem, we could point <em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em> towards a
-directory of Gesel database files. This provides a performant
-alternative to HTTP requests for an institutional collection of gene
-sets.</p>
+</div>
+</div>
+<div class="section level2">
+<h2 id="customizing-the-database">Customizing the database<a class="anchor" aria-label="anchor" href="#customizing-the-database"></a>
+</h2>
+<div class="section level3">
+<h3 id="creating-the-custom-database">Creating the custom database<a class="anchor" aria-label="anchor" href="#creating-the-custom-database"></a>
+</h3>
+<p>Users can easily create custom Gesel database for their own gene set
+collections. This is most relevant to large research organizations that
+have accumulated many gene sets over time and want to easily search
+them. To demonstrate, let’s mock up some gene set information:</p>
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mock.collection.info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>    title<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"FOO"</span>, <span class="st">"BAR"</span><span class="op">)</span>,</span>
+<span>    description<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"I am a foo"</span>, <span class="st">"I am a bar"</span><span class="op">)</span>,</span>
+<span>    maintainer<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Aaron"</span>, <span class="st">"Aaron"</span><span class="op">)</span>,</span>
+<span>    source<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"https://foo"</span>, <span class="st">"https://bar"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mock.set.info</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>        name<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"FOO_%i"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>        description<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"this is FOO %i"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">20</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>        name<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"BAR_%i"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>        description<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"this is BAR %i"</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">50</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">mock.num.genes</span> <span class="op">&lt;-</span> <span class="fl">10000</span></span>
+<span><span class="va">mock.set.membership</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">mock.set.info</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">mock.num.genes</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">500</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">}</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">mock.set.info</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">)</span>, <span class="kw">function</span><span class="op">(</span><span class="va">i</span><span class="op">)</span> <span class="op">{</span></span>
+<span>        <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">mock.num.genes</span>, <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">200</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">}</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Now we create the Gesel database files:</p>
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mock.db.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">mock.db.dir</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/prepareDatabaseFiles.html">prepareDatabaseFiles</a></span><span class="op">(</span></span>
+<span>    <span class="st">"12345"</span>, <span class="co"># mock NCBI taxonomy ID</span></span>
+<span>    <span class="va">mock.collection.info</span>, </span>
+<span>    <span class="va">mock.set.info</span>, </span>
+<span>    <span class="va">mock.set.membership</span>,</span>
+<span>    <span class="va">mock.num.genes</span>,</span>
+<span>    path <span class="op">=</span> <span class="va">mock.db.dir</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">mock.db.dir</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##  [1] "12345_collections.tsv"                  </span></span>
+<span><span class="co">##  [2] "12345_collections.tsv.gz"               </span></span>
+<span><span class="co">##  [3] "12345_collections.tsv.ranges.gz"        </span></span>
+<span><span class="co">##  [4] "12345_gene2set.tsv"                     </span></span>
+<span><span class="co">##  [5] "12345_gene2set.tsv.gz"                  </span></span>
+<span><span class="co">##  [6] "12345_gene2set.tsv.ranges.gz"           </span></span>
+<span><span class="co">##  [7] "12345_set2gene.tsv"                     </span></span>
+<span><span class="co">##  [8] "12345_set2gene.tsv.gz"                  </span></span>
+<span><span class="co">##  [9] "12345_set2gene.tsv.ranges.gz"           </span></span>
+<span><span class="co">## [10] "12345_sets.tsv"                         </span></span>
+<span><span class="co">## [11] "12345_sets.tsv.gz"                      </span></span>
+<span><span class="co">## [12] "12345_sets.tsv.ranges.gz"               </span></span>
+<span><span class="co">## [13] "12345_tokens-descriptions.tsv"          </span></span>
+<span><span class="co">## [14] "12345_tokens-descriptions.tsv.gz"       </span></span>
+<span><span class="co">## [15] "12345_tokens-descriptions.tsv.ranges.gz"</span></span>
+<span><span class="co">## [16] "12345_tokens-names.tsv"                 </span></span>
+<span><span class="co">## [17] "12345_tokens-names.tsv.gz"              </span></span>
+<span><span class="co">## [18] "12345_tokens-names.tsv.ranges.gz"</span></span></code></pre>
+<p>We also create gene annotation files to map Gesel’s internal gene
+indices to more recognizable identifiers. Most downstream users will
+expect files for Ensembl, Entrez and gene symbols.</p>
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mock.ref.genes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="kw">for</span> <span class="op">(</span><span class="va">type</span> <span class="kw">in</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"ensembl"</span>, <span class="st">"entrez"</span>, <span class="st">"symbol"</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="va">gene.ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"%s_%05d"</span>, <span class="va">type</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="fl">19999</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="co"># Generating a 1:many mapping of genes to names to make things interesting.</span></span>
+<span>    <span class="va">genes.plus</span> <span class="op">&lt;-</span> <span class="va">mock.num.genes</span> <span class="op">*</span> <span class="fl">1.1</span> </span>
+<span>    <span class="va">chosen</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">gene.ids</span>, <span class="va">genes.plus</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="va">ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">mock.num.genes</span>, <span class="va">genes.plus</span>, replace<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span>    <span class="va">mock.ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/split.html" class="external-link">split</a></span><span class="op">(</span><span class="va">chosen</span>, <span class="fu"><a href="https://rdrr.io/r/base/factor.html" class="external-link">factor</a></span><span class="op">(</span><span class="va">ids</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq_len</a></span><span class="op">(</span><span class="va">mock.num.genes</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span>    <span class="co"># Cleaning things up before saving to file.</span></span>
+<span>    <span class="va">mock.ids</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">mock.ids</span>, <span class="va">unique</span><span class="op">)</span></span>
+<span>    <span class="va">mock.ref.genes</span><span class="op">[[</span><span class="va">type</span><span class="op">]</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/unname.html" class="external-link">unname</a></span><span class="op">(</span><span class="va">mock.ids</span><span class="op">)</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">mock.gene.dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">mock.gene.dir</span><span class="op">)</span></span>
+<span><span class="fu"><a href="../reference/prepareGeneFiles.html">prepareGeneFiles</a></span><span class="op">(</span></span>
+<span>    <span class="st">"12345"</span>,</span>
+<span>    <span class="va">mock.ref.genes</span>,</span>
+<span>    path <span class="op">=</span> <span class="va">mock.gene.dir</span></span>
+<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/list.files.html" class="external-link">list.files</a></span><span class="op">(</span><span class="va">mock.gene.dir</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] "12345_gene-type-ensembl.tsv.gz" "12345_gene-type-entrez.tsv.gz" </span></span>
+<span><span class="co">## [3] "12345_gene-type-symbol.tsv.gz"  "12345_gene-types.tsv"          </span></span>
+<span><span class="co">## [5] "12345_gene-version.tsv"</span></span></code></pre>
+</div>
+<div class="section level3">
+<h3 id="reading-custom-files">Reading custom files<a class="anchor" aria-label="anchor" href="#reading-custom-files"></a>
+</h3>
+<p>In each <em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em> function, the
+<code>config=</code> argument determines how data is read from the
+database files. By default, <em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em> makes HTTP
+requests to the pre-built database files in the <a href="https://github.com/gesel-inc/feedstock" class="external-link">feedstock</a>. For our
+custom files, we can simply direct <em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em> to look
+inside our new directory:</p>
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">custom.config</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/newConfig.html">newConfig</a></span><span class="op">(</span></span>
+<span>    fetch.file<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">mock.db.dir</span>, <span class="va">x</span><span class="op">)</span>,</span>
+<span>    fetch.gene<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">mock.gene.dir</span>, <span class="va">x</span><span class="op">)</span>,</span>
+<span>    fetch.ranges<span class="op">=</span><span class="kw">function</span><span class="op">(</span><span class="va">n</span>, <span class="va">s</span>, <span class="va">e</span><span class="op">)</span> <span class="fu"><a href="../reference/readDatabaseRanges.html">readDatabaseRanges</a></span><span class="op">(</span><span class="va">mock.db.dir</span>, <span class="va">n</span>, <span class="va">s</span>, <span class="va">e</span><span class="op">)</span> </span>
+<span><span class="op">)</span></span></code></pre></div>
+<p>Passing <code>config = custom.config</code> to any <em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em> function will
+instruct it to use our custom database files:</p>
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Trying a low-level function:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/fetchAllSets.html">fetchAllSets</a></span><span class="op">(</span><span class="st">"12345"</span>, config <span class="op">=</span> <span class="va">custom.config</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##    name   description size collection number</span></span>
+<span><span class="co">## 1 FOO_1 this is FOO 1  173          1      1</span></span>
+<span><span class="co">## 2 FOO_2 this is FOO 2  416          1      2</span></span>
+<span><span class="co">## 3 FOO_3 this is FOO 3   69          1      3</span></span>
+<span><span class="co">## 4 FOO_4 this is FOO 4  460          1      4</span></span>
+<span><span class="co">## 5 FOO_5 this is FOO 5  257          1      5</span></span>
+<span><span class="co">## 6 FOO_6 this is FOO 6  121          1      6</span></span></code></pre>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Trying one of the more user-friendly functions:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu"><a href="../reference/querySets.html">querySets</a></span><span class="op">(</span></span>
+<span>    <span class="st">"12345"</span>,</span>
+<span>    genes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"ensembl_%05d"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span>,</span>
+<span>    text <span class="op">=</span> <span class="st">"FOO"</span>,</span>
+<span>    config <span class="op">=</span> <span class="va">custom.config</span></span>
+<span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##     name    description size collection set count     pvalue</span></span>
+<span><span class="co">## 1  FOO_7  this is FOO 7   87        FOO   7     2 0.06669605</span></span>
+<span><span class="co">## 2 FOO_15 this is FOO 15  211        FOO  15     3 0.08215813</span></span>
+<span><span class="co">## 3  FOO_4  this is FOO 4  460        FOO   4     3 0.39152809</span></span>
+<span><span class="co">## 4 FOO_19 this is FOO 19  105        FOO  19     1 0.40411460</span></span>
+<span><span class="co">## 5  FOO_1  this is FOO 1  173        FOO   1     1 0.57584495</span></span>
+<span><span class="co">## 6 FOO_14 this is FOO 14  174        FOO  14     1 0.57797190</span></span></code></pre>
+<p>It is possible to do some fairly sophisticated things with
+<code><a href="../reference/newConfig.html">newConfig()</a></code>, depending on the environment. For example, in
+hybrid environments, we can directly read files from the filesystem when
+running <em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em> on-prem for
+reduced latency, but then fall back to a HTTP request if the R session
+is running on the cloud.</p>
+</div>
+<div class="section level3">
+<h3 id="contributing-custom-sets">Contributing custom sets<a class="anchor" aria-label="anchor" href="#contributing-custom-sets"></a>
+</h3>
+<p>Alternatively, you might consider contributing your custom gene sets
+to the default Gesel database at <a href="https://github.com/gesel-inc/feedstock" class="external-link uri">https://github.com/gesel-inc/feedstock</a>. Contributed gene
+sets will be searchable with the default <em><a href="https://github.com/gesel-inc/gesel-R" class="external-link">gesel</a></em> functions,
+which may be more convenient than creating a custom database.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="session-information">Session information<a class="anchor" aria-label="anchor" href="#session-information"></a>
 </h2>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## R version 4.6.0 (2026-04-24)</span></span>
 <span><span class="co">## Platform: x86_64-pc-linux-gnu</span></span>
@@ -480,21 +780,23 @@ sets.</p>
 <span><span class="co">## [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## other attached packages:</span></span>
-<span><span class="co">## [1] gesel_0.1.12     BiocStyle_2.39.0</span></span>
+<span><span class="co">## [1] gesel_0.99.1     BiocStyle_2.41.0</span></span>
 <span><span class="co">## </span></span>
 <span><span class="co">## loaded via a namespace (and not attached):</span></span>
 <span><span class="co">##  [1] cli_3.6.6           knitr_1.51          rlang_1.2.0        </span></span>
-<span><span class="co">##  [4] xfun_0.57           otel_0.2.0          textshaping_1.0.5  </span></span>
-<span><span class="co">##  [7] jsonlite_2.0.0      glue_1.8.0          htmltools_0.5.9    </span></span>
-<span><span class="co">## [10] ragg_1.5.2          sass_0.4.10         rappdirs_0.3.4     </span></span>
-<span><span class="co">## [13] rmarkdown_2.31      evaluate_1.0.5      jquerylib_0.1.4    </span></span>
-<span><span class="co">## [16] fastmap_1.2.0       yaml_2.3.12         lifecycle_1.0.5    </span></span>
-<span><span class="co">## [19] httr2_1.2.2         bookdown_0.46       BiocManager_1.30.27</span></span>
-<span><span class="co">## [22] compiler_4.6.0      fs_2.0.1            Rcpp_1.1.1-1.1     </span></span>
-<span><span class="co">## [25] htmlwidgets_1.6.4   systemfonts_1.3.2   digest_0.6.39      </span></span>
-<span><span class="co">## [28] R6_2.6.1            curl_7.0.0          magrittr_2.0.5     </span></span>
-<span><span class="co">## [31] bslib_0.10.0        tools_4.6.0         pkgdown_2.2.0      </span></span>
-<span><span class="co">## [34] cachem_1.1.0        desc_1.4.3</span></span></code></pre>
+<span><span class="co">##  [4] xfun_0.57           otel_0.2.0          generics_0.1.4     </span></span>
+<span><span class="co">##  [7] textshaping_1.0.5   jsonlite_2.0.0      glue_1.8.1         </span></span>
+<span><span class="co">## [10] S4Vectors_0.51.2    htmltools_0.5.9     stats4_4.6.0       </span></span>
+<span><span class="co">## [13] ragg_1.5.2          sass_0.4.10         rappdirs_0.3.4     </span></span>
+<span><span class="co">## [16] rmarkdown_2.31      evaluate_1.0.5      jquerylib_0.1.4    </span></span>
+<span><span class="co">## [19] fastmap_1.2.0       IRanges_2.47.1      yaml_2.3.12        </span></span>
+<span><span class="co">## [22] lifecycle_1.0.5     httr2_1.2.2         bookdown_0.46      </span></span>
+<span><span class="co">## [25] BiocManager_1.30.27 compiler_4.6.0      fs_2.1.0           </span></span>
+<span><span class="co">## [28] Rcpp_1.1.1-1.1      htmlwidgets_1.6.4   systemfonts_1.3.2  </span></span>
+<span><span class="co">## [31] digest_0.6.39       R6_2.6.1            curl_7.1.0         </span></span>
+<span><span class="co">## [34] magrittr_2.0.5      bslib_0.11.0        tools_4.6.0        </span></span>
+<span><span class="co">## [37] BiocGenerics_0.59.3 pkgdown_2.2.0       cachem_1.1.0       </span></span>
+<span><span class="co">## [40] desc_1.4.3</span></span></code></pre>
 </div>
   </div>
 
