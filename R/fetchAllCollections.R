@@ -62,5 +62,6 @@ fetchAllCollections <- function(species, config = NULL) {
     )
 
     set_cache(config, "fetchAllCollections", species, output)
+    set_cache(config, "fetchSomeCollections", species, NULL) # flush this cache as it won't be used once the full data is loaded.
     output
 }

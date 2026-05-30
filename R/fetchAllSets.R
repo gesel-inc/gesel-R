@@ -56,5 +56,6 @@ fetchAllSets <- function(species, config = NULL) {
     )
 
     set_cache(config, "fetchAllSets", species, output)
+    set_cache(config, "fetchSomeSets", species, NULL) # flush this cache as it won't be used once the full data is loaded.
     output
 }

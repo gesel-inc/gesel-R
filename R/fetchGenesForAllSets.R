@@ -41,5 +41,6 @@ fetchGenesForAllSets <- function(species, config = NULL) {
     output <- decode_indices(raw)
 
     set_cache(config, "fetchGenesForAllSets", species, output)
+    set_cache(config, "fetchGenesForSomeSets", species, NULL) # flush this cache as it won't be used once the full data is loaded.
     output
 }
