@@ -145,7 +145,9 @@ save_integer_list <- function(x, prefix, include.names = FALSE) {
             lines[i] <- paste(z, collapse="\t")
         }
     }
-    write(lines, file=prefix)
+    handle <- file(prefix, open = "wb")
+    write(lines, file = handle)
+    close(handle)
 
     strlen <- nchar(lines, type="bytes") # deal with UTF-8 chars.
     handle <- gzfile(paste0(prefix, ".ranges.gz"), open="wb")
@@ -165,7 +167,9 @@ save_integer_list <- function(x, prefix, include.names = FALSE) {
 save_data_frame_with_sizes <- function(x, prefix, size) {
     x <- lapply(as.list(x), function(x) gsub("\t|\n", " ", x))
     lines <- do.call(paste, c(x, list(sep="\t")))
-    write(lines, file=prefix)
+    handle <- file(prefix, open = "wb")
+    write(lines, file = handle)
+    close(handle)
 
     nc <- nchar(lines, type="bytes") # deal with UTF-8 chars.
     handle <- gzfile(paste0(prefix, ".ranges.gz"), open="wb")

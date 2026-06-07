@@ -41,8 +41,14 @@ prepareGeneFiles <- function(species, genes, path = ".", validate = TRUE, versio
         sep <- "_"
         to.validate <- names(genes) # validation can't be trusted to auto-determine types if we mix it with the database files.
     } else {
-        writeLines(names(genes), con = file.path(path, paste0(species, "_gene-types.tsv")))
-        writeLines(version, con = file.path(path, paste0(species, "_gene-version.tsv")))
+        handle <- file(file.path(path, paste0(species, "_gene-types.tsv")), open = "wb")
+        writeLines(names(genes), con = handle)
+        close(handle)
+
+        handle <- file(file.path(path, paste0(species, "_gene-version.tsv")), open = "wb")
+        writeLines(version, con = handle)
+        close(handle)
+
         sep <- "_gene-type-"
         to.validate <- NULL # validation will automatically determine types from the manifest.
     }
