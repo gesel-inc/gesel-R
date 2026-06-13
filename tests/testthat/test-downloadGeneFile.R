@@ -4,7 +4,7 @@ test_that("downloadGeneFile works correctly", {
     tmp <- tempfile()
     out <- downloadGeneFile("9606_gene-version.tsv", cache=tmp)
     expect_true(file.exists(out))
-    expect_identical(dirname(out), tmp)
+    expect_identical(normalizePath(dirname(out)), normalizePath(tmp)) # normalize path otherwise comparison fails on Windows.
 
     cat(character(0), file=out)
     expect_identical(downloadGeneFile("9606_gene-version.tsv", cache=tmp), out) # re-uses the cache.

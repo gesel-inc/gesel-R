@@ -4,7 +4,7 @@ test_that("downloadDatabaseFile works correctly", {
     tmp <- tempfile()
     out <- downloadDatabaseFile("9606_collections.tsv.gz", cache=tmp)
     expect_true(file.exists(out))
-    expect_identical(dirname(out), tmp)
+    expect_identical(normalizePath(dirname(out)), normalizePath(tmp)) # normalize to avoid comparison failure on Windows.
 
     cat(character(0), file=out)
     expect_identical(downloadDatabaseFile("9606_collections.tsv.gz", cache=tmp), out) # re-uses the cache.
