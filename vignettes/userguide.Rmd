@@ -4,7 +4,7 @@ author:
 - name: Aaron Lun
   email: infinite.monkeys.with.keyboards@gmail.com
 package: gesel
-date: "Revised: November 4, 2024"
+date: "Revised: June 20, 2026"
 output:
   BiocStyle::html_document
 vignette: >
@@ -27,8 +27,14 @@ Clients like the `r self` package then use HTTP range requests to perform a vari
 No custom server logic is required, greatly reducing effort and cost required to keep Gesel up and running.
 Most database files do not need to be downloaded to the client, allowing us to easily scale with increasing numbers of gene sets in the database.
 
-More details can be found at https://github.com/gesel-inc.
+Check out https://github.com/gesel-inc for more details on the Gesel database format. 
 A web interface is also available at https://gesel-inc.github.io/web-app. 
+The `r self` package itself can be installed via the usual Bioconductor process:
+
+```r
+install.packages("BiocManager")
+BiocManager::install("gesel")
+```
 
 # Quick start
 
