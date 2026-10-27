@@ -35,7 +35,7 @@ createGeneIdentifierMap <- function(species, type, ignore.case = FALSE, config =
     }
 
     config <- get_config(config)
-    cached <- get_cache(config, "mapGenesByName", species)
+    cached <- get_cache(config, "createGeneIdentifierMap", species)
     sfound <- cached[[store.name]]
     modified <- FALSE
     if (is.null(sfound)) {
@@ -62,7 +62,7 @@ createGeneIdentifierMap <- function(species, type, ignore.case = FALSE, config =
     if (modified) {
         sfound[[type]] <- tfound
         cached[[store.name]] <- sfound
-        set_cache(config, "mapGenesByName", species, cached)
+        set_cache(config, "createGeneIdentifierMap", species, cached)
     }
 
     tfound
@@ -71,5 +71,6 @@ createGeneIdentifierMap <- function(species, type, ignore.case = FALSE, config =
 # For back-compatibility.
 #' @export
 mapGenesByName <- function(...) {
+    .Deprecated(new="createGeneIdentifierMap")
     createGeneIdentifierMap(...)
 }
