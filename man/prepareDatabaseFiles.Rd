@@ -25,8 +25,8 @@ Each data frame corresponds to a collection where each row corresponds to a gene
 Each data frame should have the \code{name} and \code{description} columns as described in \code{?\link{fetchAllSets}}.}
 
 \item{set.membership}{List of list of integer vectors.
-Each inner list corresponds to a collection and each vector corresponds to a gene set in that collection.
-Each vector contains the identities of its constituent genes, as row indices into the data frame returned by \code{\link{fetchAllGenes}}.
+Each inner list corresponds to a collection and each of its vectors corresponds to a gene set in that collection.
+Each vector contains the identities of the constituent genes in that set, where each gene is identified as a row index into the data frame returned by \code{\link{fetchAllGenes}}.
 All gene indices should be positive and no greater than \code{num.genes}.
 Vectors may be unsorted and contain duplicate entries - sorting and deduplication will be performed internally.}
 
