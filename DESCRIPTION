@@ -1,6 +1,6 @@
 Package: gesel
-Version: 0.99.5
-Date: 2026-06-20
+Version: 0.99.6
+Date: 2026-10-28
 Title: Search for Interesting Gene Sets
 License: MIT + file LICENSE
 Description:
@@ -33,4 +33,4 @@ URL: https://github.com/gesel-inc/gesel-R
 BugReports: https://github.com/gesel-inc/gesel-R/issues
 VignetteBuilder: knitr
 Encoding: UTF-8
-Config/roxygen2/version: 8.0.0
+Config/roxygen2/version: 8.1.0
