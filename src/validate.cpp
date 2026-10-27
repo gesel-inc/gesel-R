@@ -1,16 +1,19 @@
 #include "Rcpp.h"
+
 #include "gesel/gesel.hpp"
+#include "sanisizer/sanisizer.hpp"
 
 //[[Rcpp::export(rng=false)]]
 SEXP validate_database_files(std::string db_prefix, int num_genes) {
-    gesel::validate_database(db_prefix, num_genes);
+    gesel::validate_database(db_prefix, sanisizer::Cast(num_genes));
     return R_NilValue;
 }
 
 //[[Rcpp::export(rng=false)]]
 int validate_gene_files(std::string gene_prefix, Rcpp::Nullable<Rcpp::CharacterVector> types) {
     if (types.isNull()) {
-        return gesel::validate_genes(gene_prefix);
+        const auto num_genes = gesel::validate_genes(gene_prefix);
+        return sanisizer::cast<int>(num_genes);
     } 
 
     Rcpp::CharacterVector realized(types);
@@ -19,5 +22,7 @@ int validate_gene_files(std::string gene_prefix, Rcpp::Nullable<Rcpp::CharacterV
     for (auto t : realized) {
         name_types.push_back(Rcpp::as<std::string>(t));
     }
-    return gesel::validate_genes(gene_prefix, name_types);
+
+    const auto num_genes = gesel::validate_genes(gene_prefix, name_types);
+    return sanisizer::cast<int>(num_genes);
 }

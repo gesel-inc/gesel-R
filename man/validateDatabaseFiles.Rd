@@ -2,32 +2,24 @@
 % Please edit documentation in R/validateDatabaseFiles.R
 \name{validateDatabaseFiles}
 \alias{validateDatabaseFiles}
-\alias{validateGeneFiles}
 \title{Validate Gesel database files}
 \usage{
 validateDatabaseFiles(path, species, num.genes)
-
-validateGeneFiles(path, species, types = NULL)
 }
 \arguments{
-\item{path}{String containing the path to a directory containing the database files or gene mapping files, for \code{validateDatabaseFiles} and \code{validateGeneFiles} respectively.}
+\item{path}{String containing the path to a directory containing the database files.}
 
 \item{species}{String specifying the species in the form of its NCBI taxonomy ID.}
 
-\item{num.genes}{Integer specifying the total number of genes available for this species.}
-
-\item{types}{Character vector specifying the types of gene identifiers to validate, e.g., \code{"symbol"}, \code{"entrez"}, or \code{"ensembl"},
-If \code{NULL}, all detected files for \code{species} in \code{path} are checked.}
+\item{num.genes}{Integer specifying the total number of genes available for this species.
+This can be obtained as the return value of \code{\link{validateGeneFiles}}.}
 }
 \value{
-\code{validateDatabaseFiles} returns \code{NULL} invisibly.
-
-\code{validateGeneFiles} returns the number of genes, to be used as \code{num.genes}.
-
-In both functions, invalid formatting will cause an error to be raised.
+\code{NULL}, invisibly.
+Invalid formatting of the files will cause an error to be raised.
 }
 \description{
-Validate Gesel database and gene mapping files against the specification at \url{https://github.com/gesel-inc/gesel-spec}.
+Validate Gesel database files against the specification at \url{https://github.com/gesel-inc/gesel-spec}.
 }
 \examples{
 example(prepareDatabaseFiles, echo=FALSE)

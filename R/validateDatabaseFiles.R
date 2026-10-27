@@ -1,18 +1,14 @@
 #' Validate Gesel database files
 #'
-#' Validate Gesel database and gene mapping files against the specification at \url{https://github.com/gesel-inc/gesel-spec}.
+#' Validate Gesel database files against the specification at \url{https://github.com/gesel-inc/gesel-spec}.
 #'
 #' @param species String specifying the species in the form of its NCBI taxonomy ID.
-#' @param path String containing the path to a directory containing the database files or gene mapping files, for \code{validateDatabaseFiles} and \code{validateGeneFiles} respectively.
+#' @param path String containing the path to a directory containing the database files. 
 #' @param num.genes Integer specifying the total number of genes available for this species.
-#' @param types Character vector specifying the types of gene identifiers to validate, e.g., \code{"symbol"}, \code{"entrez"}, or \code{"ensembl"},
-#' If \code{NULL}, all detected files for \code{species} in \code{path} are checked.
+#' This can be obtained as the return value of \code{\link{validateGeneFiles}}.
 #'
-#' @return \code{validateDatabaseFiles} returns \code{NULL} invisibly.
-#'
-#' \code{validateGeneFiles} returns the number of genes, to be used as \code{num.genes}.
-#'
-#' In both functions, invalid formatting will cause an error to be raised.
+#' @return \code{NULL}, invisibly.
+#' Invalid formatting of the files will cause an error to be raised.
 #'
 #' @author Aaron Lun
 #'
@@ -26,10 +22,4 @@
 validateDatabaseFiles <- function(path, species, num.genes) {
     validate_database_files(file.path(path, paste0(species, "_")), num.genes)
     invisible(NULL)
-}
-
-#' @export
-#' @rdname validateDatabaseFiles
-validateGeneFiles <- function(path, species, types = NULL) {
-    validate_gene_files(file.path(path, paste0(species, "_")), types)
 }
