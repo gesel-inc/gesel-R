@@ -22,6 +22,7 @@ All ranges supplied in a single call to this function should be non-overlapping.
 \value{
 List of length equal to \code{length(start)}.
 Each entry is a raw vector representing the contents of the corresponding byte range.
+For ranges where \code{end <= start}, the corresponding raw vectors will be empty.
 }
 \description{
 Read any number of byte ranges from a Gesel database file on the local filesystem.

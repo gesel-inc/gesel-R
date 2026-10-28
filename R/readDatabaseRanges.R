@@ -7,6 +7,7 @@
 #'
 #' @return List of length equal to \code{length(start)}.
 #' Each entry is a raw vector representing the contents of the corresponding byte range.
+#' For ranges where \code{end <= start}, the corresponding raw vectors will be empty.
 #'
 #' @examples
 #' path <- downloadDatabaseFile("9606_set2gene.tsv")
@@ -24,8 +25,12 @@ readDatabaseRanges <- function(dir, name, start, end) {
     o <- order(start)
     output <- rep(list(raw()), length(start))
     for (i in o) {
-        seek(handle, where=start[i]) # where= seems to be zero-based in terms of its position.
-        output[[i]] <- readBin(handle, what=raw(), n=end[i] - start[i])
+        s <- start[i]
+        e <- end[i]
+        if (s < e) {
+            seek(handle, where=s) # where= seems to be zero-based in terms of its position.
+            output[[i]] <- readBin(handle, what=raw(), n=e - s)
+        }
     }
 
     output

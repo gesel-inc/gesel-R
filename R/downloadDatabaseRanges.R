@@ -50,6 +50,7 @@ rangeConcurrency <- function(concurrency = NULL) {
 #'
 #' @return List of length equal to \code{length(start)}.
 #' Each entry is a raw vector representing the contents of the corresponding byte range.
+#' For ranges where \code{end <= start}, the corresponding raw vectors will be empty.
 #'
 #' @author Aaron Lun
 #' @examples

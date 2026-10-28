@@ -35,6 +35,7 @@ Ignored if \code{multipart=TRUE}.}
 \value{
 List of length equal to \code{length(start)}.
 Each entry is a raw vector representing the contents of the corresponding byte range.
+For ranges where \code{end <= start}, the corresponding raw vectors will be empty.
 }
 \description{
 Download any number of byte ranges from a Gesel database file using (possibly multi-part) HTTP range requests.
