@@ -3,11 +3,15 @@
 test_that("fetchAllCollections matches our local ref", {
     flushMemoryCache(test.config)
 
+    expected <- ref.collections
+    expected$start <- cumsum(c(1L, head(lengths(ref.set.membership), -1L)))
+    expected$size <- lengths(ref.set.membership)
+
     payload <- fetchAllCollections("1111", config=test.config)
-    expect_identical(payload, ref.collections)
+    expect_identical(payload, expected)
 
     preloaded <- fetchAllCollections("1111", config=test.config)
-    expect_identical(payload, preloaded)
+    expect_identical(payload, expected)
 })
 
 test_that("fetchAllCollections yields a sensible remote ref", {

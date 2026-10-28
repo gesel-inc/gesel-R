@@ -6,9 +6,7 @@ ref.collections <- data.frame(
     title=c("FOO", "BAR", "WHE"),
     description=c("I am a foo", "I am a bar", "I am a whe"),
     maintainer=c("Aaron", "Aaron", "Aaron"),
-    source=c("https://foo", "https://bar", "https://whe"),
-    start=c(1L, 21L, 71L),
-    size=c(20L, 50L, 10L)
+    source=c("https://foo", "https://bar", "https://whe")
 )
 
 ref.set.info <- list(
