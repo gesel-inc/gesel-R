@@ -50,18 +50,18 @@ gene.dir <- tempfile()
 dir.create(gene.dir)
 
 ref.genes <- list()
-ref.gene.types <- c("foo", "bar", "WHEE")
+ref.gene.types <- c("alpha", "Bravo", "CHARLIE")
 
 for (i in 1:3) {
     type <- ref.gene.types[i]
-    gene.ids <- sprintf("%s_%d", type, seq_len(19999))
+    gene.ids <- sprintf("%s_%d", type, seq_len(ref.num.genes))
 
     genes.plus <- ref.num.genes * (1 + i/5) # generating a 1:many mapping of genes to names.
     chosen <- sample(gene.ids, genes.plus, replace=TRUE)
     ids <- sample(ref.num.genes, genes.plus, replace=TRUE)
 
     current <- unname(split(chosen, factor(ids, seq_len(ref.num.genes))))
-    ref.genes[[type]] <- current
+    ref.genes[[type]] <- lapply(current, unique)
 }
 
 gesel::prepareGeneFiles(

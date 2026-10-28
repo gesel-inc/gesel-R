@@ -1,9 +1,9 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-querySets.R")
 
 test_that("querySets works in basic local tests", {
-    genes <- c(sprintf("WHEE_%s", 1:50), sprintf("foo_%s", 51:100), sprintf("bar_%s", 101:200))
+    genes <- c(sprintf("CHARLIE_%s", 1:50), sprintf("alpha_%s", 51:100), sprintf("Bravo_%s", 101:200))
 
-    out <- querySets("1111", genes, types = c("WHEE", "foo", "bar"), config = test.config)
+    out <- querySets("1111", genes, types = c("CHARLIE", "alpha", "Bravo"), config = test.config)
     all.sets <- fetchAllSets("1111", config = test.config)
     expect_identical(all.sets$name[out$set], out$name)
     all.coll <- fetchAllCollections("1111", config = test.config)
@@ -12,18 +12,18 @@ test_that("querySets works in basic local tests", {
 
     # Works if the full names are requested.
     loaded <- fetchGenesForSomeSets("1111", out$set, config = test.config)
-    loaded.foo <- renameGenesInSets("1111", loaded, "foo", config = test.config)
-    loaded.bar <- renameGenesInSets("1111", loaded, "bar", config = test.config)
-    loaded.WHEE <- renameGenesInSets("1111", loaded, "WHEE", config = test.config)
+    loaded.alpha <- renameGenesInSets("1111", loaded, "alpha", config = test.config)
+    loaded.Bravo <- renameGenesInSets("1111", loaded, "Bravo", config = test.config)
+    loaded.CHARLIE <- renameGenesInSets("1111", loaded, "CHARLIE", config = test.config)
 
-    xout <- querySets("1111", genes, types = c("WHEE", "foo", "bar"), counts.only = FALSE, config = test.config)
+    xout <- querySets("1111", genes, types = c("CHARLIE", "alpha", "Bravo"), counts.only = FALSE, config = test.config)
     for (i in seq_along(loaded)) {
-        expected <- sort(intersect(c(loaded.foo[[i]], loaded.bar[[i]], loaded.WHEE[[i]]), genes))
+        expected <- sort(intersect(c(loaded.alpha[[i]], loaded.Bravo[[i]], loaded.CHARLIE[[i]]), genes))
         expect_identical(expected, sort(xout$genes[[i]]))
     }
 
     # Intersects properly with descriptions.
-    fout <- querySets("1111", genes, types = c("WHEE", "foo", "bar"), text = "FOO", config = test.config)
+    fout <- querySets("1111", genes, types = c("CHARLIE", "alpha", "Bravo"), text = "FOO", config = test.config)
     expect_true(all(fout$set %in% out$set))
     expect_true(all(grepl("FOO", fout$name) | grepl("FOO", fout$description)))
     expect_type(fout$pvalue, "double")

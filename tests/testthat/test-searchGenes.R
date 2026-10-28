@@ -2,9 +2,9 @@
 
 test_that("searchGenes works for the local ref", {
     chosen <- c(
-        unlist(ref.genes$foo)[1],
-        unlist(ref.genes$bar)[1],
-        unlist(ref.genes$WHEE)[1]
+        unlist(ref.genes$alpha)[1],
+        unlist(ref.genes$Bravo)[1],
+        unlist(ref.genes$CHARLIE)[1]
     )
 
     out <- searchGenes(species, chosen, types=ref.gene.types, config=test.config) 
@@ -12,19 +12,19 @@ test_that("searchGenes works for the local ref", {
     expect_true(all(lengths(out) > 0L))
 
     for (i in out[[1]]) {
-        expect_true(chosen[1] %in% ref.genes$foo[[i]])
+        expect_true(chosen[1] %in% ref.genes$alpha[[i]])
     }
     for (i in out[[2]]) {
-        expect_true(chosen[2] %in% ref.genes$bar[[i]])
+        expect_true(chosen[2] %in% ref.genes$Bravo[[i]])
     }
     for (i in out[[3]]) {
-        expect_true(chosen[3] %in% ref.genes$WHEE[[i]])
+        expect_true(chosen[3] %in% ref.genes$CHARLIE[[i]])
     }
 
     # Works after ignoring case.
     lout <- searchGenes(species, tolower(chosen), types=ref.gene.types, ignore.case=TRUE, config=test.config)
     for (i in lout[[3]]) {
-        expect_true(chosen[3] %in% ref.genes$WHEE[[i]])
+        expect_true(chosen[3] %in% ref.genes$CHARLIE[[i]])
     }
 })
 

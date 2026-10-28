@@ -1,11 +1,11 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-loadAllSets.R")
 
 test_that("loadAllSets works locally", {
-    loaded <- loadAllSets("1111", "foo", config=test.config)
+    loaded <- loadAllSets("1111", "alpha", config=test.config)
     expect_identical(length(loaded$sets), nrow(loaded$details))
-    expect_true(all(startsWith(unlist(loaded$sets), "foo_")))
+    expect_true(all(startsWith(unlist(loaded$sets), "alpha_")))
 
-    loaded.comp <- loadAllSets("1111", "foo", config=test.config, as.compressed = TRUE)
+    loaded.comp <- loadAllSets("1111", "alpha", config=test.config, as.compressed = TRUE)
     expect_s4_class(loaded.comp, "CompressedCharacterList")
     expect_identical(loaded$sets, as.list(loaded.comp))
     expect_identical(loaded$details, as.data.frame(S4Vectors::mcols(loaded.comp)))

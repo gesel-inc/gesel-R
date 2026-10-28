@@ -2,11 +2,11 @@
 
 test_that("renameGenesInSets works locally", {
     all.sets <- fetchGenesForAllSets("1111", config=test.config)
-    renamed <- renameGenesInSets("1111", all.sets, "foo", config=test.config)
+    renamed <- renameGenesInSets("1111", all.sets, "alpha", config=test.config)
 
     expected <- all.sets
     for (i in seq_along(expected)) {
-        expected[[i]] <- unique(as.character(unlist(ref.genes$foo[expected[[i]]])))
+        expected[[i]] <- unique(as.character(unlist(ref.genes$alpha[expected[[i]]])))
     }
 
     expect_identical(renamed, expected)

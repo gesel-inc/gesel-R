@@ -5,13 +5,13 @@ test_that("fetchAllGenes works for the local ref", {
 
     roundtrip <- fetchAllGenes(species, config=test.config)
     expect_identical(colnames(roundtrip), ref.gene.types)
-    expect_identical(unclass(roundtrip$foo), ref.genes$foo)
-    expect_identical(unclass(roundtrip$bar), ref.genes$bar)
-    expect_identical(unclass(roundtrip$whee), ref.genes$whee)
+    expect_identical(unclass(roundtrip$alpha), ref.genes$alpha)
+    expect_identical(unclass(roundtrip$Bravo), ref.genes$Bravo)
+    expect_identical(unclass(roundtrip$CHARLIE), ref.genes$CHARLIE)
 
-    sub <- fetchAllGenes(species, types = "bar", config=test.config)
-    expect_identical(colnames(sub), "bar")
-    expect_identical(unclass(roundtrip$bar), ref.genes$bar)
+    sub <- fetchAllGenes(species, types = "Bravo", config=test.config)
+    expect_identical(colnames(sub), "Bravo")
+    expect_identical(unclass(roundtrip$Bravo), ref.genes$Bravo)
 
     preloaded <- fetchAllGenes(species, config=test.config)
     expect_identical(roundtrip, preloaded)
@@ -22,9 +22,9 @@ test_that("fetchAllGenes works for v1", {
 
     roundtrip <- fetchAllGenes(species, types = ref.gene.types, config=test.config.v1)
     expect_identical(colnames(roundtrip), ref.gene.types)
-    expect_identical(unclass(roundtrip$foo), ref.genes$foo)
-    expect_identical(unclass(roundtrip$bar), ref.genes$bar)
-    expect_identical(unclass(roundtrip$whee), ref.genes$whee)
+    expect_identical(unclass(roundtrip$alpha), ref.genes$alpha)
+    expect_identical(unclass(roundtrip$Bravo), ref.genes$Bravo)
+    expect_identical(unclass(roundtrip$CHARLIE), ref.genes$CHARLIE)
 })
 
 test_that("fetchAllGenes behaves for the remote", {
