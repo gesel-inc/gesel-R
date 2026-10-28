@@ -24,11 +24,12 @@ This data frame should contain the \code{title}, \code{description}, \code{sourc
 Each data frame corresponds to a collection where each row corresponds to a gene set.
 Each data frame should have the \code{name} and \code{description} columns as described in \code{?\link{fetchAllSets}}.}
 
-\item{set.membership}{List of list of integer vectors.
-Each inner list corresponds to a collection and each of its vectors corresponds to a gene set in that collection.
+\item{set.membership}{List of lists of integer vectors.
+Each inner list corresponds to a collection and each of its vectors corresponds to a gene set in that collection,
+e.g., \code{set.membership[[i]][[j]]} contains the \code{j}-th set in the \code{i}-th collection.
 Each vector contains the identities of the constituent genes in that set, where each gene is identified as a row index into the data frame returned by \code{\link{fetchAllGenes}}.
 All gene indices should be positive and no greater than \code{num.genes}.
-Vectors may be unsorted and contain duplicate entries - sorting and deduplication will be performed internally.}
+Vectors may be unsorted and contain duplicate entries.}
 
 \item{num.genes}{Integer specifying the total number of genes available for this species.}
 
@@ -78,7 +79,7 @@ set.membership <- list(
 output <- tempfile()
 dir.create(output)
 prepareDatabaseFiles(
-    "9606",
+    "1234",
     collections, 
     set.info, 
     set.membership,
@@ -88,7 +89,7 @@ prepareDatabaseFiles(
 
 # We can then read directly from them:
 config <- newConfig(fetch.file=function(x) file.path(output, x))
-head(fetchAllSets("9606", config))
+head(fetchAllSets("1234", config))
 
 }
 \seealso{

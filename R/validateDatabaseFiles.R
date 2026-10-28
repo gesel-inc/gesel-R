@@ -13,8 +13,50 @@
 #' @author Aaron Lun
 #'
 #' @examples
-#' example(prepareDatabaseFiles, echo=FALSE)
-#' validateDatabaseFiles(output, "9606", num.genes)
+#' # Mocking up some information.
+#' collections <- data.frame(
+#'     title=c("FOO", "BAR"),
+#'     description=c("I am a foo", "I am a bar"),
+#'     maintainer=c("Aaron", "Aaron"),
+#'     source=c("https://foo", "https://bar")
+#' )
+#'
+#' set.info <- list(
+#'     data.frame(
+#'         name=sprintf("FOO_%i", seq_len(20)),
+#'         description=sprintf("this is FOO %i", seq_len(20))
+#'     ),
+#'     data.frame(
+#'         name=sprintf("BAR_%i", seq_len(50)),
+#'         description=sprintf("this is BAR %i", seq_len(50))
+#'     )
+#' )
+#'
+#' # Mocking up the gene sets.
+#' num.genes <- 10000
+#' set.membership <- list(
+#'     lapply(seq_len(nrow(set.info[[1]])), function(i) {
+#'         sample(num.genes, sample(500, 1))
+#'     }),
+#'     lapply(seq_len(nrow(set.info[[2]])), function(i) {
+#'         sample(num.genes, sample(200, 1))
+#'     })
+#' )
+#'
+#' # Now making the database files.
+#' output <- tempfile()
+#' dir.create(output)
+#' prepareDatabaseFiles(
+#'     "1234",
+#'     collections, 
+#'     set.info, 
+#'     set.membership,
+#'     num.genes,
+#'     output
+#' )
+#'
+#' # Finally, validating them.
+#' validateDatabaseFiles(output, "1234", num.genes)
 #' 
 #' @export
 #' @importFrom Rcpp sourceCpp

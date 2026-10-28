@@ -13,7 +13,16 @@
 #' @author Aaron Lun
 #'
 #' @examples
-#' example(prepareGeneFiles, echo=FALSE)
+#' genes <- list(
+#'     ensembl = list("ENSG1", c("ENSG2", "ENSG3"), character(0), "ENSG4"),
+#'     entrez = list("1", character(0), c("2", "3", "4"), c("5", "6")),
+#'     foobar = list("malat1", "neat1", "Gm1234", "LINC0000001")
+#' )
+#'
+#' tmp <- tempfile()
+#' dir.create(tmp)
+#' prepareGeneFiles("1234", genes, tmp)
+#'
 #' validateGeneFiles(tmp, "1234")
 #' 
 #' @export

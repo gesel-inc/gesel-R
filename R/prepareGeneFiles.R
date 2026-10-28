@@ -33,7 +33,10 @@
 #' tmp <- tempfile()
 #' dir.create(tmp)
 #' prepareGeneFiles("1234", genes, tmp)
-#' list.files(tmp)
+#'
+#' # We can then read directly from them:
+#' config <- newConfig(fetch.gene=function(x) file.path(tmp, x))
+#' head(fetchAllGenes("1234", config=config))
 #' 
 #' @export
 prepareGeneFiles <- function(species, genes, path = ".", validate = TRUE, version = c("0.2.0", "0.1.0")) {

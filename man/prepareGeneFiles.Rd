@@ -48,7 +48,10 @@ genes <- list(
 tmp <- tempfile()
 dir.create(tmp)
 prepareGeneFiles("1234", genes, tmp)
-list.files(tmp)
+
+# We can then read directly from them:
+config <- newConfig(fetch.gene=function(x) file.path(tmp, x))
+head(fetchAllGenes("1234", config=config))
 
 }
 \seealso{
