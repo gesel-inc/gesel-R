@@ -94,13 +94,13 @@ The `searchOverlappingSets()` identifies all sets that overlap at least one gene
 
 ```{r}
 overlaps <- searchOverlappingSets("9606", gene.idx, counts.only=FALSE)
-head(overlaps$overlap) # set index and the identities of overlapping genes.
+head(overlaps) # set index and the identities of overlapping genes.
 ```
 
 The set index can be converted back to information about each set, along with the collection from which it came:
 
 ```{r}
-first.set.info <- fetchSomeSets("9606", head(overlaps$overlap$set)) # getting details of the first few sets
+first.set.info <- fetchSomeSets("9606", head(overlaps$set)) # getting details of the first few sets
 first.set.info
 first.col.info <- fetchSomeCollections("9606", first.set.info$collection) # getting details of the collections
 first.col.info
@@ -123,11 +123,11 @@ fetchSomeSets("9606", head(thits))
 Users can construct powerful queries by intersecting the sets recovered from `searchSetText()` with those from `findOverlappingSets()`.
 
 ```{r}
-cancer.sets <- intersect(chits, overlaps$overlap$set)
+cancer.sets <- intersect(chits, overlaps$set)
 info <- fetchSomeSets("9606", cancer.sets)
-m <- match(cancer.sets, overlaps$overlap$set)
-info$count <- overlaps$overlap$count[m]
-info$pvalue <- overlaps$overlap$pvalue[m]
+m <- match(cancer.sets, overlaps$set)
+info$count <- overlaps$count[m]
+info$pvalue <- overlaps$pvalue[m]
 info[head(order(info$pvalue)),]
 ```
 

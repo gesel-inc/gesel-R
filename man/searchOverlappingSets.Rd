@@ -28,10 +28,8 @@ Duplicate entries are ignored.}
 If \code{NULL}, the default configuration is used.}
 }
 \value{
-A list containing a \code{overlap} data frame and a \code{present} integer.
-
-In the \code{overlap} data frame, each row represents a set that overlaps with \code{genes}.
-The data frame contains the following columns:
+A data frame where each row represents a set that overlaps with \code{genes}.
+This contains the following columns:
 \itemize{
 \item \code{set}, an integer column containing the set index.
 This refers to a row of the data frame returned by \code{\link{fetchAllSets}}.
@@ -45,18 +43,20 @@ Only reported if \code{test.enrichment = TRUE}.
 }
 The row order is arbitrary.
 
-\code{present} specifying the number of genes in \code{genes} that are present in at least one set in the Gesel database for \code{species}.
-\code{present} can be used as the number of draws when performing a hypergeometric test for gene set enrichment, instead of \code{length(genes)} (see Details).
-This ensures that we do not consider genes that are not present in any gene sets in Gesel,
-e.g., due to changes in annotation across genome versions or because they are pseudogenes or predicted genes.
-Otherwise, unknown genes would inappropriately increase the number of draws and inflate the enrichment p-value.
+If \code{test.enrichment = TRUE}, the data frame will also contain a \code{present} attribute.
+This is the number of genes in \code{genes} that are present in at least one set in the Gesel database for \code{species}.
 }
 \description{
 Search for gene sets that overlap with genes in a user-supplied list.
 }
+\details{
+When performing a hypergeometric test for gene set enrichment, \code{present} should be used as the number of draws instead of \code{length(genes)}. 
+This ensures that we do not consider genes in \code{genes} that are not present in any gene sets in Gesel,
+e.g., due to changes in annotation across genome versions or because they are pseudogenes or predicted genes.
+Otherwise, unknown genes would inappropriately increase the number of draws and inflate the enrichment p-value.
+}
 \examples{
-out <- searchOverlappingSets("9606", 1:10)
-overlaps <- out$overlap
+overlaps <- searchOverlappingSets("9606", 1:10)
 head(overlaps)
 
 # More details on the overlapping sets.
@@ -72,7 +72,7 @@ p <- phyper(
     q = overlaps$count - 1,
     m = set.size,
     n = universe - set.size,
-    k = out$present,
+    k = attr(overlaps, "present"),
     lower.tail=FALSE
 )
 stopifnot(identical(p, overlaps$pvalue))

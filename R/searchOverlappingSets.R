@@ -11,10 +11,8 @@
 #' @param config Configuration list, typically created by \code{\link{newConfig}}.
 #' If \code{NULL}, the default configuration is used.
 #'
-#' @return A list containing a \code{overlap} data frame and a \code{present} integer.
-#'
-#' In the \code{overlap} data frame, each row represents a set that overlaps with \code{genes}.
-#' The data frame contains the following columns:
+#' @return A data frame where each row represents a set that overlaps with \code{genes}.
+#' This contains the following columns:
 #' \itemize{
 #' \item \code{set}, an integer column containing the set index.
 #' This refers to a row of the data frame returned by \code{\link{fetchAllSets}}.
@@ -28,16 +26,18 @@
 #' }
 #' The row order is arbitrary.
 #'
-#' \code{present} specifying the number of genes in \code{genes} that are present in at least one set in the Gesel database for \code{species}.
-#' \code{present} can be used as the number of draws when performing a hypergeometric test for gene set enrichment, instead of \code{length(genes)} (see Details).
-#' This ensures that we do not consider genes that are not present in any gene sets in Gesel,
+#' If \code{test.enrichment = TRUE}, the data frame will also contain a \code{present} attribute.
+#' This is the number of genes in \code{genes} that are present in at least one set in the Gesel database for \code{species}.
+#'
+#' @details
+#' When performing a hypergeometric test for gene set enrichment, \code{present} should be used as the number of draws instead of \code{length(genes)}. 
+#' This ensures that we do not consider genes in \code{genes} that are not present in any gene sets in Gesel,
 #' e.g., due to changes in annotation across genome versions or because they are pseudogenes or predicted genes.
 #' Otherwise, unknown genes would inappropriately increase the number of draws and inflate the enrichment p-value.
 #'
 #' @author Aaron Lun
 #' @examples
-#' out <- searchOverlappingSets("9606", 1:10)
-#' overlaps <- out$overlap
+#' overlaps <- searchOverlappingSets("9606", 1:10)
 #' head(overlaps)
 #' 
 #' # More details on the overlapping sets.
@@ -53,7 +53,7 @@
 #'     q = overlaps$count - 1,
 #'     m = set.size,
 #'     n = universe - set.size,
-#'     k = out$present,
+#'     k = attr(overlaps, "present"),
 #'     lower.tail=FALSE
 #' )
 #' stopifnot(identical(p, overlaps$pvalue))
@@ -89,8 +89,8 @@ searchOverlappingSets <- function(species, genes, counts.only = TRUE, test.enric
         overlap$genes <- unname(by.set)
     }
 
-    present <- sum(lengths(info) > 0)
     if (test.enrichment) {
+        present <- sum(lengths(info) > 0)
         universe <- effectiveNumberOfGenes(species, config = config)
         set.sizes <- fetchSetSizes(species, config = config)[overlap$set]
         overlap$size <- set.sizes
@@ -101,13 +101,15 @@ searchOverlappingSets <- function(species, genes, counts.only = TRUE, test.enric
             k = present,
             lower.tail = FALSE
         )
+        attr(overlap, "present") <- present
     }
 
-    list(overlap = overlap, present = present)
+    overlap
 }
 
 # Provided for back-compatibility.
 #' @export
-findOverlappingSets <- function(...) {
-    searchOverlappingSets(..., test.enrichment = FALSE)
+findOverlappingSets <- function(species, genes, ..., config = NULL) {
+    x <- searchOverlappingSets(species, genes, ..., test.enrichment = FALSE)
+    list(overlap = x, present = attr(x, "present"))
 }

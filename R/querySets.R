@@ -68,7 +68,7 @@
 querySets <- function(species, genes = NULL, text = NULL, types = NULL, counts.only = TRUE, config = NULL) {
     if (!is.null(genes)) {
         mapped <- searchGenes(species, genes, types = types, config = config)
-        output <- searchOverlappingSets(species, genes = unlist(mapped), counts.only = counts.only, config = config)$overlap
+        output <- searchOverlappingSets(species, genes = unlist(mapped), counts.only = counts.only, config = config)
         output$size <- NULL # this will be added by fetchSomeSets, no need for it here.
         output <- output[order(output$pvalue),]
 
