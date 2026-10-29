@@ -1,12 +1,15 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-fetchSomeCollections.R")
 
 test_that("fetchSomeCollections matches our local ref", {
+    # Load all collections for reference comparison.
+    # However, we need to make sure we flush the cache so that range requests are actually performed.
     everything <- fetchAllCollections("1111", config=test.config)
     flushMemoryCache(test.config)
 
     payload <- fetchSomeCollections("1111", 1, config=test.config)
     expect_identical(everything[1,], payload)
 
+    # Cache is not used.
     payload <- fetchSomeCollections("1111", 2, config=test.config)
     expected <- everything[2,]
     rownames(expected) <- NULL

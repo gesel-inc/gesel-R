@@ -7,7 +7,7 @@ test_that("searchGenes works for the local ref", {
         unlist(ref.genes$CHARLIE)[1]
     )
 
-    out <- searchGenes(species, chosen, types=ref.gene.types, config=test.config) 
+    out <- searchGenes(species, chosen, config=test.config) 
     expect_identical(length(out), length(chosen))
     expect_true(all(lengths(out) > 0L))
 
@@ -21,11 +21,13 @@ test_that("searchGenes works for the local ref", {
         expect_true(chosen[3] %in% ref.genes$CHARLIE[[i]])
     }
 
+    # Works with explicit types.
+    typed <- searchGenes(species, chosen, types=ref.gene.types, config=test.config) 
+    expect_identical(out, typed)
+
     # Works after ignoring case.
-    lout <- searchGenes(species, tolower(chosen), types=ref.gene.types, ignore.case=TRUE, config=test.config)
-    for (i in lout[[3]]) {
-        expect_true(chosen[3] %in% ref.genes$CHARLIE[[i]])
-    }
+    lout <- searchGenes(species, tolower(chosen), ignore.case=TRUE, config=test.config)
+    expect_identical(out, lout)
 })
 
 test_that("searchGenes works for the remote", {

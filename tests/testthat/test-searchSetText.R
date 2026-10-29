@@ -1,6 +1,8 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-searchSetText.R")
 
 test_that("basic search works for the local ref", {
+    # Load all set information as a reference.
+    # We need to flush this to ensure that the range requests actually work for the tokens.
     full.set.info <- fetchAllSets(species, config=test.config)
     flushMemoryCache(test.config)
 
@@ -13,6 +15,9 @@ test_that("basic search works for the local ref", {
 
     nout <- searchSetText(species, "this", use.name=FALSE, config=test.config)
     expect_identical(nout, grep("this", full.set.info$description))
+
+    nout <- searchSetText(species, "this", use.description=FALSE, use.name=FALSE, config=test.config)
+    expect_identical(nout, integer(0))
 
     # Throwing in some wildcards.
     pout <- searchSetText(species, "foo 1*", config=test.config)

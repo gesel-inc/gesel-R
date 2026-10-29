@@ -13,6 +13,7 @@ test_that("fetchAllGenes works for the local ref", {
     expect_identical(colnames(sub), "Bravo")
     expect_identical(unclass(roundtrip$Bravo), ref.genes$Bravo)
 
+    # Fetch from cache.
     preloaded <- fetchAllGenes(species, config=test.config)
     expect_identical(roundtrip, preloaded)
 })
@@ -43,6 +44,7 @@ test_that("fetchAllGenes behaves for the remote", {
     sub <- fetchAllGenes("9606", types = c("symbol", "entrez")) 
     expect_identical(sub, roundtrip[,c("symbol", "entrez")])
 
+    # Fetch from cache.
     preloaded <- fetchAllGenes("9606")
     expect_identical(roundtrip, preloaded)
 })

@@ -1,36 +1,36 @@
-# library(testthat); library(gesel); source("setup.R"); source("test-findOverlappingSets.R")
+# library(testthat); library(gesel); source("setup.R"); source("test-searchOverlappingSets.R")
 
-test_that("findOverlappingSets works for the local ref", {
+test_that("searchOverlappingSets works for the local ref", {
     full.set.membership <- unlist(ref.set.membership, recursive=FALSE)
     genes <- sample(ref.num.genes, 100)
     ref <- lapply(full.set.membership, intersect, y=genes)
     keep <- which(lengths(ref) > 0)
 
-    overlaps <- findOverlappingSets(species, genes, counts.only=FALSE, config=test.config)
+    overlaps <- searchOverlappingSets(species, genes, counts.only=FALSE, config=test.config)
     expect_identical(sort(overlaps$overlap$set), sort(keep))
     expect_identical(lapply(ref[overlaps$overlap$set], sort), lapply(overlaps$overlap$genes, sort))
 
-    counts <- findOverlappingSets(species, genes, config=test.config)
+    counts <- searchOverlappingSets(species, genes, config=test.config)
     expect_identical(counts$overlap, data.frame(set=overlaps$overlap$set, count=lengths(overlaps$overlap$genes)))
 
     # Automatically removes duplicates from the genes.
-    duplicated.c <- findOverlappingSets(species, c(genes, genes), config=test.config)
+    duplicated.c <- searchOverlappingSets(species, c(genes, genes), config=test.config)
     expect_identical(counts, duplicated.c)
-    duplicated.o <- findOverlappingSets(species, c(genes, genes), counts.only = FALSE, config=test.config)
+    duplicated.o <- searchOverlappingSets(species, c(genes, genes), counts.only = FALSE, config=test.config)
     expect_identical(overlaps, duplicated.o)
 })
 
-test_that("findOverlappingSets works for the remote", {
+test_that("searchOverlappingSets works for the remote", {
     chosen <- 1:10 * 10L
     everything <- fetchGenesForAllSets("9606")
     ref <- lapply(everything, intersect, y=chosen)
     keep <- which(lengths(ref) > 0)
 
-    overlaps <- findOverlappingSets("9606", chosen, counts.only=FALSE)
+    overlaps <- searchOverlappingSets("9606", chosen, counts.only=FALSE)
     expect_identical(sort(overlaps$overlap$set), sort(keep))
     expect_identical(lapply(ref[overlaps$overlap$set], sort), lapply(overlaps$overlap$genes, sort))
 
-    counts <- findOverlappingSets("9606", chosen)
+    counts <- searchOverlappingSets("9606", chosen)
     expect_identical(counts$overlap, data.frame(set=overlaps$overlap$set, count=lengths(overlaps$overlap$genes)))
 })
 

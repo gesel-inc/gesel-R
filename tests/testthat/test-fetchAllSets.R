@@ -11,6 +11,7 @@ test_that("fetchAllSets matches our local ref", {
     payload <- fetchAllSets("1111", config=test.config)
     expect_identical(payload, full.set.info)
 
+    # Fetch from cache.
     preloaded <- fetchAllSets("1111", config=test.config)
     expect_identical(payload, preloaded)
 })
@@ -27,6 +28,7 @@ test_that("fetchAllSets yields a sensible remote ref", {
     expect_true(!is.unsorted(test$collection))
     expect_identical(test$number + coll.info$start[test$collection] - 1L, seq_len(nrow(test)))
 
+    # Fetch from cache.
     preloaded <- fetchAllSets("9606")
     expect_identical(test, preloaded)
 })

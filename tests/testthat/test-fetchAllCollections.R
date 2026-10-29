@@ -10,8 +10,9 @@ test_that("fetchAllCollections matches our local ref", {
     payload <- fetchAllCollections("1111", config=test.config)
     expect_identical(payload, expected)
 
+    # Fetch from cache.
     preloaded <- fetchAllCollections("1111", config=test.config)
-    expect_identical(payload, expected)
+    expect_identical(preloaded, expected)
 })
 
 test_that("fetchAllCollections yields a sensible remote ref", {
@@ -26,6 +27,7 @@ test_that("fetchAllCollections yields a sensible remote ref", {
     expect_false(anyNA(test$source))
     expect_identical(diff(test$start), head(test$size, -1L))
 
+    # Fetch from cache.
     preloaded <- fetchAllCollections("9606")
     expect_identical(test, preloaded)
 })

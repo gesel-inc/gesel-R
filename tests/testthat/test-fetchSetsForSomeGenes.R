@@ -1,6 +1,8 @@
 # library(testthat); library(gesel); source("setup.R"); source("test-fetchSetsForSomeGenes.R")
 
 test_that("fetchSetsForSomeGenes matches our local ref", {
+    # Load all gene-to-set mapping for reference comparison.
+    # However, we need to make sure we flush the cache so that range requests are actually performed.
     everything <- fetchSetsForAllGenes("1111", config=test.config)
     flushMemoryCache(test.config)
 
@@ -8,11 +10,12 @@ test_that("fetchSetsForSomeGenes matches our local ref", {
     payload <- fetchSetsForSomeGenes("1111", sub, config=test.config)
     expect_identical(everything[sub], payload)
 
+    # Subsequent requests with no caching. 
     sub <- seq(from=1, to=length(everything), by=3)
     payload <- fetchSetsForSomeGenes("1111", sub, config=test.config)
     expect_identical(everything[sub], payload)
 
-    # Works with partial caching.
+    # Works with partial caching (we need new requests for seq(2, len(everything), 3)).
     together <- seq_along(everything)
     payload <- fetchSetsForSomeGenes("1111", together, config=test.config)
     expect_identical(everything, payload)

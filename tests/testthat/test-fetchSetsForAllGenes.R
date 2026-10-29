@@ -11,6 +11,10 @@ test_that("fetchSetsForAllGenes matches our local ref", {
 
     payload <- fetchSetsForAllGenes("1111", config=test.config)
     expect_identical(payload, mapping)
+
+    # Fetch from cache.
+    preloaded <- fetchSetsForAllGenes("1111", config=test.config)
+    expect_identical(preloaded, mapping)
 })
 
 test_that("fetchSetsForAllGenes yields a sensible remote ref", {
@@ -26,6 +30,7 @@ test_that("fetchSetsForAllGenes yields a sensible remote ref", {
     expect_false(any(vapply(test, is.unsorted, FALSE)))
     expect_true(all(vapply(test, anyDuplicated, 0L) == 0L))
 
+    # Fetch from cache.
     preloaded <- fetchSetsForAllGenes("9606")
     expect_identical(test, preloaded)
 })

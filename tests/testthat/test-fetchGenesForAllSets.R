@@ -4,11 +4,12 @@ test_that("fetchGenesForAllSets matches our local ref", {
     flushMemoryCache(test.config)
 
     full.set.membership <- unlist(ref.set.membership, recursive=FALSE)
-    full.set.membership <- lapply(full.set.membership, function(y) sort(unique(y)))
+    full.set.membership <- lapply(full.set.membership, sort)
 
     payload <- fetchGenesForAllSets("1111", config=test.config)
     expect_identical(payload, full.set.membership)
 
+    # Fetch from cache.
     preloaded <- fetchGenesForAllSets("1111", config=test.config)
     expect_identical(payload, preloaded)
 })
@@ -26,6 +27,7 @@ test_that("fetchGenesForAllSets yields a sensible remote ref", {
     expect_false(any(vapply(test, is.unsorted, FALSE)))
     expect_true(all(vapply(test, anyDuplicated, 0L) == 0L))
 
+    # Fetch from cache.
     preloaded <- fetchGenesForAllSets("9606")
     expect_identical(test, preloaded)
 })
