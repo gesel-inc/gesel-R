@@ -46,7 +46,7 @@ This contains the following columns:
 If \code{genes} is provided, the data frame will additionally contain:
 \itemize{
 \item \code{count}, an integer column containing the number of overlaps between the genes in the set and those in \code{genes}.
-\item \code{genes}, a nested list where each entry is a character vector containing the genes in \code{genes} that are present in each set.
+\item \code{which}, a nested list where each entry is a character vector containing the genes in \code{genes} that are present in each set.
 Only reported if \code{counts.only = FALSE}.
 \item \code{pvalue} column, a numeric column containing the hypergeometric p-value for overrepresentation of \code{genes} in the set.
 Rows will be sorted by this column if it is present.

@@ -19,7 +19,7 @@ test_that("querySets works in basic local tests", {
     xout <- querySets("1111", genes, types = c("CHARLIE", "alpha", "Bravo"), counts.only = FALSE, config = test.config)
     for (i in seq_along(loaded)) {
         expected <- sort(intersect(c(loaded.alpha[[i]], loaded.Bravo[[i]], loaded.CHARLIE[[i]]), genes))
-        expect_identical(expected, sort(xout$genes[[i]]))
+        expect_identical(expected, sort(xout$which[[i]]))
     }
 
     # Intersects properly with descriptions.
@@ -54,5 +54,5 @@ test_that("querySets works remotely", {
     )
     expect_gte(nrow(out2), 0L)
     expect_true(all(grepl("neuro", out2$name, ignore.case=TRUE) | grepl("neuro", out2$description, ignore.case=TRUE)))
-    expect_true(all(unlist(out2$genes) %in% chosen2))
+    expect_true(all(unlist(out2$which) %in% chosen2))
 })

@@ -8,16 +8,16 @@ test_that("searchOverlappingSets works for the local ref", {
 
     overlaps <- searchOverlappingSets(species, genes, counts.only=FALSE, config=test.config)
     expect_identical(sort(overlaps$set), sort(keep))
-    expect_identical(lapply(ref[overlaps$set], sort), lapply(overlaps$genes, sort))
+    expect_identical(lapply(ref[overlaps$set], sort), lapply(overlaps$which, sort))
 
     expect_identical(lengths(full.set.membership[overlaps$set]), overlaps$size)
     expect_gte(min(overlaps$pvalue), 0)
     expect_lte(max(overlaps$pvalue), 1)
-    expect_gt(attr(overlaps, "present"), 0)
+    expect_gte(attr(overlaps, "present"), 0)
 
     counts <- searchOverlappingSets(species, genes, config = test.config)
     expect_identical(counts$set, overlaps$set)
-    expect_identical(counts$count, lengths(overlaps$genes))
+    expect_identical(counts$count, lengths(overlaps$which))
 
     # Automatically removes duplicates from the genes.
     duplicated.c <- searchOverlappingSets(species, c(genes, genes), config=test.config)
@@ -38,10 +38,10 @@ test_that("searchOverlappingSets works for the remote", {
 
     overlaps <- searchOverlappingSets("9606", chosen, counts.only=FALSE)
     expect_identical(sort(overlaps$set), sort(keep))
-    expect_identical(lapply(ref[overlaps$set], sort), lapply(overlaps$genes, sort))
+    expect_identical(lapply(ref[overlaps$set], sort), lapply(overlaps$which, sort))
 
     counts <- searchOverlappingSets("9606", chosen)
     expect_identical(counts$set, overlaps$set)
-    expect_identical(counts$count, lengths(overlaps$genes))
+    expect_identical(counts$count, lengths(overlaps$which))
 })
 

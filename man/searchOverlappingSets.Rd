@@ -34,7 +34,7 @@ This contains the following columns:
 \item \code{set}, an integer column containing the set index.
 This refers to a row of the data frame returned by \code{\link{fetchAllSets}}.
 \item \code{count}, an integer column containing the number of overlaps between the genes in the set and those in \code{genes}.
-\item \code{genes}, a nested list that contains the entries of \code{genes} that overlap with those in the set.
+\item \code{which}, a nested list that contains the entries of \code{genes} that overlap with those in the set.
 Only reported if \code{counts.only = FALSE}.
 \item \code{size} column, an integer column containing the size of each set.
 Only reported if \code{test.enrichment = TRUE}, as it is a by-product of the p-value calculation.
@@ -56,6 +56,7 @@ e.g., due to changes in annotation across genome versions or because they are ps
 Otherwise, unknown genes would inappropriately increase the number of draws and inflate the enrichment p-value.
 }
 \examples{
+# Pretend like we're interested in the first 10 genes.
 overlaps <- searchOverlappingSets("9606", 1:10)
 head(overlaps)
 
