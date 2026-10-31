@@ -5,6 +5,10 @@
 
 //[[Rcpp::export(rng=false)]]
 SEXP validate_database_files(std::string db_prefix, int num_genes) {
+    if (num_genes < 0) {
+        // If it's a double that doesn't fit in an integer, it'll be cast to NA and picked up here.
+        throw std::runtime_error("expected 'num_genes' to be non-zero");
+    }
     gesel::validate_database(db_prefix, sanisizer::Cast(num_genes));
     return R_NilValue;
 }
