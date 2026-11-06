@@ -54,8 +54,7 @@ createGeneIdentifierMap <- function(species, type, ignore.case = FALSE, config =
             all.ids <- tolower(all.ids)
         }
         all.idx <- rep(seq_along(genes), lengths(genes))
-
-        tfound <- split(all.idx, all.ids)
+        tfound <- quicksplit(all.idx, all.ids)
         tfound <- lapply(tfound, unique)
     }
 
@@ -73,4 +72,17 @@ createGeneIdentifierMap <- function(species, type, ignore.case = FALSE, config =
 mapGenesByName <- function(...) {
     .Deprecated(new="createGeneIdentifierMap")
     createGeneIdentifierMap(...)
+}
+
+# Same as split() but radix sort is much faster for strings.
+# Presumably this is because the usual comparison sorts depend on the string length.
+# We construct a factor first and then we rely on split() respecting that factor.
+quicksplit <- function(x, f) {
+    o <- order(f, method="radix")
+    codes <- integer(length(o))
+    runs <- rle(f[o])
+    codes[o] <- rep(seq_along(runs$lengths), runs$lengths)
+    levels(codes) <- runs$values
+    class(codes) <- "factor"
+    split(x, codes)
 }

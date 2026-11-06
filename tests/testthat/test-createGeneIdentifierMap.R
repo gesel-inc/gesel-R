@@ -56,3 +56,23 @@ test_that("createGeneIdentifierMap works for the remote ref", {
     reloaded <- createGeneIdentifierMap("9606", type="symbol") 
     expect_identical(mapping, reloaded)
 })
+
+test_that("quicksplit works as expected", {
+    # Try with guaranteed solos.
+    x <- sample(100, 20) 
+    f <- sample(LETTERS, 20) 
+    expect_identical(gesel:::quicksplit(x, f), split(x, f))
+
+    # Now with guaranteed duplicates.
+    x <- sample(100, 100, replace=TRUE)
+    f <- sample(LETTERS, 100, replace=TRUE)
+    expect_identical(gesel:::quicksplit(x, f), split(x, f))
+
+    x <- sample(100, 100, replace=TRUE)
+    f <- rep("alpha", 100)
+    expect_identical(gesel:::quicksplit(x, f), list(alpha=x))
+
+    empty <- list()
+    names(empty) <- character()
+    expect_identical(gesel:::quicksplit(integer(), character()), empty)
+})
