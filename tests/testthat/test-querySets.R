@@ -3,24 +3,12 @@
 test_that("querySets works in basic local tests", {
     genes <- c(sprintf("CHARLIE_%s", 1:50), sprintf("alpha_%s", 51:100), sprintf("Bravo_%s", 101:200))
 
-    out <- querySets("1111", genes, types = c("CHARLIE", "alpha", "Bravo"), config = test.config)
+    out <- querySets("1111", genes, config = test.config)
     all.sets <- fetchAllSets("1111", config = test.config)
     expect_identical(all.sets$name[out$set], out$name)
     all.coll <- fetchAllCollections("1111", config = test.config)
     expect_identical(all.coll$title[all.sets$collection[out$set]], out$collection)
     expect_type(out$pvalue, "double")
-
-    # Works if the full names are requested.
-    loaded <- fetchGenesForSomeSets("1111", out$set, config = test.config)
-    loaded.alpha <- renameGenesInSets("1111", loaded, "alpha", config = test.config)
-    loaded.Bravo <- renameGenesInSets("1111", loaded, "Bravo", config = test.config)
-    loaded.CHARLIE <- renameGenesInSets("1111", loaded, "CHARLIE", config = test.config)
-
-    xout <- querySets("1111", genes, types = c("CHARLIE", "alpha", "Bravo"), counts.only = FALSE, config = test.config)
-    for (i in seq_along(loaded)) {
-        expected <- sort(intersect(c(loaded.alpha[[i]], loaded.Bravo[[i]], loaded.CHARLIE[[i]]), genes))
-        expect_identical(expected, sort(xout$which[[i]]))
-    }
 
     # Intersects properly with descriptions.
     fout <- querySets("1111", genes, types = c("CHARLIE", "alpha", "Bravo"), text = "FOO", config = test.config)
@@ -34,6 +22,23 @@ test_that("querySets works in basic local tests", {
     expect_null(tout$pvalue)
 
     expect_error(querySets("1111", config = test.config), "must be provided")
+})
+
+test_that("querySets works in basic local tests with full names", {
+    genes <- c(sprintf("CHARLIE_%s", 1:50), sprintf("alpha_%s", 51:100), sprintf("Bravo_%s", 101:200))
+
+    xout <- querySets("1111", genes, types = c("CHARLIE", "alpha", "Bravo"), counts.only = FALSE, config = test.config)
+    loaded <- fetchGenesForSomeSets("1111", xout$set, config = test.config)
+    loaded.alpha <- renameGenesInSets("1111", loaded, "alpha", config = test.config)
+    loaded.Bravo <- renameGenesInSets("1111", loaded, "Bravo", config = test.config)
+    loaded.CHARLIE <- renameGenesInSets("1111", loaded, "CHARLIE", config = test.config)
+
+    xout2 <- querySets("1111", tolower(genes), types = c("CHARLIE", "alpha", "Bravo"), counts.only = FALSE, config = test.config)
+    for (i in seq_along(loaded)) {
+        expected <- intersect(c(loaded.alpha[[i]], loaded.Bravo[[i]], loaded.CHARLIE[[i]]), genes)
+        expect_identical(sort(expected), sort(xout$which[[i]]))
+        expect_identical(sort(tolower(expected)), sort(xout2$which[[i]])) # preserves the casing of the input string.
+    }
 })
 
 test_that("querySets works remotely", {

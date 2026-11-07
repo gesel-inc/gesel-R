@@ -12,10 +12,11 @@
 #'
 #' @return If \code{as.compressed = FALSE}, a list is returned containing:
 #' \itemize{
-#' \item \code{sets}, a list of length equal to the total number of sets for \code{species}.
-#' Each element is a character vector that corresponds to a gene set and contains the genes in that set.
+#' \item \code{sets}, a name list of length equal to the total number of sets for \code{species}.
+#' Each list element is a character vector that corresponds to a gene set and contains the genes in that set.
 #' Each gene is represented by zero, one or more identifiers of the specified \code{type} (see \code{\link{renameGenesInSets}} for details).
 #' The positional index of each set in \code{sets} can be used as the Gesel set index in other \pkg{gesel} functions like \code{\link{fetchGenesForSomeSets}}.
+#' Each list element is also named after its set (i.e., the \code{name} column in \code{details}).
 #' \item \code{details}, a data frame where each row corresponds to a gene set in \code{sets}.
 #' The data frame contains the following columns:
 #' \itemize{
@@ -58,6 +59,7 @@ loadAllSets <- function(species, type, config = NULL, as.compressed = FALSE) {
     details <- fetchAllSets(species, config = config)
     details$collection <- fetchAllCollections(species, config = config)$title[details$collection]
     details$number <- NULL
+    names(all.sets) <- details$name
 
     if (as.compressed) {
         asNamespace("IRanges")
