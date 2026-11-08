@@ -42,33 +42,33 @@ consolidateBlockSize <- function(block.size = NULL) {
     }
 }
 
-#' @importFrom utils head tail
-ranges_to_blocks <- function(boundaries, block.size) {
-    range.starts <- head(boundaries, -1)
-    mid <- range.starts + (tail(boundaries, -1) - range.starts) * 0.5 # use midpoints to place blocks.
-    ids <- floor(mid / block.size)
-    ids <- as.integer(factor(ids)) # strip out unused IDs so that they're all sorted and consecutive.
+#' @importFrom utils head
+define_blocks <- function(range.boundaries, block.size) {
+    range.mid <- head(range.boundaries, -1) + diff(range.boundaries) / 2 # use midpoints to allocate ranges into blocks.
+    block.ids <- floor(range.mid / block.size)
+    block.ids <- as.integer(factor(block.ids)) # force all IDs to be consecutive. 
 
-    if (length(ids)) {
-        first.in.block <- c(1L, which(diff(ids) != 0L) + 1L)
-        block.boundaries <- boundaries[c(first.in.block, length(boundaries))]
+    if (length(block.ids)) {
+        first.range.in.block <- c(1L, which(diff(block.ids) != 0L) + 1L)
+        block.boundaries <- range.boundaries[c(first.range.in.block, length(range.boundaries))]
     } else {
         block.boundaries <- integer(0)
     }
 
-    by.id <- split(seq_along(ids), ids)
-    by.id <- unname(by.id)
+    ranges.per.block <- split(seq_along(block.ids), block.ids)
+    ranges.per.block <- unname(ranges.per.block)
 
     list(
-        bounds = block.boundaries,
-        to.block = ids,
-        to.range = by.id
+        block.boundaries = block.boundaries,
+        range.to.block = block.ids,
+        block.to.range = ranges.per.block
     )
 }
 
-consolidate_ranges <- function(boundaries, block.info, needed) {
-    requested.blocks <- block.info$to.block[needed]
+consolidate_ranges_by_block <- function(block.info, needed.ranges) {
+    requested.blocks <- block.info$range.to.block[needed.ranges]
     requested.blocks <- sort(unique(requested.blocks))
+
     if (length(requested.blocks) == 0L) {
         return(list(
             start = integer(0),
@@ -82,8 +82,23 @@ consolidate_ranges <- function(boundaries, block.info, needed) {
     run.end <- requested.blocks[c(is.run.start, TRUE)]
 
     list(
-        start = block.info$bounds[run.start],
-        end = block.info$bounds[run.end + 1L],
-        requested = unlist(block.info$to.range[requested.blocks])
+        consolidated.start = block.info$block.boundaries[run.start],
+        consolidated.end = block.info$block.boundaries[run.end + 1L],
+        requested.ranges = unlist(block.info$block.to.range[requested.blocks])
     )
+}
+
+fetch_consolidated_ranges <- function(config, fname, range.boundaries, block.info, needed.ranges) {
+    consolidated <- consolidate_ranges_by_block(block.info, needed.ranges)
+    consolidated.parts <- fetch_ranges(config, fname, consolidated$consolidated.start, consolidated$consolidated.end)
+
+    refined <- refine_ranges(
+        consolidated.parts,
+        consolidated$consolidated.start,
+        consolidated$consolidated.end,
+        range.boundaries[consolidated$requested.ranges],
+        range.boundaries[consolidated$requested.ranges + 1L] - 1L # omit the newline.
+    )
+
+    list(requested = consolidated$requested.ranges, contents = refined)
 }

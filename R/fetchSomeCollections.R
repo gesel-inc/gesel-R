@@ -42,18 +42,9 @@ fetchSomeCollections <- function(species, collections, config = NULL) {
 
     needed <- setdiff(collections, prior.collections)
     if (length(needed)) {
-        consolidated <- consolidate_ranges(cached$intervals, cached$blocked, needed)
-        consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
+        consolidated <- fetch_consolidated_ranges(config, fname, cached$range.boundaries, cached$block.info, needed)
 
-        refined.parts <- refine_ranges(
-            consolidated.parts,
-            consolidated$start,
-            consolidated$end,
-            cached$intervals[consolidated$requested],
-            cached$intervals[consolidated$requested + 1L] - 1L # omit the trailing newline.
-        )
-
-        lines <- vapply(refined.parts, rawToChar, FUN.VALUE="")
+        lines <- vapply(consolidated$contents, rawToChar, FUN.VALUE="")
         split <- strsplit(lines, "\t")
         extra.df <- data.frame(
             title = vapply(split, function(x) x[1], ""),
@@ -90,8 +81,8 @@ get_single_collection_ranges <- function(config, species, fname) {
     range.info <- retrieve_ranges_with_sizes(config, fname)
 
     cached <- list(
-        intervals = range.info$ranges,
-        blocked = ranges_to_blocks(range.info$ranges, block.size = consolidate_block_size(config)),
+        range.boundaries = range.info$ranges,
+        block.info = define_blocks(range.info$ranges, block.size = consolidate_block_size(config)),
         starts = c(0L, cumsum(head(range.info$sizes, -1L))) + 1L,
         sizes = range.info$sizes,
         prior = list(

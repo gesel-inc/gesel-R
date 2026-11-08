@@ -8,24 +8,29 @@ test_that("consolidateBlockSize works as expected", {
     expect_identical(consolidateBlockSize(), old)
 })
 
-cr <- gesel:::consolidate_ranges
-r2b <- gesel:::ranges_to_blocks
+cr <- function(...) {
+    out <- gesel:::consolidate_ranges_by_block(...)
+    names(out) <- c("start", "end", "requested")
+    out
+}
+
+r2b <- gesel:::define_blocks
 
 test_that("consolidateRanges works for simple examples", {
     boundaries <- c(0, 10, 30, 100, 200, 210) # five ranges
 
-    expect_identical(cr(boundaries, r2b(boundaries, block.size=1), 2:4), list(start=10, end=200, requested=2:4))
-    expect_identical(cr(boundaries, r2b(boundaries, block.size=10), 2:4), list(start=10, end=200, requested=2:4))
-    expect_identical(cr(boundaries, r2b(boundaries, block.size=100), 2:4), list(start=0, end=200, requested=1:4))
-    expect_identical(cr(boundaries, r2b(boundaries, block.size=120), 2:4), list(start=0, end=210, requested=1:5))
+    expect_identical(cr(r2b(boundaries, block.size=1), 2:4), list(start=10, end=200, requested=2:4))
+    expect_identical(cr(r2b(boundaries, block.size=10), 2:4), list(start=10, end=200, requested=2:4))
+    expect_identical(cr(r2b(boundaries, block.size=100), 2:4), list(start=0, end=200, requested=1:4))
+    expect_identical(cr(r2b(boundaries, block.size=120), 2:4), list(start=0, end=210, requested=1:5))
 
-    expect_identical(cr(boundaries, r2b(boundaries, block.size=1), c(1, 3, 5)), list(start=c(0, 30, 200), end=c(10, 100, 210), requested=c(1L,3L,5L)))
-    expect_identical(cr(boundaries, r2b(boundaries, block.size=100), c(1, 3, 5)), list(start=c(0, 200), end=c(100, 210), requested=c(1L,2L,3L,5L)))
-    expect_identical(cr(boundaries, r2b(boundaries, block.size=1000), c(1, 3, 5)), list(start=0, end=210, requested=1:5))
+    expect_identical(cr(r2b(boundaries, block.size=1), c(1, 3, 5)), list(start=c(0, 30, 200), end=c(10, 100, 210), requested=c(1L,3L,5L)))
+    expect_identical(cr(r2b(boundaries, block.size=100), c(1, 3, 5)), list(start=c(0, 200), end=c(100, 210), requested=c(1L,2L,3L,5L)))
+    expect_identical(cr(r2b(boundaries, block.size=1000), c(1, 3, 5)), list(start=0, end=210, requested=1:5))
 
-    expect_identical(cr(boundaries, r2b(boundaries, block.size=1), c(1, 5)), list(start=c(0, 200), end=c(10, 210), requested=c(1L,5L)))
-    expect_identical(cr(boundaries, r2b(boundaries, block.size=100), c(1, 5)), list(start=c(0, 200), end=c(100, 210), requested=c(1:3,5L)))
-    expect_identical(cr(boundaries, r2b(boundaries, block.size=200), c(1, 5)), list(start=0, end=210, requested=1:5))
+    expect_identical(cr(r2b(boundaries, block.size=1), c(1, 5)), list(start=c(0, 200), end=c(10, 210), requested=c(1L,5L)))
+    expect_identical(cr(r2b(boundaries, block.size=100), c(1, 5)), list(start=c(0, 200), end=c(100, 210), requested=c(1:3,5L)))
+    expect_identical(cr(r2b(boundaries, block.size=200), c(1, 5)), list(start=0, end=210, requested=1:5))
 })
 
 test_that("consolidateRanges works in harder cases", {
@@ -41,7 +46,7 @@ test_that("consolidateRanges works in harder cases", {
 
         for (n in 1:50) {
             needed <- sample(ntotal, n)
-            out <- cr(boundaries, blocked, needed)
+            out <- cr(blocked, needed)
             expect_true(all(needed %in% out$requested))
 
             # Check consistency between requested and boundaries.
@@ -65,11 +70,11 @@ test_that("consolidateRanges works in harder cases", {
 
 test_that("consolidateRanges works in edge cases", {
     boundaries <- 0:5 * 10
-    expect_identical(cr(boundaries, r2b(boundaries, 10), integer(0)), list(start=integer(0), end=integer(0), requested=integer(0)))
+    expect_identical(cr(r2b(boundaries, 10), integer(0)), list(start=integer(0), end=integer(0), requested=integer(0)))
 
     boundaries <- rep(0, 10)
-    expect_identical(cr(boundaries, r2b(boundaries, 10), c(1, 5, 9)), list(start=0, end=0, requested=1:9))
+    expect_identical(cr(r2b(boundaries, 10), c(1, 5, 9)), list(start=0, end=0, requested=1:9))
 
     boundaries <- c(rep(0, 5), rep(5, 4))
-    expect_identical(cr(boundaries, r2b(boundaries, 1), c(2, 4, 6, 8)), list(start=c(0, 5), end=c(0, 5), requested=c(1:4, 6:8)))
+    expect_identical(cr(r2b(boundaries, 1), c(2, 4, 6, 8)), list(start=c(0, 5), end=c(0, 5), requested=c(1:4, 6:8)))
 })

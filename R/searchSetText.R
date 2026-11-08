@@ -51,9 +51,9 @@ fetch_sets_by_token <- function(config, species, tokens, type) {
     fname <- sprintf("%s_tokens-%s.tsv", species, type)
     if (is.null(tfound)) {
         sraw <- retrieve_ranges_with_names(config, fname)
-        tfound$ranges <- sraw$ranges
+        tfound$range.boundaries <- sraw$ranges
+        tfound$block.info <- define_blocks(sraw$ranges, block.size = consolidate_block_size(config))
         tfound$names <- sraw$names
-        tfound$blocked <- ranges_to_blocks(sraw$ranges, block.size = consolidate_block_size(config))
         tfound$prior <- list()
         modified <- TRUE
     }
@@ -93,18 +93,8 @@ fetch_sets_by_token <- function(config, species, tokens, type) {
 
     # Making a parallelized set of to.request for anything that we're missing.
     if (length(to.request)) {
-        consolidated <- consolidate_ranges(tfound$ranges, tfound$blocked, to.request)
-        consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
-
-        refined.parts <- refine_ranges(
-            consolidated.parts,
-            consolidated$start,
-            consolidated$end,
-            tfound$ranges[consolidated$requested],
-            tfound$ranges[consolidated$requested + 1L] - 1L # omit the trailing newline.
-        )
-
-        requested.indices <- decode_indices_from_raw(refined.parts)
+        consolidated <- fetch_consolidated_ranges(config, fname, tfound$range.boundaries, tfound$block.info, to.request)
+        requested.indices <- decode_indices_from_raw(consolidated$contents)
         names(requested.indices) <- tnames[consolidated$requested] 
         prior <- c(prior, requested.indices)
         modified <- TRUE

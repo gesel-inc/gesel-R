@@ -49,10 +49,10 @@ fetchGenesForSomeSets <- function(species, sets, config = NULL) {
     modified <- FALSE
 
     if (is.null(cached)) {
-        intervals <- retrieve_ranges(config, fname)
+        range.boundaries <- retrieve_ranges(config, fname)
         cached <- list(
-            intervals = intervals,
-            blocked = ranges_to_blocks(intervals, block.size = consolidate_block_size(config)),
+            range.boundaries = range.boundaries,
+            block.info = define_blocks(range.boundaries, block.size = consolidate_block_size(config)),
             prior = list(set = integer(0), genes = list())
         )
         modified <- TRUE
@@ -63,19 +63,9 @@ fetchGenesForSomeSets <- function(species, sets, config = NULL) {
 
     needed <- setdiff(sets, prior.set)
     if (length(needed)) {
-        consolidated <- consolidate_ranges(cached$intervals, cached$blocked, needed)
-        consolidated.parts <- fetch_ranges(config, fname, consolidated$start, consolidated$end)
-
-        refined.parts <- refine_ranges(
-            consolidated.parts,
-            consolidated$start,
-            consolidated$end,
-            cached$intervals[consolidated$requested],
-            cached$intervals[consolidated$requested + 1L] - 1L # omit the trailing newline.
-        )
-
+        consolidated <- fetch_consolidated_ranges(config, fname, cached$range.boundaries, cached$block.info, needed)
         prior.set <- c(prior.set, consolidated$requested)
-        prior.genes <- c(prior.genes, decode_indices_from_raw(refined.parts))
+        prior.genes <- c(prior.genes, decode_indices_from_raw(consolidated$contents))
         modified <- TRUE
     }
 
