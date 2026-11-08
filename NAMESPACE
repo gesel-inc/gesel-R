@@ -47,7 +47,6 @@ importFrom(stats,phyper)
 importFrom(utils,
   URLencode,
   head,
-  tail,
   write.table
 )
 useDynLib(gesel)

@@ -30,10 +30,7 @@ If \code{NULL}, it defaults to \code{\link{downloadDatabaseFile}}.}
 
 \item{fetch.file.args}{Named list of arguments to pass to \code{fetch.file}.}
 
-\item{fetch.ranges}{Function that accepts three arguments - 
-the name of a Gesel database file, an integer vector containing the starts of the byte ranges, and another vector containing the ends of the byte ranges
-(see \code{\link{downloadDatabaseRanges}} for details).
-It should return a list of raw vectors with the contents of the specified byte ranges.
+\item{fetch.ranges}{Function that downloads byte ranges, see \dQuote{Fetching byte ranges} below.
 If \code{NULL}, it defaults to \code{\link{downloadDatabaseRanges}}.}
 
 \item{fetch.ranges.args}{Named list of arguments to pass to \code{fetch.ranges}.}

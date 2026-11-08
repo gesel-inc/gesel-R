@@ -10,6 +10,20 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// extract_sorted_byte_ranges
+Rcpp::List extract_sorted_byte_ranges(Rcpp::List retrieved_contents, Rcpp::IntegerVector retrieved_starts, Rcpp::IntegerVector retrieved_ends, Rcpp::IntegerVector requested_starts, Rcpp::IntegerVector requested_ends);
+RcppExport SEXP _gesel_extract_sorted_byte_ranges(SEXP retrieved_contentsSEXP, SEXP retrieved_startsSEXP, SEXP retrieved_endsSEXP, SEXP requested_startsSEXP, SEXP requested_endsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::traits::input_parameter< Rcpp::List >::type retrieved_contents(retrieved_contentsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type retrieved_starts(retrieved_startsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type retrieved_ends(retrieved_endsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type requested_starts(requested_startsSEXP);
+    Rcpp::traits::input_parameter< Rcpp::IntegerVector >::type requested_ends(requested_endsSEXP);
+    rcpp_result_gen = Rcpp::wrap(extract_sorted_byte_ranges(retrieved_contents, retrieved_starts, retrieved_ends, requested_starts, requested_ends));
+    return rcpp_result_gen;
+END_RCPP
+}
 // parse_multipart_ranges
 Rcpp::List parse_multipart_ranges(Rcpp::RawVector body, std::string boundary);
 RcppExport SEXP _gesel_parse_multipart_ranges(SEXP bodySEXP, SEXP boundarySEXP) {
@@ -45,6 +59,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_gesel_extract_sorted_byte_ranges", (DL_FUNC) &_gesel_extract_sorted_byte_ranges, 5},
     {"_gesel_parse_multipart_ranges", (DL_FUNC) &_gesel_parse_multipart_ranges, 2},
     {"_gesel_validate_database_files", (DL_FUNC) &_gesel_validate_database_files, 2},
     {"_gesel_validate_gene_files", (DL_FUNC) &_gesel_validate_gene_files, 2},

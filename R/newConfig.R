@@ -12,10 +12,7 @@
 #' @param fetch.file Function that accepts the name of a Gesel database file and returns an absolute path to the file.
 #' If \code{NULL}, it defaults to \code{\link{downloadDatabaseFile}}.
 #' @param fetch.file.args Named list of arguments to pass to \code{fetch.file}.
-#' @param fetch.ranges Function that accepts three arguments - 
-#' the name of a Gesel database file, an integer vector containing the starts of the byte ranges, and another vector containing the ends of the byte ranges
-#' (see \code{\link{downloadDatabaseRanges}} for details).
-#' It should return a list of raw vectors with the contents of the specified byte ranges.
+#' @param fetch.ranges Function that downloads byte ranges, see \dQuote{Fetching byte ranges} below.
 #' If \code{NULL}, it defaults to \code{\link{downloadDatabaseRanges}}.
 #' @param fetch.ranges.args Named list of arguments to pass to \code{fetch.ranges}.
 #' @param consolidate.block.size Integer specifying the block size for consolidated requests.
@@ -33,6 +30,25 @@
 #'
 #' If no configuration list is supplied to \pkg{gesel} functions, the default configuration is used.
 #' The default is created by calling \code{newConfig} without any arguments.
+#'
+#' @section Fetching byte ranges
+#' The \code{fetch.ranges} function should accept three arguments:
+#' \itemize{
+#' \item \code{fname}, the name of a Gesel database file.
+#' \item \code{start}, an integer vector containing the zero-indexed closed start of each byte range to extract from the file.
+#' This may be of zero length.
+#' \item \code{end}, an integer vector containing the zero-indexed open end of each byte range to extract from the file.
+#' This should have the same length as \code{start} such that the \code{i}-th byte range is defined as \code{[start[i], end[i])}.
+#' The set of byte ranges should be non-empty, non-overlapping, and sorted by increasing start/end position.
+#' }
+#' It should return a list of raw vectors containing any number of \dQuote{retrieved} byte ranges.
+#' The \code{retrieved.start} and \code{retrieved.end} attributes of this list are integer vectors of the same length as the list,
+#' containing the zero-indexed closed start and open end of each retrieved byte range, respectively.
+#' All retrieved byte ranges are non-empty but may be overlapping and in any order.
+#'
+#' Each \dQuote{requested} byte range (i.e., defined by \code{start} and \code{end}) will be enclosed within at least one retrieved byte range.
+#' Note that the retrieved byte ranges may not have a 1-to-1 mapping to the requested byte ranges,
+#' e.g., if the server decides that adjacent requested ranges can be merged into a single output range.
 #'
 #' @author Aaron Lun
 #' @examples

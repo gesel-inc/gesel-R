@@ -81,24 +81,52 @@ consolidate_ranges_by_block <- function(block.info, needed.ranges) {
     run.start <- requested.blocks[c(TRUE, is.run.start)]
     run.end <- requested.blocks[c(is.run.start, TRUE)]
 
+    consolidated.start <- block.info$block.boundaries[run.start]
+    consolidated.end <- block.info$block.boundaries[run.end + 1L]
+    # There's at least one range in each block, and at least one newline in each range, so a block can't be empty.
+    stopifnot(all(consolidated.start != consolidated.end))
+
     list(
-        consolidated.start = block.info$block.boundaries[run.start],
-        consolidated.end = block.info$block.boundaries[run.end + 1L],
+        consolidated.start = consolidated.start,
+        consolidated.end = consolidated.end,
         requested.ranges = unlist(block.info$block.to.range[requested.blocks])
     )
 }
 
+extract_ranges_from_consolidated_output <- function(consolidated.output, requested.start, requested.end) {
+    consolidated.output.starts <- attr(consolidated.output, "retrieved.start")
+    consolidated.output.ends <- attr(consolidated.output, "retrieved.end")
+    stopifnot(length(consolidated.output) == length(consolidated.output.starts))
+    stopifnot(length(consolidated.output) == length(consolidated.output.ends))
+    stopifnot(all(lengths(consolidated.output) == consolidated.output.ends - consolidated.output.starts))
+
+    # extract_sorted_byte_ranges() only cares that the start positions are sorted.
+    # nested intervals with tied starts are just ignored.
+    # So, there's no need to sort by both start and end positions.
+    if (is.unsorted(consolidated.output.starts)) {
+        o <- order(consolidated.output.starts)
+        consolidated.output <- consolidated.output[o]
+        consolidated.output.starts <- consolidated.output.starts[o]
+        consolidated.output.ends <- consolidated.output.ends[o]
+    }
+
+    stopifnot(!is.unsorted(requested.start))
+    extract_sorted_byte_ranges(consolidated.output, consolidated.output.starts, consolidated.output.ends, requested.start, requested.end)
+}
+
 fetch_consolidated_ranges <- function(config, fname, range.boundaries, block.info, needed.ranges) {
     consolidated <- consolidate_ranges_by_block(block.info, needed.ranges)
-    consolidated.parts <- fetch_ranges(config, fname, consolidated$consolidated.start, consolidated$consolidated.end)
+    consolidated.output <- fetch_ranges(config, fname, consolidated$consolidated.start, consolidated$consolidated.end)
 
-    refined <- refine_ranges(
-        consolidated.parts,
-        consolidated$consolidated.start,
-        consolidated$consolidated.end,
-        range.boundaries[consolidated$requested.ranges],
-        range.boundaries[consolidated$requested.ranges + 1L] - 1L # omit the newline.
-    )
+    # For back-compatibility.
+    if (is.null(attr(consolidated.output, "retrieved.start"))) {
+        attr(consolidated.output, "retrieved.start") <- consolidated$consolidated.start
+        attr(consolidated.output, "retrieved.end") <- consolidated$consolidated.end
+    }
 
-    list(requested = consolidated$requested.ranges, contents = refined)
+    requested.ranges <- consolidated$requested.ranges
+    requested.start <- range.boundaries[requested.ranges]
+    requested.end <- range.boundaries[requested.ranges + 1L] - 1L # omit the newline.
+    refined <- extract_ranges_from_consolidated_output(consolidated.output, requested.start, requested.end)
+    list(requested = requested.ranges, contents = refined)
 }

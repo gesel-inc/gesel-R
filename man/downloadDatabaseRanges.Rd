@@ -18,12 +18,9 @@ downloadDatabaseRanges(
 \item{name}{String containing the name of a Gesel database file.
 This usually has the species identifier as a prefix, e.g., \code{"9606_set2gene.tsv.gz"}.}
 
-\item{start}{Integer vector containing the zero-indexed closed start of each byte range to extract from the file.
-This may be of zero length.}
+\item{start}{Integer vector of range start positions, see \dQuote{Fetching byte ranges} in \code{?\link{newConfig}} for details.}
 
-\item{end}{Integer vector containing the zero-indexed open end of each byte range to extract from the file.
-This should have the same length as \code{start} such that the \code{i}-th range is defined as \code{[start[i], end[i])}.
-All ranges supplied in a single call to this function should be non-overlapping.}
+\item{end}{Integer vector of range end positions, see \dQuote{Fetching byte ranges} in \code{?\link{newConfig}} for details.}
 
 \item{url}{String containing the base URL to the Gesel database files.}
 
@@ -33,9 +30,7 @@ All ranges supplied in a single call to this function should be non-overlapping.
 Ignored if \code{multipart=TRUE}.}
 }
 \value{
-List of length equal to \code{length(start)}.
-Each entry is a raw vector representing the contents of the corresponding byte range.
-For ranges where \code{end <= start}, the corresponding raw vectors will be empty.
+List of raw vectors, see \dQuote{Fetching byte ranges} in \code{?\link{newConfig}} for details.
 }
 \description{
 Download any number of byte ranges from a Gesel database file using (possibly multi-part) HTTP range requests.

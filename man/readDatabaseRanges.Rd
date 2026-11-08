@@ -12,17 +12,15 @@ readDatabaseRanges(dir, name, start, end)
 \item{name}{String containing the name of a Gesel database file.
 This usually has the species identifier as a prefix, e.g., \code{"9606_set2gene.tsv.gz"}.}
 
-\item{start}{Integer vector containing the zero-indexed closed start of each byte range to extract from the file.
-This may be of zero length.}
+\item{start}{Integer vector of range start positions, see \dQuote{Fetching byte ranges} in \code{?\link{newConfig}} for details.}
 
-\item{end}{Integer vector containing the zero-indexed open end of each byte range to extract from the file.
-This should have the same length as \code{start} such that the \code{i}-th range is defined as \code{[start[i], end[i])}.
-All ranges supplied in a single call to this function should be non-overlapping.}
+\item{end}{Integer vector of range end positions, see \dQuote{Fetching byte ranges} in \code{?\link{newConfig}} for details.}
 }
 \value{
 List of length equal to \code{length(start)}.
-Each entry is a raw vector representing the contents of the corresponding byte range.
-For ranges where \code{end <= start}, the corresponding raw vectors will be empty.
+Each entry is a raw vector representing the contents of the corresponding byte range in \code{start}.
+The \code{retrieved.start} and \code{retrieved.end} attributes store \code{start} and \code{end}, respectively,
+as stated in the \dQuote{Fetching byte ranges} section of \code{?\link{newConfig}}.
 }
 \description{
 Read any number of byte ranges from a Gesel database file on the local filesystem.

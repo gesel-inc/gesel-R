@@ -6,8 +6,9 @@
 #' @inheritParams downloadDatabaseRanges
 #'
 #' @return List of length equal to \code{length(start)}.
-#' Each entry is a raw vector representing the contents of the corresponding byte range.
-#' For ranges where \code{end <= start}, the corresponding raw vectors will be empty.
+#' Each entry is a raw vector representing the contents of the corresponding byte range in \code{start}.
+#' The \code{retrieved.start} and \code{retrieved.end} attributes store \code{start} and \code{end}, respectively,
+#' as stated in the \dQuote{Fetching byte ranges} section of \code{?\link{newConfig}}. 
 #'
 #' @examples
 #' path <- downloadDatabaseFile("9606_set2gene.tsv")
@@ -22,16 +23,15 @@ readDatabaseRanges <- function(dir, name, start, end) {
     handle <- file(file.path(dir, name), open="rb")
     on.exit(close(handle))
 
-    o <- order(start)
-    output <- rep(list(raw()), length(start))
-    for (i in o) {
+    output <- vector("list", length(start))
+    for (i in seq_along(start)) {
         s <- start[i]
         e <- end[i]
-        if (s < e) {
-            seek(handle, where=s) # where= seems to be zero-based in terms of its position.
-            output[[i]] <- readBin(handle, what=raw(), n=e - s)
-        }
+        seek(handle, where=s) # where= seems to be zero-based in terms of its position.
+        output[[i]] <- readBin(handle, what=raw(), n=e - s)
     }
 
+    attr(output, "retrieved.start") <- start
+    attr(output, "retrieved.end") <- end
     output
 }
